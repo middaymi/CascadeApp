@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 public class MainFrame extends JFrame {  
     
     private ImagePanel imgPanel; 
-    private JButton settingBtn;
+    private static JButton settingBtn;
     private Manager manager;
     
     public MainFrame() {         

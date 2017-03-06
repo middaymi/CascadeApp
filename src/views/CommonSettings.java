@@ -3,6 +3,7 @@ package views;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 public class CommonSettings {
@@ -11,6 +12,14 @@ public class CommonSettings {
     private static LineBorder  grayLineBorder = null;     
     private static Font font30 = null;
     private static Font font50 = null;
+        
+    //COMMON_SETTINGS_FOR_PANELS
+    public static void panelSettings(JPanel pnl) {
+        pnl.setLayout(null);
+        pnl.setSize(Manager.getWidth(), 
+                    Manager.getHeightWithInsets());
+        pnl.setOpaque(false);       
+    }
     
     //FONTS
     public static <T extends JComponent> void settingFont50 (T obj) {
@@ -28,7 +37,7 @@ public class CommonSettings {
         obj.setBorder(grayLineBorderInstance());
     }
      
-    //PRIVATE FUNCTIONS
+    //PRIVATE_FUNCTIONS
     //set grayLineBoard
     private static LineBorder lightGrayLineBorderInstance() {
         if (lightGrayLineBorder == null)

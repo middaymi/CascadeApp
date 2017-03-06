@@ -20,6 +20,7 @@ public class CascadeApp {
        SwingUtilities.invokeLater(new Runnable() {
             public void run() {                
                 manager = Manager.getManagerInstance();
+                dataBase.DataBaseConnection.getInstanceDataBase(); 
             }
         });
     }   

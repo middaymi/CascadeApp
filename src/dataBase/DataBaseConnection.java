@@ -3,45 +3,40 @@ package dataBase;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DataBaseConnection {
     
     private static DataBaseConnection DataBaseInstance = null;
-    private Connection conn;
+    private String dbURL = "jdbc:sqlserver://localhost;instanceName=MSSQLSERVER;"
+                         + "databaseName=TestDB;integratedSecurity=true;";
+    private Connection DBconnection;
     
     private DataBaseConnection() { 
+        //register sql drivaer
         try {
             DriverManager.registerDriver(new SQLServerDriver());
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseConnection.class.getName()).
-                             log(Level.SEVERE, null, ex);
+                             log(Level.SEVERE,"no register driver", ex);
         }
-        String dbURl = "jdbc:sqlserver://localhost;instanceName=MSSQLSERVER;databaseName=TestDB;integratedSecurity=true;";
+        //connect to database
         try {
-            conn = DriverManager.getConnection(dbURl);
-            if (conn != null) {
-                System.out.println("connected");
-                //String str = "select * from sportsman";
-                //Statement stmt = conn.createStatement();
-                //ResultSet rs = stmt.executeQuery(str);
-                
-                //while (rs.next()){
-                  //  System.out.println(rs.getString(2));
-                //}
-            }
+            DBconnection = DriverManager.getConnection(dbURL);
+            //if (DBconnection != null) System.out.println("connected");
         } catch (SQLException ex) {
-            Logger.getLogger(DataBaseConnection.class.getName()).log(Level.SEVERE, null, ex);   
-        }
-        
+            Logger.getLogger(DataBaseConnection.class.getName()).
+                             log(Level.SEVERE,"no connection to database", ex);   
+        }        
     }    
     public static DataBaseConnection getInstanceDataBase() {
         if (DataBaseInstance == null)
             DataBaseInstance = new DataBaseConnection();
         return DataBaseInstance;           
     }
+    public Connection getDBconnection() {
+        return DBconnection;
+    }    
 }

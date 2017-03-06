@@ -7,6 +7,5 @@ import views.Manager;
 public class OrganizationBtnListener implements ActionListener{        
     public void actionPerformed(ActionEvent e) {
         Manager.getManagerInstance().choosePanel(10);
-        dataBase.DataBaseConnection.getInstanceDataBase();               
     }    
 }

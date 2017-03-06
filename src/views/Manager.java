@@ -21,7 +21,7 @@ public class Manager {
     private MainFrame mFrame = null;
     private StartPage stPage = null;
     private OrganizationPage orgPage = null;
-    //private EmployeePage empPage = null;
+    private EmployeePage empPage = null;
     
     private static int width;
     private static int height;
@@ -58,15 +58,21 @@ public class Manager {
     //START_PAGE****************************************************************
     private void createStartPage(){
         stPage = new StartPage();
-        stPage.setManager(this);
-        mFrame.getContentPane().add(stPage, BorderLayout.CENTER); 
-        mFrame.setVisible(true);
+        getStPage().setManager(this);
+        getmFrame().getContentPane().add(getStPage(), BorderLayout.CENTER); 
+        getmFrame().setVisible(true);
     }
     
     //ORGANIZATION_PAGE*********************************************************
      private void createOrganizationPage(){
         orgPage = new OrganizationPage();
-        mFrame.getContentPane().add(orgPage, BorderLayout.CENTER);
+        getmFrame().getContentPane().add(getOrgPage(), BorderLayout.CENTER);
+    }
+     
+    //EMPLOYEE_PAGE*************************************************************
+    private void createEmployeePage() {
+        empPage = new EmployeePage();
+        getmFrame().getContentPane().add(getEmpPage(), BorderLayout.CENTER);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -74,20 +80,35 @@ public class Manager {
         hideAllPanels();
         switch(currentNumber) {
             case(0):
-                stPage.setVisible(true);
+                getStPage().setVisible(true);
                 break;  
             case(10):
-                if (orgPage == null) {
-                    createOrganizationPage();
-                }
-                orgPage.setVisible(true);
+                if (getOrgPage() == null) createOrganizationPage();
+                getOrgPage().setVisible(true);
                 break;
             case(20):
+                if (getEmpPage() == null) createEmployeePage();
+                getEmpPage().setVisible(true);
                 break;
         }
     }
     private void hideAllPanels() {
-        if (stPage != null) stPage.setVisible(false);
-        if (orgPage != null) orgPage.setVisible(false);
+        if (getStPage() != null) getStPage().setVisible(false);
+        if (getOrgPage() != null) getOrgPage().setVisible(false);
+        if (getEmpPage() != null) getEmpPage().setVisible(false);
     }   
+
+    //get panels
+    public MainFrame getmFrame() {
+        return mFrame;
+    }
+    public StartPage getStPage() {
+        return stPage;
+    }
+    public OrganizationPage getOrgPage() {
+        return orgPage;
+    }
+    public EmployeePage getEmpPage() {
+        return empPage;
+    }
 }
