@@ -148,5 +148,49 @@ public class OrganizationPage extends JPanel {
         accountField.setEditable(b);
         legalAddressField.setEditable(b);
         actualAddressField.setEditable(b);        
-    }  
+    } 
+    //write in data-organization object 
+    public void setFields() {
+        organizationData.setFullName(fullNameField.getText());
+        organizationData.setPhoneNumber(phoneNumberField.getText());
+        organizationData.setSite(siteField.getText());
+        organizationData.seteMail(eMailField.getText());
+        organizationData.setOGRN(ogrnField.getText());
+        organizationData.setKPP(kppField.getText());
+        organizationData.setINN(innField.getText());
+        organizationData.setAccount(accountField.getText());
+        organizationData.setLegalAddress(legalAddressField.getText());
+        organizationData.setActualAddress(actualAddressField.getText());      
+    }
+
+    public JTextField getFullNameField() {
+        return fullNameField;
+    }
+    public JTextField getPhoneNumberField() {
+        return phoneNumberField;
+    }
+    public JTextField getSiteField() {
+        return siteField;
+    }
+    public JTextField getEMailField() {
+        return eMailField;
+    }
+    public JTextField getOgrnField() {
+        return ogrnField;
+    }
+    public JTextField getKppField() {
+        return kppField;
+    }
+    public JTextField getInnField() {
+        return innField;
+    }
+    public JTextField getAccountField() {
+        return accountField;
+    }
+    public JTextField getLegalAddressField() {
+        return legalAddressField;
+    }
+    public JTextField getActualAddressField() {
+        return actualAddressField;
+    }    
 }

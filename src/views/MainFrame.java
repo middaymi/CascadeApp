@@ -13,13 +13,15 @@ import javax.swing.JFrame;
 public class MainFrame extends JFrame {  
     
     private ImagePanel imgPanel; 
-    private static JButton settingBtn;
+    private JButton settingBtn;
+    private JButton jumpToMainFrameBtn;
     private Manager manager;
     
     public MainFrame() {         
         super("CascadeApp");         
         setMainFrame(imgPanel);       
-        setSettingBtn(settingBtn);        
+        setSettingBtn(settingBtn); 
+        setJumpBtn(jumpToMainFrameBtn);
     }
     
     //main frame settings
@@ -55,6 +57,17 @@ public class MainFrame extends JFrame {
                         302*(Manager.getHeight() - getInsetBottom())/349);
         this.add(btn);
     } 
+    //setting button for jump to mainFrame
+     private void setJumpBtn (JButton btn) {
+        btn = new JButton();
+        btn.setSize(Manager.getWidth()/32, 
+                    Manager.getHeightWithInsets()/18);
+        btn.setLocation(303*Manager.getWidth()/320, 
+                        272*(Manager.getHeight() - getInsetBottom())/349);
+        btn.addActionListener(new controllers.CommonButtons.JumpToMainFrameBtnListener());
+        this.add(btn);
+    }
+     
     //get the bottom insert for real height of screen
     public int getInsetBottom() {
         return (Toolkit.getDefaultToolkit().
