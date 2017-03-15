@@ -12,6 +12,7 @@ public class ChangeButtonListener implements ActionListener{
     public void actionPerformed(ActionEvent e) {        
         if (manager.getOrgPage() != null) {
             if (change == true) {
+                manager.getOrgPage().changeTextButton(false);
                 organizationModel.checkTextFields();
                 manager.getOrgPage().setFields();
                 organizationModel.updateOrganizationFields();
@@ -19,6 +20,7 @@ public class ChangeButtonListener implements ActionListener{
                 change = false;
             } else {
             manager.getOrgPage().setEditableTextFiels(true);
+            manager.getOrgPage().changeTextButton(true);
             change = true;
             }
         }       

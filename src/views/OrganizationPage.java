@@ -10,7 +10,7 @@ import models.OrganizationModel;
 
 public class OrganizationPage extends JPanel {
     
-    private JButton changeBtn = null; 
+    private JButton changeBtn; 
     
     private JLabel fullNameLabel;
     private JLabel phoneNumberLabel;
@@ -34,7 +34,7 @@ public class OrganizationPage extends JPanel {
     private JTextField legalAddressField;
     private JTextField actualAddressField; 
     
-    private Organization organizationData;
+    private Organization orgData;
     private OrganizationModel orgModel;
         
     public OrganizationPage() {         
@@ -42,7 +42,7 @@ public class OrganizationPage extends JPanel {
         CommonSettings.panelSettings(this);
         createChangeButton();
         createLabels();
-        organizationData = orgModel.getOrganizationData();        
+        orgData = orgModel.getOrganizationData();        
         createTextFields();
         settingsTextFields();
         setEditableTextFiels(false);
@@ -51,15 +51,19 @@ public class OrganizationPage extends JPanel {
     //CHANGE_BUTTON*************************************************************
     //a button for a possible to change organization panel
     private void createChangeButton() {
-        changeBtn = new JButton();
-        changeBtn.setBackground(Color.YELLOW);
-        changeBtn.setSize(Manager.getWidth()/32, 
-                    Manager.getHeightWithInsets()/18);
-        changeBtn.setLocation(9*Manager.getWidth()/10, 
-                        302*Manager.getHeightWithInsets()/349);
+        changeBtn = new JButton("Изменить");
+        changeBtn.setBackground(Color.LIGHT_GRAY);
+        changeBtn.setSize(250, 100);
+        changeBtn.setLocation(1984, 1430);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.OrganizationPage.
                                         ChangeButtonListener());
+    }
+    public void changeTextButton(boolean mode) {
+        if (mode == true) {
+            changeBtn.setText("Сохранить");
+        } else 
+            changeBtn.setText("Изменить");
     }
         
     //LABELS********************************************************************
@@ -89,11 +93,8 @@ public class OrganizationPage extends JPanel {
     //set Labels size, location, font, border
     private void setSizeLocationFontBorderLabel(JLabel lbl, int x) {
         CommonSettings.settingFont30(lbl);
-        lbl.setSize(33*Manager.getWidth()/320, 
-                    20*Manager.getHeightWithInsets()/349);
-        lbl.setLocation((Manager.getWidth()/64),
-                         10*Manager.getHeightWithInsets()/349 +
-                         30*Manager.getHeightWithInsets()/349 * x);
+        lbl.setSize(320, 100);
+        lbl.setLocation(934, 230 + 120 * x);
         CommonSettings.settingGrayBorder(lbl);
         this.add(lbl);
     }
@@ -115,26 +116,23 @@ public class OrganizationPage extends JPanel {
     //set TextFields size, location, font, border
     private void setSizeLocationFontBorder(JTextField txtField, int x){
         CommonSettings.settingFont30(txtField);
-        txtField.setSize(13*Manager.getWidth()/32, 
-                         20*Manager.getHeightWithInsets()/349);
-        txtField.setLocation((Manager.getWidth()/8),
-                         10*Manager.getHeightWithInsets()/349 +
-                         30*Manager.getHeightWithInsets()/349 * x);
+        txtField.setSize(960, 100);
+        txtField.setLocation(1274, 230 + 120 * x);
         CommonSettings.settingGrayBorder(txtField);
         this.add(txtField);        
     } 
     //create textFields and set a text
     private void createTextFields() {
-        fullNameField = new JTextField(organizationData.getFullName());
-        phoneNumberField = new JTextField(organizationData.getPhoneNumber());
-        siteField = new JTextField(organizationData.getSite());
-        eMailField  = new JTextField(organizationData.geteMail());
-        ogrnField = new JTextField(organizationData.getOGRN());
-        kppField = new JTextField(organizationData.getKPP());
-        innField = new JTextField(organizationData.getINN());
-        accountField = new JTextField(organizationData.getAccount());
-        legalAddressField = new JTextField(organizationData.getLegalAddress());
-        actualAddressField = new JTextField(organizationData.getActualAddress());         
+        fullNameField = new JTextField(orgData.getFullName());
+        phoneNumberField = new JTextField(orgData.getPhoneNumber());
+        siteField = new JTextField(orgData.getSite());
+        eMailField  = new JTextField(orgData.geteMail());
+        ogrnField = new JTextField(orgData.getOGRN());
+        kppField = new JTextField(orgData.getKPP());
+        innField = new JTextField(orgData.getINN());
+        accountField = new JTextField(orgData.getAccount());
+        legalAddressField = new JTextField(orgData.getLegalAddress());
+        actualAddressField = new JTextField(orgData.getActualAddress());         
     }
     //posible to change or not    
     public void setEditableTextFiels(boolean b) {
@@ -151,16 +149,16 @@ public class OrganizationPage extends JPanel {
     } 
     //write in data-organization object 
     public void setFields() {
-        organizationData.setFullName(fullNameField.getText());
-        organizationData.setPhoneNumber(phoneNumberField.getText());
-        organizationData.setSite(siteField.getText());
-        organizationData.seteMail(eMailField.getText());
-        organizationData.setOGRN(ogrnField.getText());
-        organizationData.setKPP(kppField.getText());
-        organizationData.setINN(innField.getText());
-        organizationData.setAccount(accountField.getText());
-        organizationData.setLegalAddress(legalAddressField.getText());
-        organizationData.setActualAddress(actualAddressField.getText());      
+        orgData.setFullName(fullNameField.getText());
+        orgData.setPhoneNumber(phoneNumberField.getText());
+        orgData.setSite(siteField.getText());
+        orgData.seteMail(eMailField.getText());
+        orgData.setOGRN(ogrnField.getText());
+        orgData.setKPP(kppField.getText());
+        orgData.setINN(innField.getText());
+        orgData.setAccount(accountField.getText());
+        orgData.setLegalAddress(legalAddressField.getText());
+        orgData.setActualAddress(actualAddressField.getText());      
     }
 
     public JTextField getFullNameField() {

@@ -14,16 +14,10 @@ public class StartPage extends JPanel{
     private JButton testingBtn;
     
     public StartPage() {  
-        startPagePanelSettings();         
+        CommonSettings.panelSettings(this);
         createButtons();
     }     
-    //panel settings
-    private void startPagePanelSettings() {
-        this.setLayout(null);
-        this.setLocation(0, 0);        
-        this.setSize(Manager.getWidth(), Manager.getHeightWithInsets());
-        this.setOpaque(false);
-    }     
+      
     //create all buttons
     private void  createButtons() { 
         //create buttons
@@ -104,8 +98,5 @@ public class StartPage extends JPanel{
                         break;
             }
         }
-    }
-    public void setManager(Manager manager) {
-        this.manager = manager;
     }
 }

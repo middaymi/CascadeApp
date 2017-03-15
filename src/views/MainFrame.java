@@ -7,21 +7,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {  
     
     private ImagePanel imgPanel; 
-    private JButton settingBtn;
-    private JButton jumpToMainFrameBtn;
-    private Manager manager;
     
     public MainFrame() {         
         super("CascadeApp");         
-        setMainFrame(imgPanel);       
-        setSettingBtn(settingBtn); 
-        setJumpBtn(jumpToMainFrameBtn);
+        setMainFrame(imgPanel); 
     }
     
     //main frame settings
@@ -30,6 +24,7 @@ public class MainFrame extends JFrame {
         this.setSize(Manager.getWidth(), 
                     (Manager.getHeight() - getInsetBottom()));
         this.setLocation(0, 0);
+        this.setVisible(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);       
     }
@@ -48,38 +43,25 @@ public class MainFrame extends JFrame {
         imgPnl.setVisible(true);
         return imgPnl;
     }
-    //setting button
-    private void setSettingBtn (JButton btn) {
-        btn = new JButton();
-        btn.setSize(Manager.getWidth()/32, 
-                    Manager.getHeightWithInsets()/18);
-        btn.setLocation(303*Manager.getWidth()/320, 
-                        302*(Manager.getHeight() - getInsetBottom())/349);
-        this.add(btn);
-    } 
-    //setting button for jump to mainFrame
-     private void setJumpBtn (JButton btn) {
-        btn = new JButton();
-        btn.setSize(Manager.getWidth()/32, 
-                    Manager.getHeightWithInsets()/18);
-        btn.setLocation(303*Manager.getWidth()/320, 
-                        272*(Manager.getHeight() - getInsetBottom())/349);
-        btn.addActionListener(new controllers.CommonButtons.JumpToMainFrameBtnListener());
-        this.add(btn);
-    }
-     
-    //get the bottom insert for real height of screen
+        
+    //get frame inserts
+    //frame border + taskBar
     public int getInsetBottom() {
         return (Toolkit.getDefaultToolkit().
-                getScreenInsets(getGraphicsConfiguration()).bottom); 
-    }
-    
-    public void setManager(Manager manager) {
-        this.manager = manager;
-    }
+                getScreenInsets(getGraphicsConfiguration()).bottom
+                + getInsets().bottom 
+                + getInsets().top);
+    } 
+    //left + right
+    public int getInsetLeftRight() {
+        return (this.getInsets().left*2);
+    }    
 }
 
-
-
-
-
+//        System.out.println("\n" + this.getInsets().top);
+//        System.out.println(this.getInsets().left);
+//        System.out.println(this.getInsets().bottom + "\n");
+//        System.out.println(Toolkit.getDefaultToolkit().
+//                            getScreenInsets(getGraphicsConfiguration()).bottom
+//                            + getInsets().bottom 
+//                            + getInsets().top);

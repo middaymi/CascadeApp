@@ -16,7 +16,7 @@ public class CommonSettings {
     //COMMON_SETTINGS_FOR_PANELS
     public static void panelSettings(JPanel pnl) {
         pnl.setLayout(null);
-        pnl.setSize(Manager.getWidth(), 
+        pnl.setSize(Manager.getWidthWithInsets(), 
                     Manager.getHeightWithInsets());
         pnl.setOpaque(false);       
     }

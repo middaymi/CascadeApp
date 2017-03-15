@@ -16,29 +16,34 @@ import java.awt.Toolkit;
 
 public class Manager {
     
-    private static Manager ManagerInstance = null;
+    private static Manager managerInstance = null;
     
-    private MainFrame mFrame = null;
-    private StartPage stPage = null;
-    private OrganizationPage orgPage = null;
-    private EmployeePage empPage = null;
+    private static MainFrame mFrame = null;
+    private static StartPage stPage = null;
+    private static OrganizationPage orgPage = null;
+    private static EmployeePage empPage = null;
+    private static CommonButtonsPanel comBtnPanel = null;
     
     private static int width;
     private static int height;
-    private static int insetsBottom;
+    private static int insetsTopBottom;
+    private static int insetsLeftRight;
            
     private Manager() { 
         width = getResolution().width;
         height = getResolution().height;
         mFrame = new MainFrame();
-        insetsBottom = mFrame.getInsetBottom();
-        createStartPage();     
-        mFrame.setManager(this);
-    }    
+        insetsTopBottom = mFrame.getInsetBottom();
+        insetsLeftRight = mFrame.getInsetLeftRight();
+        createCommonBtnPanel();
+        createStartPage();         
+    } 
+    
     public static Manager getManagerInstance() {
-        if (ManagerInstance == null)
-            ManagerInstance = new Manager();
-        return ManagerInstance;
+        if (managerInstance == null) {
+            managerInstance = new Manager();
+        }
+        return managerInstance;
     }
       
     //GET_SCREEN_RESOLUTION*****************************************************
@@ -51,64 +56,81 @@ public class Manager {
     public static int getHeight() {
         return height;
     }
-    public static int getHeightWithInsets() {
-        return (height - insetsBottom);
+    public static int getWidthWithInsets() {
+        return (width - insetsLeftRight);
+    }
+    public static int getHeightWithInsets() {        
+        return (height - insetsTopBottom);
+    }
+    
+    //COMMON_BTN_PANEL**********************************************************
+    private void createCommonBtnPanel() {
+        comBtnPanel = new CommonButtonsPanel();
+        getComBtnPanel().setVisible(true);
+        getmFrame().getContentPane().add(getComBtnPanel(), BorderLayout.CENTER);        
     }
     
     //START_PAGE****************************************************************
     private void createStartPage(){
         stPage = new StartPage();
-        getStPage().setManager(this);
-        getmFrame().getContentPane().add(getStPage(), BorderLayout.CENTER); 
-        getmFrame().setVisible(true);
+        getComBtnPanel().useBtns(0);
+        getmFrame().getContentPane().add(getStPage(), BorderLayout.CENTER);       
     }
     
     //ORGANIZATION_PAGE*********************************************************
-     private void createOrganizationPage(){
+     private static void createOrganizationPage(){
         orgPage = new OrganizationPage();
         getmFrame().getContentPane().add(getOrgPage(), BorderLayout.CENTER);
     }
      
     //EMPLOYEE_PAGE*************************************************************
-    private void createEmployeePage() {
+    private static void createEmployeePage() {
         empPage = new EmployeePage();
         getmFrame().getContentPane().add(getEmpPage(), BorderLayout.CENTER);
     }
     
+    //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
+    private static void hideAllPanels() {
+        if (getStPage() != null) getStPage().setVisible(false);
+        if (getOrgPage() != null) getOrgPage().setVisible(false);
+        if (getEmpPage() != null) getEmpPage().setVisible(false);
+    }
+    
     //CHOOSE_PANELS*************************************************************
-    public void choosePanel(int currentNumber) {
+    public static void choosePanel(int currentNumber) {
         hideAllPanels();
         switch(currentNumber) {
             case(0):
                 getStPage().setVisible(true);
+                getComBtnPanel().useBtns(0);
                 break;  
             case(10):
                 if (getOrgPage() == null) createOrganizationPage();
                 getOrgPage().setVisible(true);
+                getComBtnPanel().useBtns(10);
                 break;
             case(20):
                 if (getEmpPage() == null) createEmployeePage();
-                getEmpPage().setVisible(true);
+                getEmpPage().setVisible(true); 
+                getComBtnPanel().useBtns(20);
                 break;
         }
-    }
-    private void hideAllPanels() {
-        if (getStPage() != null) getStPage().setVisible(false);
-        if (getOrgPage() != null) getOrgPage().setVisible(false);
-        if (getEmpPage() != null) getEmpPage().setVisible(false);
-    }   
+    } 
 
     //get panels
-    public MainFrame getmFrame() {
+    public static MainFrame getmFrame() {
         return mFrame;
     }
-    public StartPage getStPage() {
+    public static StartPage getStPage() {
         return stPage;
     }
-    public OrganizationPage getOrgPage() {
+    public static OrganizationPage getOrgPage() {
         return orgPage;
     }
-    public EmployeePage getEmpPage() {
+    public static EmployeePage getEmpPage() {
         return empPage;
+    }
+    public static CommonButtonsPanel getComBtnPanel() {
+        return comBtnPanel;
     }
 }
