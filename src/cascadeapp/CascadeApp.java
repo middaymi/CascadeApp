@@ -20,6 +20,8 @@ public class CascadeApp {
        SwingUtilities.invokeLater(new Runnable() {
             public void run() {                
                 manager = Manager.getManagerInstance();
+                System.out.println("WIDTH: " + Manager.getWidthWithInsets());
+                System.out.println("HEIGHT: " + Manager.getHeightWithInsets());
                 dataBase.DataBaseConnection.getInstanceDataBase(); 
             }
         });

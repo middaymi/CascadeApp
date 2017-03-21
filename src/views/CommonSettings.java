@@ -13,12 +13,12 @@ public class CommonSettings {
     private static Font font30 = null;
     private static Font font50 = null;
         
-    //COMMON_SETTINGS_FOR_PANELS
-    public static void panelSettings(JPanel pnl) {
-        pnl.setLayout(null);
-        pnl.setSize(Manager.getWidthWithInsets(), 
+    //COMMON_SETTINGS_FOR_PANELS (USUAL AND SCROLL)
+    public static <T extends JComponent> void panelSettings(T obj) {
+        obj.setLayout(null);
+        obj.setSize(Manager.getWidthWithInsets(), 
                     Manager.getHeightWithInsets());
-        pnl.setOpaque(false);       
+        obj.setOpaque(false);       
     }
     
     //FONTS

@@ -57,11 +57,3 @@ public class MainFrame extends JFrame {
         return (this.getInsets().left*2);
     }    
 }
-
-//        System.out.println("\n" + this.getInsets().top);
-//        System.out.println(this.getInsets().left);
-//        System.out.println(this.getInsets().bottom + "\n");
-//        System.out.println(Toolkit.getDefaultToolkit().
-//                            getScreenInsets(getGraphicsConfiguration()).bottom
-//                            + getInsets().bottom 
-//                            + getInsets().top);

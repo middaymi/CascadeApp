@@ -65,11 +65,11 @@ public class CommonButtonsPanel extends JPanel {
                 getSettingBtn().setEnabled(true);
                 break;
             case (10): //organizationPage
-                getBackBtn().setVisible(true);
+                getBackBtn().setVisible(false);
                 getBackBtn().setEnabled(false);
                 getToMainFrameBtn().setVisible(true);
                 getToMainFrameBtn().setEnabled(true);
-                getNextBtn().setVisible(true);
+                getNextBtn().setVisible(false);
                 getNextBtn().setEnabled(false);
                 getSettingBtn().setVisible(false);
                 getSettingBtn().setEnabled(false);                    

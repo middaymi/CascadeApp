@@ -15,7 +15,7 @@ import views.OrganizationPage;
 
 public class OrganizationModel {
     
-    private static OrganizationModel OrganizationModelInstance = null;
+    private static OrganizationModel organizationModelInstance = null;
     private Organization organization = new Organization();
     private Manager manager =  Manager.getManagerInstance();
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
@@ -23,9 +23,9 @@ public class OrganizationModel {
     //get a link for other objects
     private OrganizationModel() {}    
     public static OrganizationModel getOrganizationModelInstance() {
-        if (OrganizationModelInstance == null)
-            OrganizationModelInstance = new OrganizationModel();
-        return OrganizationModelInstance;
+        if (organizationModelInstance == null)
+            organizationModelInstance = new OrganizationModel();
+        return organizationModelInstance;
     } 
     
     //select all information about organization from DB
