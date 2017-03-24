@@ -11,6 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 import data.Employee;
+import java.sql.PreparedStatement;
+import java.util.HashSet;
+import java.util.Iterator;
+import javax.swing.CellEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import views.Manager;
 
 public class EmployeeModel extends AbstractTableModel{
 
@@ -18,10 +26,18 @@ public class EmployeeModel extends AbstractTableModel{
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
                                    getDBconnection();
     private Employee employee = new Employee();
-    private String tableTitles[] = {"Фамилия", "Имя", "Отчество", 
+    //service array for updateRows
+    private ArrayList updateArray = new ArrayList();
+    //service array for original columnNames
+    private ArrayList <String> originalTableTitles = new ArrayList();
+    //order like in sqlTable; then name, surname are swaped
+    private String tableTitles[] = {"ID", "Имя", "Фамилия", "Отчество", 
                                     "Дата рождения", "Опыт", "Образование"};
+    private HashSet <ArrayList> willUpdateFields = new HashSet<>();
     
-    private EmployeeModel() {}
+    private EmployeeModel() {
+        employee.setEditable(true);      
+    }
     
     //get a link for other objects
     public static EmployeeModel getOrganizationModelInstance() {
@@ -31,9 +47,7 @@ public class EmployeeModel extends AbstractTableModel{
     }
     
     //select all data from db
-    //String selectAllFromEmployee = "select * from employee";
-    String selectAllFromEmployee = "select surname, name, middleName, birthday, "
-                                 + "experience, education from employee;";
+    String selectAllFromEmployee = "select * from employee";
     private ResultSet getEmployeeData() {
         Statement stmt;
         ResultSet rs = null;
@@ -48,9 +62,11 @@ public class EmployeeModel extends AbstractTableModel{
         return rs;
     }
     
-    //get selectAllFromEmployee from ResultSet 
-    public Employee setDataSource() {
+    //get selectAllFromEmployee data from ResultSet, 
+    //push it to the employeeDataClass(there:employee)
+     public void setDataSource() {
         ResultSet rs = null; 
+        Class type = null;
         try {
             //del prev data
             employee.getData().clear();
@@ -60,24 +76,20 @@ public class EmployeeModel extends AbstractTableModel{
             rs = getEmployeeData();
             ResultSetMetaData rsmd = rs.getMetaData();
             
-            //get info about columns and their types
-            //and set values to Employee.class arraylist
+            //get info about columns and their types,
+            //set values to Employee.class arraylist
             int columnCount = rsmd.getColumnCount();
-            for ( int i = 0; i < columnCount; i++) {
-                //add columnName
-                //employee.getColumnNames().add(rsmd.getColumnName(i+1));
-                employee.getColumnNames().add(tableTitles[i]);
-                //column type
-                Class type = Class.forName(rsmd.getColumnClassName(i+1));
-                employee.getColumnTypes().add(type);
-            }
-
-            //check results
-            employee.printArray(employee.getColumnNames());
-            System.out.println();
-            employee.printArray(employee.getColumnTypes());
-            
-            //data is changed
+            for (int i = 0; i < columnCount; i++) {
+                //add original columnNames to serviceArray
+                originalTableTitles.add(rsmd.getColumnName(i+1));
+                //add columnName                
+                employee.setColumnNames(tableTitles[i]);
+                //add columnType
+                type = Class.forName(rsmd.getColumnClassName(i+1));
+                employee.setColumnTypes(type);                 
+            }     
+                         
+            //?something for table
             fireTableStructureChanged();
             
             //get row-data
@@ -85,17 +97,19 @@ public class EmployeeModel extends AbstractTableModel{
                 //save a list of a row
                 ArrayList row = new ArrayList();
                 for (int i = 0; i < columnCount; i++) {
-                    if (employee.getColumnTypes().get(i) == String.class)
+                    if (employee.getColumnTypes().get(i) == String.class) {
                         row.add(rs.getString(i+1));
-                    else
+                    } else {
                         row.add(rs.getObject(i+1));
+                    }
                 }
-                synchronized (employee.getData()) {
-                    employee.getData().add(row);
+                synchronized (employee.getData()) {                    
+                    employee.setData(row);
                     //info about added row
-                    fireTableRowsInserted(employee.getData().size()-1, employee.getData().size()-1);
+                    fireTableRowsInserted(employee.getData().size()-1, 
+                                          employee.getData().size()-1);
                 }
-            }
+            }            
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).
                              log(Level.SEVERE, 
@@ -103,11 +117,10 @@ public class EmployeeModel extends AbstractTableModel{
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).
                              log(Level.SEVERE, 
-                             "not defina class type of data", ex);
-        }
-        return employee;
+                             "not define class type of data", ex);
+        }        
     }
-           
+               
     //get rows number
     public int getRowCount() {
         synchronized (employee.getData()) {
@@ -132,11 +145,67 @@ public class EmployeeModel extends AbstractTableModel{
             return ((ArrayList)employee.getData().get(row)).get(column);
         }
     }
-    //change cell value
-    public void setValueAt(Object value, int row, int column){
-        synchronized (employee.getData()) {
-            ((ArrayList)employee.getData().get(row)).set(column, value);
+    private void getDataForUpdate() {
+        Iterator<ArrayList> it = willUpdateFields.iterator();
+        while(it.hasNext()){
+            ArrayList now = it.next();
+//            now.get(0));
+//            now.get(1));
+//            now.get(2));
+            
         }
     }
     
+    
+    
+    //change cell value
+    public void setValueAt(Object value, int row, int column){
+        ArrayList willUpdate = new ArrayList();
+        willUpdate.add(row);
+        willUpdate.add(column);
+        willUpdate.add(value);
+        willUpdateFields.add(willUpdate);   
+        getDataForUpdate();
+        System.out.println(willUpdateFields);
+        
+        try {
+            synchronized (employee.getData()) {
+                ((ArrayList)employee.getData().get(row)).set(column, value);
+            }
+            
+            System.out.println("ROW " + row);
+            System.out.println("COLUMN " + column);
+            
+            // Эта функция
+            // возвращает название поля по его номеру
+            String columnName = getColumnName(column);
+            
+            String query = "UPDATE " + "EMPLOYEE " +
+                    "SET " + originalTableTitles.get(column) + " = " +
+                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
+           
+            // запрос готов, выполним изменения
+            System.out.println(query);
+            PreparedStatement pstmt = DBC.prepareStatement(query);
+            pstmt.executeUpdate();  // выполнить изменение
+            // теперь осталось, изменить значение вектора  rows
+            //setDataSource();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }  
+ 
+    //can edit or not
+    public boolean isCellEditable(int row, int column) {
+		return employee.getCellEditable();
+    }
+    //get a link of Employee class with set data
+    public Employee getEmployeeDataLink() {
+        return employee;	 
+    }
 }
+
+//if (!getColumnClass(column).equals(getValueAt(row, column).getClass())) {
+//            JOptionPane.showMessageDialog(Manager.getEmpPage(),
+//            "Неверный тип данных",
+//            "Ошибка", JOptionPane.WARNING_MESSAGE);

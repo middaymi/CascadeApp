@@ -96,8 +96,8 @@ public class OrganizationModel {
 
     //check some textFields values     
     public void checkTextFields() {
-        //fullName --       
-        //phoneNumber
+        //fullName, phoneNumber, site, eMail, ogrnaccount, legalAddress, 
+        //actualAddress, kpp, inn are not checking 
         if (manager.getOrgPage().getPhoneNumberField().getText().length() > 35) {
             JOptionPane.showMessageDialog(manager.getOrgPage(),
             "Проверьте значение поля 'Контактный номер', "
@@ -106,9 +106,6 @@ public class OrganizationModel {
             manager.getOrgPage().getPhoneNumberField().
                     setText(organization.getPhoneNumber());
         }
-        //site--
-        //eMail--
-        //ogrn
         if (manager.getOrgPage().getOgrnField().getText().length() > 13) {
             JOptionPane.showMessageDialog(manager.getOrgPage(),
             "Проверьте значение поля 'ОГРН', "
@@ -117,7 +114,6 @@ public class OrganizationModel {
             manager.getOrgPage().getOgrnField().
                     setText(organization.getOGRN());
         }
-        //kpp
         if (manager.getOrgPage().getKppField().getText().length() > 9) {
             JOptionPane.showMessageDialog(manager.getOrgPage(),
             "Проверьте значение поля 'КПП', "
@@ -126,7 +122,6 @@ public class OrganizationModel {
             manager.getOrgPage().getKppField().
                     setText(organization.getKPP());
         }
-        //inn
         if (manager.getOrgPage().getInnField().getText().length() > 12) {
             JOptionPane.showMessageDialog(manager.getOrgPage(),
             "Проверьте значение поля 'ИНН', "
@@ -134,10 +129,6 @@ public class OrganizationModel {
             "Ошибка", JOptionPane.WARNING_MESSAGE);
             manager.getOrgPage().getInnField().
                     setText(organization.getINN());
-        }
-        //account--
-        //legalAddress--
-        //actualAddress--    
+        }           
     }
 }
-

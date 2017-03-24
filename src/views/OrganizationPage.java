@@ -57,7 +57,7 @@ public class OrganizationPage extends JPanel {
         changeBtn.setLocation(1984, 1430);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.OrganizationPage.
-                                        ChangeButtonListener());
+                                        OrgChangeButtonListener());
     }
     public void changeTextButton(boolean mode) {
         if (mode == true) {
@@ -92,7 +92,7 @@ public class OrganizationPage extends JPanel {
     }
     //set Labels size, location, font, border
     private void setSizeLocationFontBorderLabel(JLabel lbl, int x) {
-        CommonSettings.settingFont30(lbl);
+        CommonSettings.settingFontBold30(lbl);
         lbl.setSize(320, 100);
         lbl.setLocation(934, 230 + 120 * x);
         CommonSettings.settingGrayBorder(lbl);

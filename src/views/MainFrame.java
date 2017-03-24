@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
                            (new File("images\\5.jpg")));
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).
-                             log(Level.SEVERE, null, ex);
+                             log(Level.SEVERE, "no image", ex);
         }
         imgPnl.setLayout(new BorderLayout());
         imgPnl.setOpaque(true);
