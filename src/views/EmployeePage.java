@@ -73,6 +73,9 @@ public class EmployeePage extends JPanel {
         }
         table.setColumnModel(columnModel);
     }
+    public JTable getTable() {
+        return this.table;
+    }
     
     //SCROLL_PANE***************************************************************
     //scroll pane settings
@@ -94,7 +97,7 @@ public class EmployeePage extends JPanel {
         changeBtn.setLocation(2334, 1440);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.EmployeePage.
-                                        EmpChangeButtonListener());
+                                        EmpChangeBtnListener());
     }    
     private void setDelBtnSettings() {
         delBtn = new JButton("Удалить");        
@@ -103,8 +106,8 @@ public class EmployeePage extends JPanel {
         delBtn.setLocation(2054, 1440);
         delBtn.setVisible(false);
         this.add(delBtn);
-        //delBtn.addActionListener(new controllers.EmployeePage.
-        //                             EmpChangeButtonListener());
+        delBtn.addActionListener(new controllers.EmployeePage.
+                                     DelBtnListener());
     }     
     private void setAddBtnSettings() {
         addBtn = new JButton("Добавить");        
@@ -114,17 +117,17 @@ public class EmployeePage extends JPanel {
         addBtn.setVisible(false);
         this.add(addBtn);
         //delBtn.addActionListener(new controllers.EmployeePage.
-        //                             EmpChangeButtonListener());
+        //                             EmpChangeBtnListener());
     } 
     
     public void setBtnsMode(boolean mode) {
         //text for changeBtn
+        //can change
         if (mode == true) {
             changeBtn.setText("Сохранить");
             delBtn.setVisible(true);
             addBtn.setVisible(true);
-            table.setEnabled(true);
-            //table.setEditingRow(table.getSelectedRow());
+            table.setEnabled(true);            
         }
         else {
             changeBtn.setText("Изменить");

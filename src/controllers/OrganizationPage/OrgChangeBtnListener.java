@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import views.Manager;
 import models.OrganizationModel;
 
-public class OrgChangeButtonListener implements ActionListener{ 
+public class OrgChangeBtnListener implements ActionListener{ 
     Manager manager = Manager.getManagerInstance();
     OrganizationModel organizationModel = OrganizationModel.getOrganizationModelInstance();
     boolean change = false;

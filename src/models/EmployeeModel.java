@@ -14,10 +14,9 @@ import data.Employee;
 import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Iterator;
-import javax.swing.CellEditor;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JOptionPane;
-import javax.swing.event.TableModelEvent;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import views.Manager;
 
 public class EmployeeModel extends AbstractTableModel{
@@ -26,13 +25,12 @@ public class EmployeeModel extends AbstractTableModel{
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
                                    getDBconnection();
     private Employee employee = new Employee();
-    //service array for updateRows
-    private ArrayList updateArray = new ArrayList();
     //service array for original columnNames
     private ArrayList <String> originalTableTitles = new ArrayList();
     //order like in sqlTable; then name, surname are swaped
     private String tableTitles[] = {"ID", "Имя", "Фамилия", "Отчество", 
                                     "Дата рождения", "Опыт", "Образование"};
+    //for save changed tableFields
     private HashSet <ArrayList> willUpdateFields = new HashSet<>();
     
     private EmployeeModel() {
@@ -48,7 +46,7 @@ public class EmployeeModel extends AbstractTableModel{
     
     //select all data from db
     String selectAllFromEmployee = "select * from employee";
-    private ResultSet getEmployeeData() {
+    private ResultSet getDataFromDB() {
         Statement stmt;
         ResultSet rs = null;
         try {
@@ -73,7 +71,7 @@ public class EmployeeModel extends AbstractTableModel{
             employee.getColumnNames().clear();
             employee.getColumnTypes().clear();
             
-            rs = getEmployeeData();
+            rs = getDataFromDB();
             ResultSetMetaData rsmd = rs.getMetaData();
             
             //get info about columns and their types,
@@ -145,54 +143,50 @@ public class EmployeeModel extends AbstractTableModel{
             return ((ArrayList)employee.getData().get(row)).get(column);
         }
     }
-    private void getDataForUpdate() {
+    
+    //update fields in DB
+    public void updateData() {
         Iterator<ArrayList> it = willUpdateFields.iterator();
         while(it.hasNext()){
-            ArrayList now = it.next();
-//            now.get(0));
-//            now.get(1));
-//            now.get(2));
-            
+            try {
+                ArrayList now = it.next();
+                int row = (int)now.get(0);
+                int column = (int)now.get(1);
+                Object value = now.get(2);
+                
+                //create updateQuery 
+                String query = "UPDATE " + "EMPLOYEE " +
+                        "SET " + originalTableTitles.get(column) + " = " +
+                        "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
+                                
+                System.out.println(query);
+                //update
+                PreparedStatement pstmt = DBC.prepareStatement(query);
+                pstmt.executeUpdate();  
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeModel.class.getName()).
+                             log(Level.SEVERE, "Something wrong with SQLquery,"
+                                             + "no update", ex);
+            }            
         }
-    }
-    
-    
+    }  
     
     //change cell value
     public void setValueAt(Object value, int row, int column){
+        //save changes
         ArrayList willUpdate = new ArrayList();
         willUpdate.add(row);
         willUpdate.add(column);
         willUpdate.add(value);
-        willUpdateFields.add(willUpdate);   
-        getDataForUpdate();
-        System.out.println(willUpdateFields);
-        
-        try {
-            synchronized (employee.getData()) {
-                ((ArrayList)employee.getData().get(row)).set(column, value);
-            }
-            
-            System.out.println("ROW " + row);
-            System.out.println("COLUMN " + column);
-            
-            // Эта функция
-            // возвращает название поля по его номеру
-            String columnName = getColumnName(column);
-            
-            String query = "UPDATE " + "EMPLOYEE " +
-                    "SET " + originalTableTitles.get(column) + " = " +
-                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
-           
-            // запрос готов, выполним изменения
-            System.out.println(query);
-            PreparedStatement pstmt = DBC.prepareStatement(query);
-            pstmt.executeUpdate();  // выполнить изменение
-            // теперь осталось, изменить значение вектора  rows
-            //setDataSource();
-        } catch (SQLException ex) {
-            Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, null, ex);
+        willUpdateFields.add(willUpdate); 
+        //setValue
+        synchronized (employee.getData()) {
+            ((ArrayList)employee.getData().get(row)).set(column, value);
         }
+        //was changed
+        System.out.println("ROW " + row);
+        System.out.println("COLUMN " + column);   
    }  
  
     //can edit or not
@@ -202,6 +196,14 @@ public class EmployeeModel extends AbstractTableModel{
     //get a link of Employee class with set data
     public Employee getEmployeeDataLink() {
         return employee;	 
+    }
+    public void delSelectedRow() {
+       JTable empTable = Manager.getEmpPage().getTable();
+       int sel = empTable.getSelectedRow(); // или номер строки
+       System.out.println("sel " + sel);
+       //DefaultTableModel model = (DefaultTableModel)empTable.getModel();
+       //model.removeRow(sel);
+       //empTable.setModel(model);             
     }
 }
 

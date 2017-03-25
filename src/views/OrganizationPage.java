@@ -57,7 +57,7 @@ public class OrganizationPage extends JPanel {
         changeBtn.setLocation(1984, 1430);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.OrganizationPage.
-                                        OrgChangeButtonListener());
+                                        OrgChangeBtnListener());
     }
     public void changeTextButton(boolean mode) {
         if (mode == true) {
