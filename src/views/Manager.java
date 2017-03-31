@@ -22,6 +22,8 @@ public class Manager {
     private static StartPage stPage = null;
     private static OrganizationPage orgPage = null;
     private static EmployeePage empPage = null;
+    private static AthletePage athPage = null;
+    private static PerformancePage perPage = null;
     private static CommonButtonsPanel comBtnPanel = null;
     
     private static int width;
@@ -89,11 +91,25 @@ public class Manager {
         getmFrame().getContentPane().add(getEmpPage(), BorderLayout.CENTER);
     }
     
+    //ATHLETE_PAGE**************************************************************
+    private static void createAthletePage() {
+        athPage = new AthletePage();
+        getmFrame().getContentPane().add(getAthPage(), BorderLayout.CENTER);
+    }
+    
+    //PERFORMANCE_PAGE**********************************************************
+    private static void createPerformancePage() {
+        perPage = new PerformancePage();
+        getmFrame().getContentPane().add(getPerPage(), BorderLayout.CENTER);
+    }    
+    
     //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
     private static void hideAllPanels() {
         if (getStPage() != null) getStPage().setVisible(false);
         if (getOrgPage() != null) getOrgPage().setVisible(false);
         if (getEmpPage() != null) getEmpPage().setVisible(false);
+        if (getAthPage() != null) getAthPage().setVisible(false);
+        if (getPerPage() != null) getPerPage().setVisible(false);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -114,6 +130,16 @@ public class Manager {
                 getEmpPage().setVisible(true); 
                 getComBtnPanel().useBtns(20);
                 break;
+            case(30):
+                if (getAthPage() == null) createAthletePage();
+                getAthPage().setVisible(true);
+                getComBtnPanel().useBtns(20);
+                break;
+            case(40):
+                if (getPerPage() == null) createPerformancePage();
+                getPerPage().setVisible(true);
+                getComBtnPanel().useBtns(20);
+                break;
         }
     } 
 
@@ -129,6 +155,12 @@ public class Manager {
     }
     public static EmployeePage getEmpPage() {
         return empPage;
+    }
+    public static AthletePage getAthPage() {
+        return athPage;
+    }
+    public static PerformancePage getPerPage() {
+        return perPage;
     }
     public static CommonButtonsPanel getComBtnPanel() {
         return comBtnPanel;

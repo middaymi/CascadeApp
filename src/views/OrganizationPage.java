@@ -55,6 +55,7 @@ public class OrganizationPage extends JPanel {
         changeBtn.setBackground(Color.LIGHT_GRAY);
         changeBtn.setSize(250, 100);
         changeBtn.setLocation(1984, 1430);
+        CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.OrganizationPage.
                                         OrgChangeBtnListener());

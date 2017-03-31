@@ -2,7 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class Employee {   
+public class Performance {   
     //list of columns names
     private ArrayList columnNames = new ArrayList();    
     //list of columns type 
@@ -43,3 +43,4 @@ public class Employee {
         }
     }
 }
+

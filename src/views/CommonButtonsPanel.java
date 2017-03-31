@@ -21,26 +21,30 @@ public class CommonButtonsPanel extends JPanel {
   
     //setting button
     private void createSettingBtn () {
-        settingBtn = new JButton("Настройки");
+        settingBtn = new JButton("*");
         settingBtn.setSize(100, 100);
         settingBtn.setLocation(3018, 1507);
         settingBtn.setBackground(Color.LIGHT_GRAY);
+        CommonSettings.settingFont30(settingBtn);
         this.add(settingBtn);
     }
     //a button for jump to mainFrame 
     private void createToMainFrameBtn () {
-        toMainFrameBtn = new JButton("На главную");
+        toMainFrameBtn = new JButton("Главная");
         toMainFrameBtn.setSize(200, 70);
         toMainFrameBtn.setLocation(1484, 30);
         toMainFrameBtn.setBackground(Color.LIGHT_GRAY);
+        CommonSettings.settingFont30(toMainFrameBtn);
         this.add(toMainFrameBtn);
-        toMainFrameBtn.addActionListener(new controllers.CommonButtons.JumpToMainFrameBtnListener());
+        toMainFrameBtn.addActionListener(new controllers.CommonButtons.
+                                             JumpToMainFrameBtnListener());
     }  
     private void createBackBtn() {
         backBtn = new JButton("Назад");
         backBtn.setSize(100, 70);
         backBtn.setLocation(50, 30);
         backBtn.setBackground(Color.LIGHT_GRAY);
+        CommonSettings.settingFont30(backBtn);
         this.add(backBtn);
     }
     private void createNextBtn() {
@@ -48,6 +52,7 @@ public class CommonButtonsPanel extends JPanel {
         nextBtn.setSize(100, 70);
         nextBtn.setLocation(3018, 30);
         nextBtn.setBackground(Color.LIGHT_GRAY);
+        CommonSettings.settingFont30(nextBtn);
         this.add(nextBtn);
     }            
             

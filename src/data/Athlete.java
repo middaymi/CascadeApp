@@ -2,7 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class Employee {   
+public class Athlete {
     //list of columns names
     private ArrayList columnNames = new ArrayList();    
     //list of columns type 
@@ -34,7 +34,7 @@ public class Employee {
     public void setData(ArrayList data) {
         this.data.add(data);
     }
-    public void setEditable(boolean editable) {
+    public void setCellEditable(boolean editable) {
         this.editable = editable;
     }     
     public void printArray (ArrayList ar) {

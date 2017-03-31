@@ -66,7 +66,7 @@ public class OrganizationModel {
         }
         return organization;
     }
-    
+  
     //update organization data
     String updateOrganization = 
             "update organization set FullName = ?, PhoneNumber = ?, Site = ?, "

@@ -6,7 +6,6 @@ import views.Manager;
 
 public class EmployeeBtnListener implements ActionListener{        
     public void actionPerformed(ActionEvent e) { 
-        Manager.getManagerInstance().choosePanel(20);
-        
+        Manager.getManagerInstance().choosePanel(20);       
     }
 }

@@ -1,14 +1,6 @@
-/************************************
-WARNING! CHANGE HANDLEWRITTEN SIZE
-         NUMBERS
-
-* setTableColumnsSettings() move to 
-employeeModel?
-************************************/
-
 package views;
 
-import data.Employee;
+import data.Performance;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,29 +8,29 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
-import models.Employee.EmployeeColumnModel;
-import models.Employee.EmployeeModel;
+import models.Performance.PerformanceColumnModel;
+import models.Performance.PerformanceModel;
 
-public class EmployeePage extends JPanel {
+public class PerformancePage extends JPanel {
     
-    private Employee empData;
-    private EmployeeModel empModel;
+    private Performance perData;
+    private PerformanceModel perModel;
     private JScrollPane scrlPane;
     private JTable table;
-    private EmployeeColumnModel ecm;
+    private PerformanceColumnModel pcm;
     private JButton changeBtn;
     private JButton delBtn;
     private JButton addBtn;
        
-    public EmployeePage() { 
+    public PerformancePage() { 
         CommonSettings.panelSettings(this); 
-        empModel = EmployeeModel.getEmployeeModelInstance(); 
-        empData = empModel.getEmployeeDataLink();
+        perModel = PerformanceModel.getPerformanceModelInstance();
+        perData = perModel.getEmployeeDataLink();
         setTableSettings();       
         setScrlPaneSettings();             
-        empModel.setDataSource(); //display the result
-        ecm = new EmployeeColumnModel(table);
-        ecm.setTableColumnsSettings();
+        perModel.setDataSource(); //display the result
+        pcm = new PerformanceColumnModel(table);
+        pcm.setTableColumnsSettings();
         setChangeBtnSettings();
         setDelBtnSettings();
         setAddBtnSettings();        
@@ -47,7 +39,7 @@ public class EmployeePage extends JPanel {
     //TABLE*********************************************************************
     //table settings
     private void setTableSettings() {
-        table = new JTable(empModel);
+        table = new JTable(perModel);
         table.setVisible(true);
         table.setOpaque(true);
         table.setRowHeight(50);
@@ -55,7 +47,7 @@ public class EmployeePage extends JPanel {
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
-        table.setRowSorter(new TableRowSorter(empModel));
+        table.setRowSorter(new TableRowSorter(perModel));
     } 
     public JTable getTable() {
         return this.table;
@@ -72,9 +64,6 @@ public class EmployeePage extends JPanel {
         scrlPane.setLocation(584, 230);
         this.add(scrlPane);
     } 
-    public int getScrollPaneWidth() {
-        return scrlPane.getWidth();
-    }
     
     //BUTTONS*******************************************************************
     private void setChangeBtnSettings() {
@@ -84,8 +73,7 @@ public class EmployeePage extends JPanel {
         changeBtn.setLocation(2334, 1440);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
-        changeBtn.addActionListener(new controllers.EmployeePage.
-                                        EmpChangeBtnListener());
+        changeBtn.addActionListener(new controllers.Performance.ChangeBtnListener());
     }    
     private void setDelBtnSettings() {
         delBtn = new JButton("Удалить");        
@@ -95,8 +83,7 @@ public class EmployeePage extends JPanel {
         delBtn.setVisible(false);
         CommonSettings.settingFont30(delBtn);
         this.add(delBtn);
-        delBtn.addActionListener(new controllers.EmployeePage.
-                                     DelBtnListener());
+        delBtn.addActionListener(new controllers.Performance.DelBtnListener());
     }     
     private void setAddBtnSettings() {
         addBtn = new JButton("Добавить");        

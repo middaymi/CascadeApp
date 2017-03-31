@@ -1,14 +1,8 @@
-/************************************
-WARNING! CHANGE HANDLEWRITTEN SIZE
-         NUMBERS
-
-* setTableColumnsSettings() move to 
-employeeModel?
-************************************/
-
 package views;
 
-import data.Employee;
+import models.Athlete.AthleteColumnModel;
+import models.Athlete.AthleteModel;
+import data.Athlete;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,47 +10,47 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
-import models.Employee.EmployeeColumnModel;
-import models.Employee.EmployeeModel;
 
-public class EmployeePage extends JPanel {
+public class AthletePage extends JPanel {
     
-    private Employee empData;
-    private EmployeeModel empModel;
+    private Athlete athData;
+    private models.Athlete.AthleteModel athModel;
     private JScrollPane scrlPane;
     private JTable table;
-    private EmployeeColumnModel ecm;
     private JButton changeBtn;
     private JButton delBtn;
     private JButton addBtn;
+    private AthleteColumnModel acm;
        
-    public EmployeePage() { 
+    public AthletePage() { 
         CommonSettings.panelSettings(this); 
-        empModel = EmployeeModel.getEmployeeModelInstance(); 
-        empData = empModel.getEmployeeDataLink();
+        athModel = AthleteModel.getAthleteModelInstance(); 
+        athData = athModel.getAthleteDataLink();
         setTableSettings();       
-        setScrlPaneSettings();             
-        empModel.setDataSource(); //display the result
-        ecm = new EmployeeColumnModel(table);
-        ecm.setTableColumnsSettings();
+        setScrlPaneSettings();
+        //display the result
+        athModel.setDataSource(); 
+        //set columnModel for table
+        acm = new AthleteColumnModel(table); 
+        acm.setTableColumnsSettings();
         setChangeBtnSettings();
         setDelBtnSettings();
-        setAddBtnSettings();        
+        setAddBtnSettings(); 
+        //set a sort
+        table.setRowSorter(new TableRowSorter(athModel));
     }
-    
     //TABLE*********************************************************************
     //table settings
     private void setTableSettings() {
-        table = new JTable(empModel);
+        table = new JTable(athModel);
         table.setVisible(true);
         table.setOpaque(true);
         table.setRowHeight(50);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
-        table.setRowSorter(new TableRowSorter(empModel));
-    } 
+    }    
     public JTable getTable() {
         return this.table;
     }
@@ -68,46 +62,42 @@ public class EmployeePage extends JPanel {
         scrlPane.setVisible(true);
         scrlPane.setOpaque(false);
         scrlPane.setViewportBorder(BorderFactory.createLineBorder(Color.YELLOW));
-        scrlPane.setSize(2000, 1180);
-        scrlPane.setLocation(584, 230);
+        scrlPane.setSize(3000, 1180);
+        scrlPane.setLocation(84, 230);
         this.add(scrlPane);
-    } 
-    public int getScrollPaneWidth() {
-        return scrlPane.getWidth();
-    }
+    }  
     
     //BUTTONS*******************************************************************
     private void setChangeBtnSettings() {
         changeBtn = new JButton("Изменить");        
         changeBtn.setBackground(Color.LIGHT_GRAY);
         changeBtn.setSize(250, 100);
-        changeBtn.setLocation(2334, 1440);
+        changeBtn.setLocation(2834, 1440);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
-        changeBtn.addActionListener(new controllers.EmployeePage.
-                                        EmpChangeBtnListener());
+        changeBtn.addActionListener(new controllers.AthletePage.
+                                        AthChangeBtnListener());                                        
     }    
     private void setDelBtnSettings() {
         delBtn = new JButton("Удалить");        
         delBtn.setBackground(Color.LIGHT_GRAY);
         delBtn.setSize(250, 100);
-        delBtn.setLocation(2054, 1440);
+        delBtn.setLocation(2554, 1440);
         delBtn.setVisible(false);
         CommonSettings.settingFont30(delBtn);
         this.add(delBtn);
-        delBtn.addActionListener(new controllers.EmployeePage.
+        delBtn.addActionListener(new controllers.AthletePage.
                                      DelBtnListener());
     }     
     private void setAddBtnSettings() {
         addBtn = new JButton("Добавить");        
         addBtn.setBackground(Color.LIGHT_GRAY);
         addBtn.setSize(250, 100);
-        addBtn.setLocation(1774, 1440);
+        addBtn.setLocation(2274, 1440);
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        //delBtn.addActionListener(new controllers.EmployeePage.
-        //                             EmpChangeBtnListener());
+        //delBtn.addActionListener();
     } 
     
     public void setBtnsMode(boolean mode) {

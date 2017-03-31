@@ -11,7 +11,7 @@ public class DataBaseConnection {
     
     private static DataBaseConnection DataBaseInstance = null;
     private String dbURL = "jdbc:sqlserver://localhost;instanceName=MSSQLSERVER;"
-                         + "databaseName=TestDB;integratedSecurity=true;";
+                         + "databaseName=DB;integratedSecurity=true;";
     private Connection DBconnection;
     
     private DataBaseConnection() { 
