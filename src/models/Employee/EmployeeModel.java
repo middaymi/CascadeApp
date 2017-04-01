@@ -232,6 +232,33 @@ public class EmployeeModel extends AbstractTableModel{
         this.employee.getData().remove(sel);
         fireTableRowsDeleted(sel, sel);
     }
+    
+    public void addRow() {
+        employee.getData().add("");
+        int size = employee.getData().size();
+        fireTableRowsInserted(size, size);
+    }
+//    public void addCustomer(Customer customer) {
+//        int rowIndex = this.customers.size();
+//        this.customers.add(customer);
+//        fireTableRowsInserted(rowIndex, rowIndex);
+//    }
+//
+//    public void addCustomers(List<Customer> customerList) {
+//        if (!customerList.isEmpty()) {
+//            int firstRow = this.customers.size();
+//            this.customers.addAll(customerList);
+//            int lastRow = this.customers.size() - 1;
+//            fireTableRowsInserted(firstRow, lastRow);
+//        }
+//    }
+//
+//    public void insertCustomer(int rowIndex) {
+//        ArrayList willAdd = new ArrayList();
+//        rowIndex = getRowCount() + 1;
+//        this.employee.getData().add(rowIndex, customer);
+//        fireTableRowsInserted(rowIndex, rowIndex);
+//    }
 }
 
 //if (!getColumnClass(column).equals(getValueAt(row, column).getClass())) {

@@ -10,14 +10,17 @@ package views;
 
 import data.Employee;
 import java.awt.Color;
+import java.awt.Graphics;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 import models.Employee.EmployeeColumnModel;
 import models.Employee.EmployeeModel;
+import sun.util.calendar.LocalGregorianCalendar.Date;
 
 public class EmployeePage extends JPanel {
     
@@ -64,16 +67,20 @@ public class EmployeePage extends JPanel {
     //SCROLL_PANE***************************************************************
     //scroll pane settings
     private void setScrlPaneSettings() {
-        scrlPane = new JScrollPane(table);        
+        scrlPane = new JScrollPane(table); 
         scrlPane.setVisible(true);
+        //border
+//        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+//        scrlPane.setBorder(border);
+//        scrlPane.setViewportBorder(border); 
+        //
+        //opaque
         scrlPane.setOpaque(false);
-        scrlPane.setViewportBorder(BorderFactory.createLineBorder(Color.YELLOW));
+        scrlPane.getViewport().setOpaque(false); 
+                
         scrlPane.setSize(2000, 1180);
-        scrlPane.setLocation(584, 230);
+        scrlPane.setLocation(584, 230);                
         this.add(scrlPane);
-    } 
-    public int getScrollPaneWidth() {
-        return scrlPane.getWidth();
     }
     
     //BUTTONS*******************************************************************
@@ -106,8 +113,7 @@ public class EmployeePage extends JPanel {
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        //delBtn.addActionListener(new controllers.EmployeePage.
-        //                             EmpChangeBtnListener());
+        addBtn.addActionListener(new controllers.EmployeePage.AddBtnListener());
     } 
     
     public void setBtnsMode(boolean mode) {

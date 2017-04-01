@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 import models.Performance.PerformanceColumnModel;
 import models.Performance.PerformanceModel;
@@ -58,8 +59,14 @@ public class PerformancePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
+        //border
+        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+        scrlPane.setBorder(border);
+        scrlPane.setViewportBorder(border); 
+        //opaque
         scrlPane.setOpaque(false);
-        scrlPane.setViewportBorder(BorderFactory.createLineBorder(Color.YELLOW));
+        scrlPane.getViewport().setOpaque(false); 
+        
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);
         this.add(scrlPane);

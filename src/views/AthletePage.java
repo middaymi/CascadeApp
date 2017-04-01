@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 
 public class AthletePage extends JPanel {
@@ -60,9 +61,15 @@ public class AthletePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
+        //border
+        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+        scrlPane.setBorder(border);
+        scrlPane.setViewportBorder(border); 
+        //opaque
         scrlPane.setOpaque(false);
-        scrlPane.setViewportBorder(BorderFactory.createLineBorder(Color.YELLOW));
-        scrlPane.setSize(3000, 1180);
+        scrlPane.getViewport().setOpaque(false); 
+                
+        scrlPane.setSize(3000, 1190);
         scrlPane.setLocation(84, 230);
         this.add(scrlPane);
     }  
