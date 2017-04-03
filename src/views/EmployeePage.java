@@ -8,23 +8,19 @@ employeeModel?
 
 package views;
 
-import data.Employee;
 import java.awt.Color;
-import java.awt.Graphics;
-import javax.swing.BorderFactory;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 import models.Employee.EmployeeColumnModel;
 import models.Employee.EmployeeModel;
-import sun.util.calendar.LocalGregorianCalendar.Date;
 
 public class EmployeePage extends JPanel {
     
-    private Employee empData;
+    private ArrayList empData;
     private EmployeeModel empModel;
     private JScrollPane scrlPane;
     private JTable table;
@@ -69,11 +65,7 @@ public class EmployeePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table); 
         scrlPane.setVisible(true);
-        //border
-//        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-//        scrlPane.setBorder(border);
-//        scrlPane.setViewportBorder(border); 
-        //
+        
         //opaque
         scrlPane.setOpaque(false);
         scrlPane.getViewport().setOpaque(false); 
@@ -120,7 +112,7 @@ public class EmployeePage extends JPanel {
         //text for changeBtn
         //can change
         if (mode == true) {
-            changeBtn.setText("Сохранить");
+            changeBtn.setText("Выйти");
             delBtn.setVisible(true);
             addBtn.setVisible(true);
             table.setEnabled(true);            

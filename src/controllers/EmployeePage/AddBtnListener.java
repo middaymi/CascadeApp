@@ -7,10 +7,11 @@ import views.Manager;
 
 public class AddBtnListener implements ActionListener { 
     private Manager manager = Manager.getManagerInstance();
-    private EmployeeModel employeeModel = EmployeeModel.getEmployeeModelInstance();          
+    private EmployeeModel employeeModel = EmployeeModel.
+                                          getEmployeeModelInstance();          
     public void actionPerformed(ActionEvent e) {                
         if (manager.getEmpPage() != null) {
-                employeeModel.addRow();
+            employeeModel.addEmployee();
         } 
     }
 }

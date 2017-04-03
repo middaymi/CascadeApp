@@ -121,7 +121,8 @@ public class AthleteModel extends AbstractTableModel {
             Logger.getLogger(EmployeeModel.class.getName()).
                              log(Level.SEVERE, 
                              "not define class type of data", ex);
-        }        
+        }          
+         System.out.println("OTT: " + originalTableTitles);
     }
                
     //get rows number
@@ -144,7 +145,7 @@ public class AthleteModel extends AbstractTableModel {
     }
     //get cell value
     public Object getValueAt(int row, int column) {
-        synchronized (athlete.getData()) {
+        synchronized (athlete.getData()) {            
             return ((ArrayList)athlete.getData().get(row)).get(column);
         }
     }
@@ -196,7 +197,7 @@ public class AthleteModel extends AbstractTableModel {
  
     //can edit or not
     public boolean isCellEditable(int row, int column) {
-		return athlete.getCellEditable();
+        return athlete.getCellEditable();
     }
     
     //get a link of Employee class with set data

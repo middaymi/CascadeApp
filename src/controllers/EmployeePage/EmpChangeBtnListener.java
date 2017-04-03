@@ -13,9 +13,9 @@ public class EmpChangeBtnListener implements ActionListener{
     public void actionPerformed(ActionEvent e) {        
         if (manager.getEmpPage() != null) {
             if (change == true) {
-                manager.getEmpPage().setBtnsMode(false);
-                employeeModel.updateData();
+                manager.getEmpPage().setBtnsMode(false);                
                 change = false;
+                employeeModel.delEmptyRows();
             } else {
             manager.getEmpPage().setBtnsMode(true);
             change = true;

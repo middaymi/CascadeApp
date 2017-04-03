@@ -1,45 +1,63 @@
 package data;
 
-import java.util.ArrayList;
+import java.sql.Date;
 
-public class Employee {   
-    //list of columns names
-    private ArrayList columnNames = new ArrayList();    
-    //list of columns type 
-    private ArrayList columnTypes = new ArrayList();    
-    //data from DB
-    private ArrayList data = new ArrayList();       
-    //edit or not rhe table
-    private boolean editable;   
-   
-    public ArrayList getColumnNames() {
-        return columnNames;
+//storage data class
+public class Employee { 
+    private int id;
+    private String name;
+    private String surname;
+    private String middlename;
+    private java.sql.Date birthday;
+    private int experience;
+    private String education;
+    
+    //edit or not the table
+    private boolean editable;
+    
+    public int getId() {
+        return id;
     }
-    public ArrayList getColumnTypes() {
-        return columnTypes;
+    public String getName() {
+        return name;
     }
-    public ArrayList getData() {
-        return data;
+    public String getSurname() {
+        return surname;
     }
-    public boolean getCellEditable() {
-        return editable;
+    public String getMiddlename() {
+        return middlename;
+    }
+    public java.sql.Date getBirthday() {
+        return birthday;
+    }
+    public int getExperience() {
+        return experience;
+    }
+    public String getEducation() {
+        return education;
     }
 
-    public void setColumnNames(String str) {
-        this.columnNames.add(str);
+    public void setId(int id) {
+        this.id = id;
     }
-    public void setColumnTypes(Class cls) {
-        this.columnTypes.add(cls);
+    public void setName(String name) {
+        this.name = name;
     }
-    public void setData(ArrayList data) {
-        this.data.add(data);
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }     
-    public void printArray (ArrayList ar) {
-        for (int i = 0; i < ar.size(); i++) {
-            System.out.println(ar.get(i));
-        }
+    public void setMiddlename(String middlename) {
+        this.middlename = middlename;
+    }
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+    public void setEducation(String education) {
+        this.education = education;
     }
 }
+
+
