@@ -4,12 +4,10 @@ import models.Athlete.AthleteColumnModel;
 import models.Athlete.AthleteModel;
 import data.Athlete;
 import java.awt.Color;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 
 public class AthletePage extends JPanel {
@@ -61,13 +59,9 @@ public class AthletePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
-        //border
-        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        scrlPane.setBorder(border);
-        scrlPane.setViewportBorder(border); 
-        //opaque
-        scrlPane.setOpaque(false);
-        scrlPane.getViewport().setOpaque(false); 
+        //color
+        scrlPane.setBackground(new Color(80, 80, 80, 30));
+        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
                 
         scrlPane.setSize(3000, 1190);
         scrlPane.setLocation(84, 230);
@@ -111,7 +105,7 @@ public class AthletePage extends JPanel {
         //text for changeBtn
         //can change
         if (mode == true) {
-            changeBtn.setText("Сохранить");
+            changeBtn.setText("Выйти");
             delBtn.setVisible(true);
             addBtn.setVisible(true);
             table.setEnabled(true);            

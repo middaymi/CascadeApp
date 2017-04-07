@@ -9,6 +9,8 @@ employeeModel?
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.sql.Date;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -17,6 +19,8 @@ import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
 import models.Employee.EmployeeColumnModel;
 import models.Employee.EmployeeModel;
+import models.Employee.DateCellEditor;
+import models.MultiLineCell;
 
 public class EmployeePage extends JPanel {
     
@@ -48,13 +52,16 @@ public class EmployeePage extends JPanel {
     private void setTableSettings() {
         table = new JTable(empModel);
         table.setVisible(true);
-        table.setOpaque(true);
-        table.setRowHeight(50);
+        table.setOpaque(true);        
+        table.setRowHeight(180);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
         table.setRowSorter(new TableRowSorter(empModel));
+        table.setDefaultEditor(java.sql.Date.class, new DateCellEditor());
+        table.setDefaultRenderer(String.class, new MultiLineCell());
+        table.setRowSelectionAllowed(true);        
     } 
     public JTable getTable() {
         return this.table;
@@ -66,9 +73,8 @@ public class EmployeePage extends JPanel {
         scrlPane = new JScrollPane(table); 
         scrlPane.setVisible(true);
         
-        //opaque
-        scrlPane.setOpaque(false);
-        scrlPane.getViewport().setOpaque(false); 
+        scrlPane.setBackground(new Color(80, 80, 80, 30));
+        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
                 
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);                

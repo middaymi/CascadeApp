@@ -3,7 +3,6 @@ package views;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 public class CommonSettings {

@@ -1,5 +1,7 @@
 package views;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -12,6 +14,8 @@ public class StartPage extends JPanel{
     private JButton performanceBtn;
     private JButton competitionBtn;
     private JButton testingBtn;
+    
+    private Color myGray = new Color(80, 80, 80, 30);
     
     public StartPage() {  
         CommonSettings.panelSettings(this);
@@ -58,12 +62,14 @@ public class StartPage extends JPanel{
         CommonSettings.settingFont50(btn);
         CommonSettings.settingLightGrayBorder(btn);
         //btn's painting
-        //btn.setBorderPainted(false);
+        //btn.setBorderPainted(true);
+        //btn.setBackground(Color.lightGray);
+        //btn.setBackground(myGray);
         btn.setFocusPainted(false);
         btn.setContentAreaFilled(false);
         
         //pressed and rollover btn's icon
-        //btn.setPressedIcon(setSizesBottomPanel(imgPr, iconPr));
+        //btn.setPressedIcon();
         //btn.setRolloverIcon(setSizesBottomPanel(imgPr, iconPr)); 
         
         if (x == 1) {
@@ -98,5 +104,11 @@ public class StartPage extends JPanel{
                         break;
             }
         }
+    }    
+    @Override
+    public void paintComponent(Graphics g) {
+        g.setColor(myGray);
+        g.fillRect(0, 0, getSize().width, getSize().height);
+        super.paintComponent(g);
     }
 }

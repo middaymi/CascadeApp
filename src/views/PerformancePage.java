@@ -59,13 +59,9 @@ public class PerformancePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
-        //border
-        Border border = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-        scrlPane.setBorder(border);
-        scrlPane.setViewportBorder(border); 
-        //opaque
-        scrlPane.setOpaque(false);
-        scrlPane.getViewport().setOpaque(false); 
+        //color
+        scrlPane.setBackground(new Color(80, 80, 80, 30));
+        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
         
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);

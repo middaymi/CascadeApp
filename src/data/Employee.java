@@ -11,9 +11,7 @@ public class Employee {
     private java.sql.Date birthday;
     private int experience;
     private String education;
-    
-    //edit or not the table
-    private boolean editable;
+    private String post;
     
     public int getId() {
         return id;
@@ -35,6 +33,9 @@ public class Employee {
     }
     public String getEducation() {
         return education;
+    }    
+    public String getPost() {
+        return post;
     }
 
     public void setId(int id) {
@@ -57,6 +58,9 @@ public class Employee {
     }
     public void setEducation(String education) {
         this.education = education;
+    }
+    public void setPost(String post) {
+        this.post = post;
     }
 }
 

@@ -1,8 +1,5 @@
 package models.Employee;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import dataBase.DataBaseConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -36,7 +33,7 @@ public class EmployeeModel extends AbstractTableModel{
     private ArrayList <String> enColumnNames = new ArrayList();    
     //table headers
     private String titles[] = {"ID", "Имя", "Фамилия", "Отчество", "ДР", 
-                               "Опыт", "Образование"};     
+                               "Опыт", "Образование", "Должность"};     
     //order like in sqlTable; then name, surname are swaped 
     private ArrayList <String> columnNames = new ArrayList();    
     //list of columns type 
@@ -138,6 +135,9 @@ public class EmployeeModel extends AbstractTableModel{
                         case ("Education"):
                             rowEmployee.setEducation(rs.getString(i + 1));
                             break;
+                        case ("Post"):
+                            rowEmployee.setPost(rs.getString(i + 1));
+                            break;
                     }                 
                 }
                 synchronized (getData()) {                    
@@ -187,6 +187,9 @@ public class EmployeeModel extends AbstractTableModel{
             case ("Education"):                        
                 returnField = empLink.getEducation();
                 break;
+            case ("Post"):
+                returnField = empLink.getPost();
+                break;
         }                   
         return returnField;        
     }  
@@ -217,7 +220,10 @@ public class EmployeeModel extends AbstractTableModel{
             case ("Education"):
                 setClass.setEducation(((String)value).trim());                        
                 break;
-        }                 
+            case ("Post"):
+                setClass.setPost(((String)value).trim());
+                break;
+        }             
         updateData(row, column, value);      
    }  
        
@@ -286,6 +292,7 @@ public class EmployeeModel extends AbstractTableModel{
         //newRow.setBirthday();
         newRow.setExperience(0);
         newRow.setEducation("");
+        newRow.setPost("");
         setData(newRow);        
         //change table view
         fireTableRowsInserted(rowIndex, rowIndex);
@@ -297,7 +304,7 @@ public class EmployeeModel extends AbstractTableModel{
         try {
             //add empty row
             String query = "INSERT INTO EMPLOYEE "
-                         + "VALUES ('', '', '', NULL, 0, '')";
+                         + "VALUES ('', '', '', null, 0, '', '')";
             System.out.println(query);
             PreparedStatement pstmt = DBC.prepareStatement(query);
             pstmt.execute();
