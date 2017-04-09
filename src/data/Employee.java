@@ -8,7 +8,7 @@ public class Employee {
     private String name;
     private String surname;
     private String middlename;
-    private java.sql.Date birthday;
+    private Date birthday;
     private int experience;
     private String education;
     private String post;
@@ -25,7 +25,7 @@ public class Employee {
     public String getMiddlename() {
         return middlename;
     }
-    public java.sql.Date getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
     public int getExperience() {

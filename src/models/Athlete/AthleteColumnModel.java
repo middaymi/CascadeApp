@@ -40,7 +40,7 @@ public class AthleteColumnModel {
                     {column.setPreferredWidth(120);
                     render.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
                     table.getColumn("Разряд").setCellRenderer(render);}            
-            else if (column.getHeaderValue() == "Представители")
+            else if (column.getHeaderValue() == "Представитель")
                     {column.setPreferredWidth(500);}            
             else if (column.getHeaderValue() == "Телефон")
                     {column.setPreferredWidth(240);}            

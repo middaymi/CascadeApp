@@ -1,6 +1,7 @@
 package models;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -37,6 +38,9 @@ public class MultiLineCell extends JTextArea implements TableCellRenderer {
       setBorder(new EmptyBorder(1, 2, 1, 2));
     }
     setText((value == null) ? "" : value.toString());
-    return new JScrollPane(this);            
+    
+    JScrollPane scrlpane = new JScrollPane(this);
+    scrlpane.getVerticalScrollBar().setPreferredSize (new Dimension(0,0));
+    return scrlpane;            
   }
 }

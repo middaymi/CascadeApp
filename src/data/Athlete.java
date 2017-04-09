@@ -1,45 +1,103 @@
 package data;
 
-import java.util.ArrayList;
+import java.util.Date;
 
-public class Athlete {
-    //list of columns names
-    private ArrayList columnNames = new ArrayList();    
-    //list of columns type 
-    private ArrayList columnTypes = new ArrayList();    
-    //data from DB
-    private ArrayList data = new ArrayList();       
-    //edit or not rhe table
-    private boolean editable;   
-   
-    public ArrayList getColumnNames() {
-        return columnNames;
+//storage data class
+public class Athlete { 
+    private int id;
+    private String surname;
+    private String name;
+    private String middlename;
+    private Date birthday;
+    private int idrank;
+    private String assigneeFullName;
+    private String phoneNumber;
+    private String actualAddress;
+    private String mainDocumentCopy;
+    private String  medicalCertificate;
+    private String insurance;
+    private boolean sex;
+
+    public int getId() {
+        return id;
     }
-    public ArrayList getColumnTypes() {
-        return columnTypes;
+    public String getSurname() {
+        return surname;
     }
-    public ArrayList getData() {
-        return data;
+    public String getName() {
+        return name;
     }
-    public boolean getCellEditable() {
-        return editable;
+    public String getMiddlename() {
+        return middlename;
+    }
+    public Date getBirthday() {
+        return birthday;
+    }
+    public int getIdrank() {
+        return idrank;
+    }
+    public String getAssigneeFullName() {
+        return assigneeFullName;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public String getActualAddress() {
+        return actualAddress;
+    }
+    public String getMainDocumentCopy() {
+        return mainDocumentCopy;
+    }
+    public String getMedicalCertificate() {
+        return medicalCertificate;
+    }
+    public String getInsurance() {
+        return insurance;
+    }
+    public boolean getSex() {
+        return sex;
     }
 
-    public void setColumnNames(String str) {
-        this.columnNames.add(str);
+    
+    public void setId(int id) {
+        this.id = id;
     }
-    public void setColumnTypes(Class cls) {
-        this.columnTypes.add(cls);
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
-    public void setData(ArrayList data) {
-        this.data.add(data);
+    public void setName(String name) {
+        this.name = name;
     }
-    public void setCellEditable(boolean editable) {
-        this.editable = editable;
-    }     
-    public void printArray (ArrayList ar) {
-        for (int i = 0; i < ar.size(); i++) {
-            System.out.println(ar.get(i));
-        }
+    public void setMiddlename(String middlename) {
+        this.middlename = middlename;
     }
+    public void setBirthday(java.sql.Date birthday) {
+        this.birthday = birthday;
+    }
+    public void setIdrank(int idrank) {
+        this.idrank = idrank;
+    }
+    public void setAssigneeFullName(String assigneeFullName) {
+        this.assigneeFullName = assigneeFullName;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public void setActualAddress(String actualAddress) {
+        this.actualAddress = actualAddress;
+    }
+    public void setMainDocumentCopy(String mainDocumentCopy) {
+        this.mainDocumentCopy = mainDocumentCopy;
+    }
+    public void setMedicalCertificate(String medicalCertificate) {
+        this.medicalCertificate = medicalCertificate;
+    }
+    public void setInsurance(String insurance) {
+        this.insurance = insurance;
+    }
+    public void setSex(boolean sex) {
+        this.sex = sex;
+    }    
 }
+
+

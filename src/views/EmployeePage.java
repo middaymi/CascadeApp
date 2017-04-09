@@ -9,8 +9,6 @@ employeeModel?
 package views;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.sql.Date;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -39,7 +37,7 @@ public class EmployeePage extends JPanel {
         empData = empModel.getEmployeeDataLink();
         setTableSettings();       
         setScrlPaneSettings();             
-        empModel.setDataSource(); //display the result
+        empModel.setDataSource(); 
         ecm = new EmployeeColumnModel(table);
         ecm.setTableColumnsSettings();
         setChangeBtnSettings();
@@ -59,9 +57,9 @@ public class EmployeePage extends JPanel {
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
         table.setRowSorter(new TableRowSorter(empModel));
-        table.setDefaultEditor(java.sql.Date.class, new DateCellEditor());
+        //table.setDefaultEditor(java.sql.Date.class, new DateCellEditor());
         table.setDefaultRenderer(String.class, new MultiLineCell());
-        table.setRowSelectionAllowed(true);        
+        //table.setRowSelectionAllowed(true);        
     } 
     public JTable getTable() {
         return this.table;
@@ -73,8 +71,8 @@ public class EmployeePage extends JPanel {
         scrlPane = new JScrollPane(table); 
         scrlPane.setVisible(true);
         
-        scrlPane.setBackground(new Color(80, 80, 80, 30));
-        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
                 
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);                
@@ -111,23 +109,15 @@ public class EmployeePage extends JPanel {
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        addBtn.addActionListener(new controllers.EmployeePage.AddBtnListener());
-    } 
-    
+        addBtn.addActionListener(new controllers.EmployeePage.
+                                     AddBtnListener());
+    }     
     public void setBtnsMode(boolean mode) {
-        //text for changeBtn
-        //can change
-        if (mode == true) {
-            changeBtn.setText("Выйти");
-            delBtn.setVisible(true);
-            addBtn.setVisible(true);
-            table.setEnabled(true);            
-        }
-        else {
-            changeBtn.setText("Изменить");
-            delBtn.setVisible(false);
-            addBtn.setVisible(false);
-            table.setEnabled(false);
-        }
+        //editable or not regime
+        if (mode == true) {changeBtn.setText("Выйти");}
+        else {changeBtn.setText("Изменить");}
+        delBtn.setVisible(mode);
+        addBtn.setVisible(mode);
+        table.setEnabled(mode); 
     }
 }

@@ -12,9 +12,9 @@ public class ChangeBtnListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {        
         if (manager.getPerPage() != null) {
             if (change == true) {
-                manager.getPerPage().setBtnsMode(false);
-                perModel.updateData();
+                manager.getPerPage().setBtnsMode(false);                
                 change = false;
+                perModel.delEmptyRows();
             } else {
             manager.getPerPage().setBtnsMode(true);
             change = true;

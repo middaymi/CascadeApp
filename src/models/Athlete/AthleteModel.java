@@ -3,53 +3,66 @@ package models.Athlete;
 import data.Athlete;
 import dataBase.DataBaseConnection;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import models.Employee.EmployeeModel;
 import views.Manager;
 
 public class AthleteModel extends AbstractTableModel {
 
     private static AthleteModel athleteModelInstance = null;
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
-                                   getDBconnection();
-    private Athlete athlete = new Athlete();
+                                   getDBconnection();  
+    //edit or not the table
+    private boolean editable;
+        
+    //DATA**********************************************************************
+    private ArrayList <Athlete> data = new ArrayList();  
+        
+    //HEADER********************************************************************
     //service array for original columnNames
-    private ArrayList <String> originalTableTitles = new ArrayList();
-    //order like in sqlTable; then name, surname are swaped
-    private String tableTitles[] = {"ID", "Фамилия", "Имя", "Отчество", 
-                                    "ДР", "Разряд", 
-                                    "Представители", "Телефон",
-                                    "Адрес", 
-                                    "Документ", 
-                                    "Сертификат",
-                                    "Страховка", "Пол"};
-    //for save changed tableFields
-    private HashSet <ArrayList> willUpdateFields = new HashSet<>();
+    private ArrayList <String> enColumnNames = new ArrayList();    
+    //table headers
+    private String titles[] = {"ID", "Фамилия", "Имя", "Отчество", "ДР", 
+                               "Разряд", "Представитель", "Телефон", "Адрес",
+                               "Документ", "Сертификат", "Страховка", "Пол"};     
+    //order like in sqlTable; then name, surname are swaped 
+    private ArrayList <String> columnNames = new ArrayList();    
+    //list of columns type 
+    private ArrayList <Object> columnTypes = new ArrayList();     
+    //**************************************************************************
     
+    //constructor
     private AthleteModel() {
-        athlete.setCellEditable(true);      
+        setEditable(true);      
     }
     
-    //get a link for other objects
+    //singletone, get an object link
     public static AthleteModel getAthleteModelInstance() {
         if (athleteModelInstance == null)
             athleteModelInstance = new AthleteModel();
         return athleteModelInstance;
     }
     
-    //select all data from db
+    //editing
+    public boolean isEditable() {
+        return editable;
+    }
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }   
+    
+    //SELECT ALL****************************************************************
+    //query: select all data from db
     String selectAllFromAthlete = "select * from athlete";
     private ResultSet getDataFromDB() {
         Statement stmt;
@@ -58,155 +71,228 @@ public class AthleteModel extends AbstractTableModel {
             stmt = DBC.createStatement();
             rs = stmt.executeQuery(selectAllFromAthlete); 
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeModel.class.getName()).
+            Logger.getLogger(AthleteModel.class.getName()).
                              log(Level.SEVERE,"no executed "
                              + "query 'selectAllFromAthlete'", ex); 
         }
         return rs;
     }
     
+    //CREATE VALUES|ROWS FOR TABLE**********************************************
     //get selectAllFromAthlete data from ResultSet, 
-    //push it to the athleteDataClass(there:athletes)
+    //push it to the data storage (there:athlete)
      public void setDataSource() {
         ResultSet rs = null; 
         Class type = null;
         try {
             //del prev data
-            athlete.getData().clear();
-            athlete.getColumnNames().clear();
-            athlete.getColumnTypes().clear();
+            getData().clear();
+            getColumnNames().clear();
+            getColumnTypes().clear();
             
             rs = getDataFromDB();
             ResultSetMetaData rsmd = rs.getMetaData();
             
             //get info about columns and their types,
-            //set values to Employee.class arraylist
+            //set values to Athlete.class arraylist
             int columnCount = rsmd.getColumnCount();
             for (int i = 0; i < columnCount; i++) {
                 //add original columnNames to serviceArray
-                originalTableTitles.add(rsmd.getColumnName(i+1));
-                //add columnName                
-                athlete.setColumnNames(tableTitles[i]);
+                enColumnNames.add(rsmd.getColumnName(i+1));
+                //add titles
+                setColumnNames(titles[i]);
                 //add columnType
                 type = Class.forName(rsmd.getColumnClassName(i+1));
-                athlete.setColumnTypes(type);                 
-            }     
-                         
+                setColumnTypes(type);                 
+            } 
+                                     
             //?something for table
             fireTableStructureChanged();
             
             //get row-data
             while (rs.next()) {
-                //save a list of a row
-                ArrayList row = new ArrayList();
-                for (int i = 0; i < columnCount; i++) {
-                    if (athlete.getColumnTypes().get(i) == String.class) {
-                        row.add(rs.getString(i+1));
-                    } else {
-                        row.add(rs.getObject(i+1));
-                    }
+                //save a dataclass of a row
+                Athlete rowAthlete = new Athlete();
+                for (int i = 0; i < columnCount; i++) {                    
+                    switch (enColumnNames.get(i)) {
+                        case ("ID"):
+                            rowAthlete.setId(rs.getInt(i + 1));
+                            break;                           
+                        case ("Surname"):
+                            rowAthlete.setSurname(rs.getString(i + 1));
+                            break; 
+                        case ("Name"):
+                            rowAthlete.setName(rs.getString(i + 1));
+                            break;
+                        case ("Middlename"):
+                            rowAthlete.setMiddlename(rs.getString(i + 1));
+                            break;
+                        case ("Birthday"):
+                            rowAthlete.setBirthday(rs.getDate(i + 1));
+                            break;                            
+                        case ("IDrank"):
+                            rowAthlete.setIdrank(rs.getInt(i + 1));
+                            break;
+                        case ("AssigneeFullName"):
+                            rowAthlete.setAssigneeFullName(rs.getString(i + 1));
+                            break;
+                        case ("PhoneNumber"):
+                            rowAthlete.setPhoneNumber(rs.getString(i + 1));
+                            break;
+                        case ("ActualAddress"):
+                            rowAthlete.setActualAddress(rs.getString(i + 1));
+                            break;
+                        case ("MainDocumentCopy"):
+                            rowAthlete.setMainDocumentCopy(rs.getString(i + 1));
+                            break;
+                        case ("MedicalCertificate"):
+                            rowAthlete.setMedicalCertificate(rs.getString(i + 1));
+                            break;
+                        case ("Insurance"):
+                            rowAthlete.setInsurance(rs.getString(i + 1));
+                            break;
+                        case ("Sex"):
+                            rowAthlete.setSex(rs.getBoolean(i + 1));
+                            break;
+                    }                 
                 }
-                synchronized (athlete.getData()) {                    
-                    athlete.setData(row);
+                synchronized (getData()) {                    
+                    setData(rowAthlete);
                     //info about added row
-                    fireTableRowsInserted(athlete.getData().size()-1, 
-                                          athlete.getData().size()-1);
+                    fireTableRowsInserted(getData().size()-1, 
+                                          getData().size()-1);
                 }
             }            
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeModel.class.getName()).
+            Logger.getLogger(AthleteModel.class.getName()).
                              log(Level.SEVERE, 
                              "ResultSet problem", ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(EmployeeModel.class.getName()).
+            Logger.getLogger(AthleteModel.class.getName()).
                              log(Level.SEVERE, 
                              "not define class type of data", ex);
-        }          
-         System.out.println("OTT: " + originalTableTitles);
-    }
-               
-    //get rows number
-    public int getRowCount() {
-        synchronized (athlete.getData()) {
-            return athlete.getData().size();
+        }        
+    } 
+     
+    //GET_VALUE*****************************************************************
+    public Object getValueAt(int row, int column) {        
+        Athlete athLink;        
+        athLink = (Athlete)getData().get(row);        
+        String colName = enColumnNames.get(column);
+        Object returnField = null;
+
+        switch (colName) {            
+            case ("ID"):
+                returnField = athLink.getId();
+                break;                           
+            case ("Surname"):
+                returnField = athLink.getSurname();
+                break; 
+            case ("Name"):
+                returnField = athLink.getName();
+                break;
+            case ("Middlename"):
+                returnField = athLink.getMiddlename();
+                break;
+            case ("Birthday"):
+                returnField = athLink.getBirthday();
+                break;                            
+            case ("IDrank"):
+                returnField = athLink.getIdrank();
+                break;
+            case ("AssigneeFullName"):
+                returnField = athLink.getAssigneeFullName();
+                break;
+            case ("PhoneNumber"):
+                returnField = athLink.getPhoneNumber();
+                break;
+            case ("ActualAddress"):
+                returnField = athLink.getActualAddress();
+                break;
+            case ("MainDocumentCopy"):
+                returnField = athLink.getMainDocumentCopy();
+                break;
+            case ("MedicalCertificate"):
+                returnField = athLink.getMedicalCertificate();
+                break;
+            case ("Insurance"):
+                returnField = athLink.getInsurance();
+                break;
+            case ("Sex"):
+                returnField = athLink.getSex();
+                break;
         }
-    }
-    //get columns number
-    public int getColumnCount() {
-        return athlete.getColumnNames().size();
-    }
-    //get cell column type
-    public Class getColumnClass(int column) {
-        return (Class)athlete.getColumnTypes().get(column);
-    }
-    //get cell name
-    public String getColumnName(int column) {
-        return (String)athlete.getColumnNames().get(column);
-    }
-    //get cell value
-    public Object getValueAt(int row, int column) {
-        synchronized (athlete.getData()) {            
-            return ((ArrayList)athlete.getData().get(row)).get(column);
-        }
-    }
-    
-    //update fields in DB
-    public void updateData() {
-        Iterator<ArrayList> it = willUpdateFields.iterator();
-        while(it.hasNext()){
-            try {
-                ArrayList now = it.next();
-                int row = (int)now.get(0);
-                int column = (int)now.get(1);
-                Object value = now.get(2);
-                
-                //create updateQuery 
-                String query = "UPDATE " + "ATHLETE " +
-                        "SET " + originalTableTitles.get(column) + " = " +
-                        "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
-                                
-                System.out.println(query);
-                //update
-                PreparedStatement pstmt = DBC.prepareStatement(query);
-                pstmt.executeUpdate();  
-                
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeeModel.class.getName()).
-                             log(Level.SEVERE, "Something wrong with SQLquery,"
-                                             + "no update", ex);
-            }            
-        }
+        return returnField;        
     }  
     
-    //change cell value
-    public void setValueAt(Object value, int row, int column){
-        //save changes
-        ArrayList willUpdate = new ArrayList();
-        willUpdate.add(row);
-        willUpdate.add(column);
-        willUpdate.add(value);
-        willUpdateFields.add(willUpdate); 
-        //setValue
-        synchronized (athlete.getData()) {
-            ((ArrayList)athlete.getData().get(row)).set(column, value);
-        }
-        //was changed
-        System.out.println("ROW " + row);
-        System.out.println("COLUMN " + column);   
+    //CATCH CHANGE CELL VALUE***************************************************
+    public void setValueAt(Object value, int row, int column) {                        
+        //will get an edited class
+        Athlete setClass;        
+        //Athlete row-exemplar
+        setClass = getDataByIndex(row);         
+                          
+        switch (getEnColumnNames().get(column)) {                        
+            case ("Surname"):
+                setClass.setSurname(((String)value).trim());
+                break; 
+            case ("Name"):
+                setClass.setName(((String)value).trim());
+                break;
+            case ("Middlename"):
+                setClass.setMiddlename(((String)value).trim());
+                break;
+            case ("Birthday"):
+                setClass.setBirthday((Date)value);
+                break;                            
+            case ("IDrank"):
+                setClass.setIdrank((int)value);
+                break;
+            case ("AssigneeFullName"):
+                setClass.setAssigneeFullName(((String)value).trim());
+                break;
+            case ("PhoneNumber"):
+                setClass.setPhoneNumber(((String)value).trim());
+                break;
+            case ("ActualAddress"):
+                setClass.setActualAddress(((String)value).trim());
+                break;
+            case ("MainDocumentCopy"):
+                setClass.setMainDocumentCopy(((String)value).trim());
+                break;
+            case ("MedicalCertificate"):
+                setClass.setMedicalCertificate(((String)value).trim());
+                break;
+            case ("Insurance"):
+                setClass.setInsurance(((String)value).trim());
+                break;
+            case ("Sex"):
+                setClass.setSex((boolean)value);
+                break;
+        }             
+        updateData(row, column, value);      
    }  
- 
-    //can edit or not
-    public boolean isCellEditable(int row, int column) {
-        return athlete.getCellEditable();
+       
+    //UPDATE FIELDS IN DB AFTER EDIT TABLE CELL*********************************
+    public void updateData(int row, int column, Object value) {                
+        try { 
+            //create updateQuery 
+            String query = "UPDATE " + "ATHLETE " +
+                    "SET " + enColumnNames.get(column) + " = " +
+                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
+            System.out.println(query);
+            //update
+            PreparedStatement pstmt = DBC.prepareStatement(query);
+            pstmt.executeUpdate(); 
+        } catch (SQLException ex) {
+            Logger.getLogger(AthleteModel.class.getName()).
+                         log(Level.SEVERE, "Something wrong with SQLquery,"
+                                         + "no update", ex);
+        } 
     }
     
-    //get a link of Employee class with set data
-    public Athlete getAthleteDataLink() {
-        return athlete;	 
-    }
-    
+   //DELETE_ROW*****************************************************************  
    public void delSelectedRow() {
-       System.out.println("lolo");
         int sel = 0;
         try {             
             JTable athTable = Manager.getAthPage().getTable();
@@ -223,7 +309,7 @@ public class AthleteModel extends AbstractTableModel {
             this.removeRow(sel);
            
         } catch (SQLException ex) {
-            Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
+            Logger.getLogger(AthleteModel.class.getName()).log(Level.SEVERE, 
                             "Something wrong with deleting a row", ex);
         } catch (ArrayIndexOutOfBoundsException ex) {
             if (sel == -1) {    
@@ -234,12 +320,168 @@ public class AthleteModel extends AbstractTableModel {
             }            
         }
     }
-    
     //del a row from holderArrayList and autoRepaint table 
     private void removeRow(int sel) {      
-        this.athlete.getData().remove(sel);
+        getData().remove(sel);
         fireTableRowsDeleted(sel, sel);
+    }  
+    
+    //INSERT_ROW****************************************************************
+    public void addAthlete() {
+        //get the least index, bottom add
+        int rowIndex = getData().size();
+        //create empty data class
+        Athlete newRow = new Athlete();  
+        
+        newRow.setSurname("");
+        newRow.setName("");
+        newRow.setMiddlename("");
+        //birthday
+        //idrank
+        newRow.setAssigneeFullName("");
+        newRow.setPhoneNumber("");
+        newRow.setActualAddress("");
+        newRow.setMainDocumentCopy("");
+        newRow.setMedicalCertificate("");
+        newRow.setInsurance("");
+        newRow.setSex(false);
+
+        setData(newRow);        
+        //change table view
+        fireTableRowsInserted(rowIndex, rowIndex);
+        //insert into db
+        insertRowIntoTable(newRow);
+    }
+    
+    private void insertRowIntoTable (Athlete athlete)  {        
+        try {
+            //add empty row
+            String query = "INSERT INTO ATHLETE "
+                         + "VALUES ('', '', '', '2000-01-01', 1, '', '', '',"
+                         +          " '', '', '', 0);";
+            System.out.println(query);
+            PreparedStatement pstmt = DBC.prepareStatement(query);
+            pstmt.execute();
+            
+            //get ID added empty row
+            String selectID = "SELECT IDENT_CURRENT('ATHLETE')";
+            Statement stmt = DBC.createStatement();
+            ResultSet rs = stmt.executeQuery(selectID);
+            while (rs.next()) {
+                athlete.setId(rs.getInt(1));
+                System.out.println(rs.getInt(1));
+            }       
+          
+        pstmt.close();
+        stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(AthleteModel.class.getName()).log(Level.SEVERE,
+                       "Not insert a new row into DB or not get row ID", ex);
+        }        
+    }
+    
+    //DEL_EMPTY_ROWS************************************************************
+    public void delEmptyRows() {
+        //delete from table
+        try {            
+            String query = "SELECT ID FROM ATHLETE "
+                         + "WHERE Name = '' AND Surname = '' AND "
+                         + "Middlename = '';";
+            System.out.println(query);
+            Statement stmt = DBC.createStatement();
+            ResultSet rs = stmt.executeQuery(query); 
+                        
+            //get id rows for del
+            int i = 1;
+                        
+            //if there are empty rows
+            while (rs.next()) {                  
+                for (int j = 0; j < getData().size(); j++) {
+                    System.out.println("RS: " + rs.getInt(i));
+                    System.out.println(((Athlete) getDataByIndex(j)).getId());
+                    if (((Athlete) getDataByIndex(j)).getId() == rs.getInt(i)) {
+                        removeRow(j);  
+                    }
+                }                
+            }
+            //say user message
+            JOptionPane.showMessageDialog(Manager.getAthPage(),
+            "Пустые строки были удалены",
+            "Информирование", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+        Logger.getLogger(AthleteModel.class.getName()).log(Level.SEVERE, 
+                         "Cannot select empty rows", ex);
+        }
+        
+        //delete from db
+        try{           
+            String queryDelDB = "DELETE FROM ATHLETE "
+                    + "WHERE Name = '' AND Surname = '' AND Middlename = '';";
+            System.out.println(queryDelDB);
+            PreparedStatement pstmt = DBC.prepareStatement(queryDelDB);
+            pstmt.execute();          
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AthleteModel.class.getName()).log(Level.SEVERE, 
+                             "Cannot delete empty rows", ex);
+        }
+    }
+      
+    //GETTERS*******************************************************************
+    //can edit or not
+    public boolean isCellEditable(int row, int column) {
+		return getCellEditable();
+    }    
+    //get a link of Employee class with set data
+    public ArrayList getAthleteDataLink() {
+        return data;	 
+    }
+    //get rows number
+    public int getRowCount() {
+        synchronized (getData()) {
+            return getData().size();
+        }
+    }        
+    public ArrayList getColumnNames() {
+        return columnNames;
+    }
+    public ArrayList <String> getEnColumnNames() {
+        return enColumnNames;
+    }
+    public ArrayList getColumnTypes() {
+        return columnTypes;
+    }
+    public Athlete getDataByIndex(int i) {
+        return (Athlete)data.get(i);
+    }
+    public ArrayList getData() {
+        return data;
+    }    
+    public boolean getCellEditable() {
+        return editable;
+    }
+
+    //get columns number
+    public int getColumnCount() {
+        return getColumnNames().size();
+    }
+    //get cell column type
+    public Class getColumnClass(int column) {
+        return (Class)getColumnTypes().get(column);
+    }
+    //get cell name
+    public String getColumnName(int column) {
+        return (String)getColumnNames().get(column);
+    } 
+    
+    //SETTERS*******************************************************************
+    public void setColumnNames(String str) {
+        this.columnNames.add(str);
+    }
+    public void setColumnTypes(Class cls) {
+        this.columnTypes.add(cls);
+    }
+    public void setData(Athlete data) {
+        this.data.add(data);
     }
 }
-    
-

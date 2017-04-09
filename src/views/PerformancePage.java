@@ -1,20 +1,18 @@
 package views;
 
-import data.Performance;
 import java.awt.Color;
-import javax.swing.BorderFactory;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.border.Border;
 import javax.swing.table.TableRowSorter;
 import models.Performance.PerformanceColumnModel;
 import models.Performance.PerformanceModel;
 
 public class PerformancePage extends JPanel {
     
-    private Performance perData;
+    private ArrayList perData;
     private PerformanceModel perModel;
     private JScrollPane scrlPane;
     private JTable table;
@@ -60,8 +58,8 @@ public class PerformancePage extends JPanel {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
         //color
-        scrlPane.setBackground(new Color(80, 80, 80, 30));
-        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
         
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);
@@ -76,7 +74,8 @@ public class PerformancePage extends JPanel {
         changeBtn.setLocation(2334, 1440);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
-        changeBtn.addActionListener(new controllers.Performance.ChangeBtnListener());
+        changeBtn.addActionListener(new controllers.Performance.
+                                        ChangeBtnListener());
     }    
     private void setDelBtnSettings() {
         delBtn = new JButton("Удалить");        
@@ -86,7 +85,8 @@ public class PerformancePage extends JPanel {
         delBtn.setVisible(false);
         CommonSettings.settingFont30(delBtn);
         this.add(delBtn);
-        delBtn.addActionListener(new controllers.Performance.DelBtnListener());
+        delBtn.addActionListener(new controllers.Performance.
+                                     DelBtnListener());
     }     
     private void setAddBtnSettings() {
         addBtn = new JButton("Добавить");        
@@ -96,24 +96,15 @@ public class PerformancePage extends JPanel {
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        //delBtn.addActionListener(new controllers.EmployeePage.
-        //                             EmpChangeBtnListener());
-    } 
-    
+        addBtn.addActionListener(new controllers.Performance.
+                                     AddBtnListener());
+    }     
     public void setBtnsMode(boolean mode) {
-        //text for changeBtn
-        //can change
-        if (mode == true) {
-            changeBtn.setText("Сохранить");
-            delBtn.setVisible(true);
-            addBtn.setVisible(true);
-            table.setEnabled(true);            
-        }
-        else {
-            changeBtn.setText("Изменить");
-            delBtn.setVisible(false);
-            addBtn.setVisible(false);
-            table.setEnabled(false);
-        }
+        //editable or not regime
+        if (mode == true) {changeBtn.setText("Выйти");}
+        else {changeBtn.setText("Изменить");}
+        delBtn.setVisible(mode);
+        addBtn.setVisible(mode);
+        table.setEnabled(mode); 
     }
 }

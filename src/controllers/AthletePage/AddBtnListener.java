@@ -8,8 +8,9 @@ import views.Manager;
 public class AddBtnListener implements ActionListener{
     Manager manager = Manager.getManagerInstance();
     private AthleteModel athModel = AthleteModel.getAthleteModelInstance(); 
-    public void actionPerformed(ActionEvent e) { 
-        
-    }
-    
+    public void actionPerformed(ActionEvent e) {                
+        if (manager.getAthPage() != null) {
+            athModel.addAthlete();
+        } 
+    }    
 }

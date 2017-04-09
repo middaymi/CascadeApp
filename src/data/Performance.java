@@ -1,46 +1,53 @@
 package data;
 
-import java.util.ArrayList;
+import java.sql.Date;
 
-public class Performance {   
-    //list of columns names
-    private ArrayList columnNames = new ArrayList();    
-    //list of columns type 
-    private ArrayList columnTypes = new ArrayList();    
-    //data from DB
-    private ArrayList data = new ArrayList();       
-    //edit or not rhe table
-    private boolean editable;   
-   
-    public ArrayList getColumnNames() {
-        return columnNames;
+//storage data class
+public class Performance { 
+    private int id;
+    private String fullName;
+    private String phonogram;
+    private String costumeDesign;
+    private String costumePhoto;   
+    private String description;    
+
+    public int getId() {
+        return id;
     }
-    public ArrayList getColumnTypes() {
-        return columnTypes;
+    public String getFullName() {
+        return fullName;
     }
-    public ArrayList getData() {
-        return data;
+    public String getPhonogram() {
+        return phonogram;
     }
-    public boolean getCellEditable() {
-        return editable;
+    public String getCostumeDesign() {
+        return costumeDesign;
+    }
+    public String getCostumePhoto() {
+        return costumePhoto;
+    }
+    public String getDescription() {
+        return description;
     }
 
-    public void setColumnNames(String str) {
-        this.columnNames.add(str);
+    public void setId(int id) {
+        this.id = id;
     }
-    public void setColumnTypes(Class cls) {
-        this.columnTypes.add(cls);
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
-    public void setData(ArrayList data) {
-        this.data.add(data);
+    public void setPhonogram(String phonogram) {
+        this.phonogram = phonogram;
     }
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }     
-    public void printArray (ArrayList ar) {
-        for (int i = 0; i < ar.size(); i++) {
-            System.out.println(ar.get(i));
-        }
+    public void setCostumeDesign(String costumeDesign) {
+        this.costumeDesign = costumeDesign;
     }
+    public void setCostumePhoto(String costumePhoto) {
+        this.costumePhoto = costumePhoto;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }    
 }
+
 

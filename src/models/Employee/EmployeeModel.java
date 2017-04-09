@@ -127,7 +127,8 @@ public class EmployeeModel extends AbstractTableModel{
                             rowEmployee.setMiddlename(rs.getString(i + 1));
                             break;
                         case ("Birthday"):
-                            rowEmployee.setBirthday(rs.getDate(i + 1));
+                            //get sql.Date, convert to util.
+                            rowEmployee.setBirthday((rs.getDate(i + 1)));
                             break;
                         case ("Experience"):
                             rowEmployee.setExperience(rs.getInt(i + 1));
@@ -228,12 +229,15 @@ public class EmployeeModel extends AbstractTableModel{
    }  
        
     //UPDATE FIELDS IN DB AFTER EDIT TABLE CELL*********************************
-    public void updateData(int row, int column, Object value) {                
+    public void updateData(int row, int column, Object value) { 
+        String query;
         try { 
+          
             //create updateQuery 
-            String query = "UPDATE " + "EMPLOYEE " +
+            query = "UPDATE " + "EMPLOYEE " +
                     "SET " + enColumnNames.get(column) + " = " +
-                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0);
+                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0) + ";";
+            
             System.out.println(query);
             //update
             PreparedStatement pstmt = DBC.prepareStatement(query);
@@ -275,10 +279,10 @@ public class EmployeeModel extends AbstractTableModel{
         }
     }
     //del a row from holderArrayList and autoRepaint table 
-    private void removeRow(int sel) {      
+    private void removeRow(int sel) {          
         getData().remove(sel);
-        fireTableRowsDeleted(sel, sel);
-    } 
+        fireTableRowsDeleted(sel, sel);    
+    }
     
     //INSERT_ROW****************************************************************
     public void addEmployee() {
@@ -315,10 +319,11 @@ public class EmployeeModel extends AbstractTableModel{
             ResultSet rs = stmt.executeQuery(selectID);
             while (rs.next()) {
                 employee.setId(rs.getInt(1));
+                System.out.println(rs.getInt(1));
             }       
           
-        pstmt.close();
-        stmt.close();
+        //pstmt.close();
+        //stmt.close();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE,
                        "Not insert a new row into DB or not get row ID", ex);
@@ -330,8 +335,7 @@ public class EmployeeModel extends AbstractTableModel{
         //delete from table
         try {            
             String query = "SELECT ID FROM EMPLOYEE "
-                         + "WHERE Name = '' AND Surname = '' AND "
-                         + "Middlename = '';";
+                         + "WHERE Name = '' AND Surname = '';";
             System.out.println(query);
             Statement stmt = DBC.createStatement();
             ResultSet rs = stmt.executeQuery(query); 
@@ -340,17 +344,17 @@ public class EmployeeModel extends AbstractTableModel{
             int i = 1;
             
             //if not empty rows
-            if (!rs.next()) {return;}
+            //if (rs.) {return;}
             
             //if there are empty rows
-            while (rs.next()) {                  
-                for (int j = 0; j < getData().size(); j++) {
-                    System.out.println("RS: " + rs.getInt(i));
-                    System.out.println(((Employee) getDataByIndex(j)).getId());
+            while (rs.next()) { 
+                System.out.println("I = : " + i + " RS: " + rs.getInt(i));
+                for (int j = 0; j < getData().size(); j++) {                                        
                     if (((Employee) getDataByIndex(j)).getId() == rs.getInt(i)) {
-                        removeRow(j);  
+                        removeRow(j);
+                        System.out.println("J DEL: " + j);
                     }
-                }                
+                }
             }
             //say user message
             JOptionPane.showMessageDialog(Manager.getEmpPage(),

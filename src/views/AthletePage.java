@@ -2,18 +2,19 @@ package views;
 
 import models.Athlete.AthleteColumnModel;
 import models.Athlete.AthleteModel;
-import data.Athlete;
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
+import models.MultiLineCell;
 
 public class AthletePage extends JPanel {
     
-    private Athlete athData;
-    private models.Athlete.AthleteModel athModel;
+    private ArrayList athData;
+    private AthleteModel athModel;
     private JScrollPane scrlPane;
     private JTable table;
     private JButton changeBtn;
@@ -44,11 +45,12 @@ public class AthletePage extends JPanel {
         table = new JTable(athModel);
         table.setVisible(true);
         table.setOpaque(true);
-        table.setRowHeight(50);
+        table.setRowHeight(90);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
+        table.setDefaultRenderer(String.class, new MultiLineCell());
     }    
     public JTable getTable() {
         return this.table;
@@ -60,8 +62,8 @@ public class AthletePage extends JPanel {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
         //color
-        scrlPane.setBackground(new Color(80, 80, 80, 30));
-        scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.setBackground(new Color(80, 80, 80, 30));
+        //scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
                 
         scrlPane.setSize(3000, 1190);
         scrlPane.setLocation(84, 230);
@@ -98,23 +100,15 @@ public class AthletePage extends JPanel {
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        //delBtn.addActionListener();
-    } 
-    
+        addBtn.addActionListener(new controllers.AthletePage.
+                                     AddBtnListener());
+    }     
     public void setBtnsMode(boolean mode) {
-        //text for changeBtn
-        //can change
-        if (mode == true) {
-            changeBtn.setText("Выйти");
-            delBtn.setVisible(true);
-            addBtn.setVisible(true);
-            table.setEnabled(true);            
-        }
-        else {
-            changeBtn.setText("Изменить");
-            delBtn.setVisible(false);
-            addBtn.setVisible(false);
-            table.setEnabled(false);
-        }
+        //editable or not regime
+        if (mode == true) {changeBtn.setText("Выйти");}
+        else {changeBtn.setText("Изменить");}
+        delBtn.setVisible(mode);
+        addBtn.setVisible(mode);
+        table.setEnabled(mode); 
     }
 }

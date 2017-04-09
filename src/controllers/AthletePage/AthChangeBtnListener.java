@@ -13,9 +13,9 @@ public class AthChangeBtnListener implements ActionListener{
     public void actionPerformed(ActionEvent e) {        
         if (manager.getAthPage() != null) {
             if (change == true) {
-                manager.getAthPage().setBtnsMode(false);
-                athModel.updateData();
+                manager.getAthPage().setBtnsMode(false);                
                 change = false;
+                athModel.delEmptyRows();                
             } else {
             manager.getAthPage().setBtnsMode(true);
             change = true;
