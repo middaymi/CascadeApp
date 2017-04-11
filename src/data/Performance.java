@@ -1,10 +1,9 @@
 package data;
 
-import java.sql.Date;
-
 //storage data class
 public class Performance { 
     private int id;
+    private String season;
     private String fullName;
     private String phonogram;
     private String costumeDesign;
@@ -29,6 +28,9 @@ public class Performance {
     public String getDescription() {
         return description;
     }
+     public String getSeason() {
+        return season;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -47,6 +49,9 @@ public class Performance {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+    public void setSeason(String season) {
+        this.season = season;
     }    
 }
 

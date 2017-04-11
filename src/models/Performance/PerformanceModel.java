@@ -32,7 +32,7 @@ public class PerformanceModel extends AbstractTableModel{
     private ArrayList <String> enColumnNames = new ArrayList();    
     //table headers
     private String titles[] = {"ID", "Название", "Фонограмма", "Дизайн костюма", 
-                               "Фото костюма", "Описание"};     
+                               "Фото костюма", "Описание", "Сезон"};     
     //order like in sqlTable; then name, surname are swaped 
     private ArrayList <String> columnNames = new ArrayList();    
     //list of columns type 
@@ -61,12 +61,27 @@ public class PerformanceModel extends AbstractTableModel{
     
     //SELECT ALL****************************************************************
     //query: select all data from db
-    String selectAllFromPerformance = "SELECT * FROM PERFORMANCE";
+    String selectAllFromPerformance = "SELECT PERFORMANCE.*, " +
+                                             "SEASON.Period " +
+                                       "FROM PERFORMANCE, SEASON_PERFORMANCE, " +
+                                             "SEASON " +
+                                       "WHERE PERFORMANCE.ID = SEASON_PERFORMANCE.IDperformance " +
+                                              "AND " +
+                                              "SEASON_PERFORMANCE.IDseason = SEASON.ID " +
+                                       "GROUP BY PERFORMANCE.ID, " +
+                                              "PERFORMANCE.FullName, " +
+                                              "PERFORMANCE.Phonogram, " +
+                                              "PERFORMANCE.CostumeDesign, " +
+                                              "PERFORMANCE.CostumePhoto, " +
+                                              "PERFORMANCE.Description, " +
+                                              "SEASON.Period " +
+                                       "ORDER BY PERFORMANCE.FullName DESC;";
+    
     private ResultSet getDataFromDB() {
         Statement stmt;
         ResultSet rs = null;
         try {
-            stmt = DBC.createStatement();
+            stmt = DBC.createStatement();            
             rs = stmt.executeQuery(selectAllFromPerformance); 
         } catch (SQLException ex) {
             Logger.getLogger(PerformanceModel.class.getName()).
@@ -103,6 +118,7 @@ public class PerformanceModel extends AbstractTableModel{
                 type = Class.forName(rsmd.getColumnClassName(i+1));
                 setColumnTypes(type);                 
             } 
+            System.out.println(enColumnNames);
                                      
             //?something for table
             fireTableStructureChanged();
@@ -130,6 +146,9 @@ public class PerformanceModel extends AbstractTableModel{
                             break;                       
                         case ("Description"):
                             rowPerformance.setDescription(rs.getString(i + 1));
+                            break;
+                        case ("Period"):
+                            rowPerformance.setSeason(rs.getString(i + 1));
                             break;
                     }                 
                 }
@@ -176,7 +195,10 @@ public class PerformanceModel extends AbstractTableModel{
                 break;                       
             case ("Description"):
                 returnField = perLink.getDescription();
-                break;      
+                break; 
+            case ("Period"):
+                returnField = perLink.getSeason();
+                break;
         }                   
         return returnField;        
     }  
@@ -204,6 +226,9 @@ public class PerformanceModel extends AbstractTableModel{
             case ("Description"):
                 setClass.setDescription(((String)value).trim());
                 break; 
+            case ("Period"):
+                setClass.setSeason(((String)value).trim());
+                break;
         }             
         updateData(row, column, value);      
    }  
@@ -278,7 +303,7 @@ public class PerformanceModel extends AbstractTableModel{
         //insert into db
         insertRowIntoTable(newRow, rowIndex);
     }
-    //change tempFullName!!!!
+    
     private void insertRowIntoTable (Performance performance, int rowIndex)  {        
         try {     
             int tempID = 0;
@@ -351,6 +376,22 @@ public class PerformanceModel extends AbstractTableModel{
             Logger.getLogger(PerformanceModel.class.getName()).log(Level.SEVERE, 
                              "Cannot delete empty rows", ex);
         }
+    }
+    
+    //OPEN EDIT MODE************************************************************
+    public int selRow() {
+        int sel = 0;
+        JTable perTable = Manager.getPerPage().getTable();
+        //get selected row
+        sel = perTable.getSelectedRow(); 
+        System.out.println("sel " + sel);
+        if (sel == -1) {    
+                JOptionPane.showMessageDialog(Manager.getPerPage(),
+                "Не выбрана постановка для редактирования",
+                "Ошибка", JOptionPane.WARNING_MESSAGE);
+                
+        }
+        return sel; 
     }
       
     //GETTERS*******************************************************************

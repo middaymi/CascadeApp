@@ -4,15 +4,18 @@
 20 - EMPLOYEE PAGE
 30 - ATHLETE PAGE
 40 - PERFORMANE PAGE
-50 - COMPETITION PAGE
-60 - TESTING PAGE
+     41 - PERFORMANCE_EDIT PAGE
+50 - COMPETITION AND TESTING PAGE
 */
 
 package views;
 
+import views.Performance.PerformancePage;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import views.Performance.*;
+import views.TestingCompetition.*;
 
 public class Manager {
     
@@ -24,6 +27,8 @@ public class Manager {
     private static EmployeePage empPage = null;
     private static AthletePage athPage = null;
     private static PerformancePage perPage = null;
+    private static PerformanceEditPage perEditPage = null;
+    private static TestingCompetitionPage testCompPage = null;
     private static CommonButtonsPanel comBtnPanel = null;
     
     private static int width;
@@ -101,7 +106,17 @@ public class Manager {
     private static void createPerformancePage() {
         perPage = new PerformancePage();
         getmFrame().getContentPane().add(getPerPage(), BorderLayout.CENTER);
-    }    
+    }
+    private static void createPerEditPage() {
+        perEditPage = new PerformanceEditPage();
+        getmFrame().getContentPane().add(getPerEditPage(), BorderLayout.CENTER);
+    }
+
+    //TESTING_AND_COMPETITION_PAGE**********************************************
+     private static void createTestingCompetitionPage() {
+        testCompPage = new TestingCompetitionPage();
+        getmFrame().getContentPane().add(getTestCompPage(), BorderLayout.CENTER);
+    }   
     
     //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
     private static void hideAllPanels() {
@@ -110,6 +125,8 @@ public class Manager {
         if (getEmpPage() != null) getEmpPage().setVisible(false);
         if (getAthPage() != null) getAthPage().setVisible(false);
         if (getPerPage() != null) getPerPage().setVisible(false);
+        if (getPerEditPage() != null) getPerEditPage().setVisible(false);
+        if (getTestCompPage() != null) getTestCompPage().setVisible(false);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -140,6 +157,18 @@ public class Manager {
                 getPerPage().setVisible(true);
                 getComBtnPanel().useBtns(20);
                 break;
+            case(41):
+                System.out.println("THERE");
+                if (getPerEditPage() == null) createPerEditPage();
+                getPerEditPage().setVisible(true);
+                //change, add backBtn
+                getComBtnPanel().useBtns(30);
+                break;
+            case(50):
+                if (getPerPage() == null) createPerformancePage();
+                getTestCompPage().setVisible(true);
+                getComBtnPanel().useBtns(20);
+                break;
         }
     } 
 
@@ -161,6 +190,12 @@ public class Manager {
     }
     public static PerformancePage getPerPage() {
         return perPage;
+    }
+    public static PerformanceEditPage getPerEditPage() {
+        return perEditPage;
+    }            
+    public static TestingCompetitionPage getTestCompPage() {
+        return testCompPage;
     }
     public static CommonButtonsPanel getComBtnPanel() {
         return comBtnPanel;

@@ -1,21 +1,18 @@
 package views;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class StartPage extends JPanel{
-    
-    private Manager manager;
+        
     private JButton organizationBtn;
     private JButton employeeBtn;
     private JButton athleteBtn;
     private JButton performanceBtn;
-    private JButton competitionBtn;
-    private JButton testingBtn;
+    private JButton testCompetitionBtn;
+    //private JButton testingBtn;
     
-    private Color myGray = new Color(80, 80, 80, 30);
+    //private Color myGray = new Color(80, 80, 80, 30);
     
     public StartPage() {  
         CommonSettings.panelSettings(this);
@@ -29,16 +26,16 @@ public class StartPage extends JPanel{
         employeeBtn = new JButton("Сотрудники");
         athleteBtn = new JButton("Спортсмены");
         performanceBtn = new JButton("Постановки");
-        competitionBtn = new JButton("Соревнования");
-        testingBtn = new JButton("Зачеты");
-                                
+        testCompetitionBtn = new JButton("<html><p align=center>Зачеты и "
+                                             + "<p align=center>Соревнования"
+                                       + "</html>");
+                                         
         //buttons settings
         setButtonsSizeLocationAdd(1, 1, organizationBtn);
         setButtonsSizeLocationAdd(1, 2, employeeBtn);
         setButtonsSizeLocationAdd(1, 3, athleteBtn);
         setButtonsSizeLocationAdd(2, 1, performanceBtn);
-        setButtonsSizeLocationAdd(2, 2, competitionBtn);
-        setButtonsSizeLocationAdd(2, 3, testingBtn);
+        setButtonsSizeLocationAdd(2, 2, testCompetitionBtn);     
                
         //add listeners
         organizationBtn.addActionListener(new controllers.StartPage.
@@ -49,16 +46,14 @@ public class StartPage extends JPanel{
                                          AthleteBtnListener());
         performanceBtn.addActionListener(new controllers.StartPage.
                                              PerformanceBtnListener());
-        competitionBtn.addActionListener(new controllers.StartPage.
-                                             CompetitionBtnListener());
-        testingBtn.addActionListener(new controllers.StartPage.
-                                         TestingBtnListener());       
-    }    
+        testCompetitionBtn.addActionListener(new controllers.StartPage.
+                                                 TestCompetitionBtnListener());             
+    } 
+    
     //size, location, font
     private void setButtonsSizeLocationAdd(int x, int y, JButton btn) {
         //location: 2 rows(x), 3 columns(y)
-        btn.setSize((3*Manager.getWidth())/16, 
-                     2*Manager.getHeightWithInsets()/9);        
+        btn.setSize(600, 360);
         CommonSettings.settingFont50(btn);
         CommonSettings.settingLightGrayBorder(btn);
         //btn's painting
@@ -74,41 +69,26 @@ public class StartPage extends JPanel{
         
         if (x == 1) {
             switch(y) {
-                case 1: btn.setLocation(3*Manager.getWidth()/16,
-                                          Manager.getHeightWithInsets()/4);
+                case 1: btn.setLocation(584, 420);
                         this.add(organizationBtn);
                         break;
-                case 2: btn.setLocation(13*Manager.getWidth()/32,
-                                           Manager.getHeightWithInsets()/4);
+                case 2: btn.setLocation(1284, 420);
                         this.add(employeeBtn);
                         break;
-                case 3: btn.setLocation(5*Manager.getWidth()/8, 
-                                          Manager.getHeightWithInsets()/4);
+                case 3: btn.setLocation(1984, 420);                     
                         this.add(athleteBtn);
                         break;
             }
         }
         if (x == 2) {
             switch(y) {
-                case 1: btn.setLocation(3*Manager.getWidth()/16, 
-                                       19*Manager.getHeightWithInsets()/36);
+                case 1: btn.setLocation(934, 880);
                         this.add(performanceBtn);
                         break;
-                case 2: btn.setLocation(13*Manager.getWidth()/32, 
-                                        19*Manager.getHeightWithInsets()/36);
-                        this.add(competitionBtn);
-                        break;
-                case 3: btn.setLocation(5*Manager.getWidth()/8, 
-                                       19*Manager.getHeightWithInsets()/36);
-                        this.add(testingBtn);
+                case 2: btn.setLocation(1634, 880);
+                        this.add(testCompetitionBtn);
                         break;
             }
         }
-    }    
-    @Override
-    public void paintComponent(Graphics g) {
-        g.setColor(myGray);
-        g.fillRect(0, 0, getSize().width, getSize().height);
-        super.paintComponent(g);
     }
-}
+}    

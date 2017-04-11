@@ -21,15 +21,9 @@ public class PerformanceColumnModel {
         columnModel = table.getColumnModel();
         Enumeration e = columnModel.getColumns();
         //del ID column and exchange columns
-        columnModel.removeColumn((TableColumn)columnModel.getColumn(0));        
+        columnModel.removeColumn((TableColumn)columnModel.getColumn(0));
+        columnModel.moveColumn(5, 1);        
         render.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-        while (e.hasMoreElements()) {            
-            TableColumn column = (TableColumn)e.nextElement();
-//            if (column.getHeaderValue() == "Опыт") {
-//               table.getColumn("Опыт").setCellRenderer(render);}
-//            else if (column.getHeaderValue() == "ДР")
-//               table.getColumn("ДР").setCellRenderer(render);
-        }
         table.setColumnModel(columnModel);
     }       
 }

@@ -40,15 +40,17 @@ public class CommonButtonsPanel extends JPanel {
                                              JumpToMainFrameBtnListener());
     }  
     private void createBackBtn() {
-        backBtn = new JButton("Назад");
+        backBtn = new JButton("⟵");
         backBtn.setSize(100, 70);
         backBtn.setLocation(50, 30);
         backBtn.setBackground(Color.LIGHT_GRAY);
         CommonSettings.settingFont30(backBtn);
         this.add(backBtn);
+        backBtn.addActionListener(new controllers.CommonButtons.
+                                      BackBtnListener());
     }
     private void createNextBtn() {
-        nextBtn = new JButton("Вперед");
+        nextBtn = new JButton("⟶");
         nextBtn.setSize(100, 70);
         nextBtn.setLocation(3018, 30);
         nextBtn.setBackground(Color.LIGHT_GRAY);
@@ -72,6 +74,16 @@ public class CommonButtonsPanel extends JPanel {
             case (10): //organizationPage
                 getBackBtn().setVisible(false);
                 getBackBtn().setEnabled(false);
+                getToMainFrameBtn().setVisible(true);
+                getToMainFrameBtn().setEnabled(true);
+                getNextBtn().setVisible(false);
+                getNextBtn().setEnabled(false);
+                getSettingBtn().setVisible(false);
+                getSettingBtn().setEnabled(false);                    
+                break; 
+            case (30): //PerformanceEditPage
+                getBackBtn().setVisible(true);
+                getBackBtn().setEnabled(true);
                 getToMainFrameBtn().setVisible(true);
                 getToMainFrameBtn().setEnabled(true);
                 getNextBtn().setVisible(false);

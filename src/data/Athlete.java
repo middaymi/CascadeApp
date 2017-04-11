@@ -98,6 +98,11 @@ public class Athlete {
     public void setSex(boolean sex) {
         this.sex = sex;
     }    
+    
+    @Override
+    public String toString() {
+        return getSurname() + " " + getName() + " " + getMiddlename();
+    }
 }
 
 

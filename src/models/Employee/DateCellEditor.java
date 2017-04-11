@@ -2,17 +2,17 @@ package models.Employee;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Calendar;
 
 public class DateCellEditor extends AbstractCellEditor implements TableCellEditor {
     // редактор - прокручивающийся список
     private JSpinner editor;
     
-    // конструктор
+    // конструктор 
     public DateCellEditor() {
         // настраиваем прокручивающийся список
-        SpinnerDateModel model = new SpinnerDateModel( new java.sql.Date(System.currentTimeMillis()), null, null, Calendar.SHORT_STANDALONE);
+        SpinnerDateModel model = new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH);
         editor = new JSpinner(model);
     }
     

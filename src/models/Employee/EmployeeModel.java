@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 import data.Employee;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -101,7 +100,14 @@ public class EmployeeModel extends AbstractTableModel{
                 //add titles
                 setColumnNames(titles[i]);
                 //add columnType
-                type = Class.forName(rsmd.getColumnClassName(i+1));
+                System.out.println(rsmd.getColumnClassName(i+1));
+                if (rsmd.getColumnClassName(i+1).equals("java.sql.Date")) {
+                    type = Class.forName("java.util.Date");
+                }
+                else {
+                    type = Class.forName(rsmd.getColumnClassName(i+1));
+                }
+                
                 setColumnTypes(type);                 
             } 
                                      
@@ -128,7 +134,9 @@ public class EmployeeModel extends AbstractTableModel{
                             break;
                         case ("Birthday"):
                             //get sql.Date, convert to util.
-                            rowEmployee.setBirthday((rs.getDate(i + 1)));
+                            java.util.Date date = new java.util.Date();
+                            date.setTime(rs.getDate(i + 1).getTime());                                    
+                            rowEmployee.setBirthday(date);
                             break;
                         case ("Experience"):
                             rowEmployee.setExperience(rs.getInt(i + 1));
@@ -156,6 +164,13 @@ public class EmployeeModel extends AbstractTableModel{
             Logger.getLogger(EmployeeModel.class.getName()).
                              log(Level.SEVERE, 
                              "not define class type of data", ex);
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
+                        "not close DB connection in  setDataSource()", ex);
+            }
         }        
     } 
      
@@ -198,54 +213,71 @@ public class EmployeeModel extends AbstractTableModel{
     //CATCH CHANGE CELL VALUE***************************************************
     public void setValueAt(Object value, int row, int column) {                        
         //will get an edited class
-        Employee setClass;        
         //Employee row-exemplar
-        setClass = getDataByIndex(row);         
-                            
+        Employee setClass = getDataByIndex(row);        
+  
+        String valueStr = "";
+        
         switch (getEnColumnNames().get(column)) {                 
-            case ("Name"):                        
+            case ("Name"):              
+                valueStr = "'" + ((String)value).trim() + "'";
                 setClass.setName(((String)value).trim());
                 break;                            
-            case ("Surname"):                        
+            case ("Surname"):           
+                valueStr = "'" + ((String)value).trim() + "'";
                 setClass.setSurname(((String)value).trim());
                 break;                            
             case ("Middlename"):
+                valueStr = "'" + ((String)value).trim() + "'";
                 setClass.setMiddlename(((String)value).trim());
                 break;
-            case ("Birthday"):
-                setClass.setBirthday((Date)value);                        
-                break;
-            case ("Experience"):
-                setClass.setExperience((Integer)value);
-                break;
             case ("Education"):
+                valueStr = "'" + ((String)value).trim() + "'";
                 setClass.setEducation(((String)value).trim());                        
                 break;
             case ("Post"):
+                valueStr = "'" + ((String)value).trim() + "'";
                 setClass.setPost(((String)value).trim());
                 break;
+            case ("Birthday"):
+                long date = ((java.util.Date)value).getTime();
+                valueStr = "'" + new java.sql.Date(date) + "'";
+                setClass.setBirthday((java.util.Date)value);                        
+                break;
+            case ("Experience"):
+                valueStr = (String)value;
+                setClass.setExperience((Integer)value);
+                break;            
         }             
-        updateData(row, column, value);      
+        updateData(row, column, valueStr);      
    }  
        
     //UPDATE FIELDS IN DB AFTER EDIT TABLE CELL*********************************
-    public void updateData(int row, int column, Object value) { 
+    public void updateData(int row, int column, String value) { 
         String query;
+        PreparedStatement pstmt = null;
         try { 
           
             //create updateQuery 
             query = "UPDATE " + "EMPLOYEE " +
                     "SET " + enColumnNames.get(column) + " = " +
-                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 0) + ";";
+                    value + " WHERE ID = " + getValueAt(row, 0) + ";";
             
             System.out.println(query);
             //update
-            PreparedStatement pstmt = DBC.prepareStatement(query);
+            pstmt = DBC.prepareStatement(query);
             pstmt.executeUpdate(); 
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).
                          log(Level.SEVERE, "Something wrong with SQLquery,"
                                          + "no update", ex);
+        } finally {
+            try {
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
+                                "not close connection in updateData()", ex);
+            }
         } 
     }
     
@@ -281,7 +313,7 @@ public class EmployeeModel extends AbstractTableModel{
     //del a row from holderArrayList and autoRepaint table 
     private void removeRow(int sel) {          
         getData().remove(sel);
-        fireTableRowsDeleted(sel, sel);    
+        fireTableRowsDeleted(sel, sel);        
     }
     
     //INSERT_ROW****************************************************************
@@ -304,55 +336,60 @@ public class EmployeeModel extends AbstractTableModel{
         insertRowIntoTable(newRow);
     }
     
-    private void insertRowIntoTable (Employee employee)  {        
+    private void insertRowIntoTable (Employee employee)  {
+        Statement stmt = null;
+        ResultSet rs;
         try {
             //add empty row
             String query = "INSERT INTO EMPLOYEE "
-                         + "VALUES ('', '', '', null, 0, '', '')";
+                         + "VALUES ('', '', '', GETDATE(), 0, '', '')";
             System.out.println(query);
             PreparedStatement pstmt = DBC.prepareStatement(query);
             pstmt.execute();
             
             //get ID added empty row
             String selectID = "SELECT IDENT_CURRENT('EMPLOYEE')";
-            Statement stmt = DBC.createStatement();
-            ResultSet rs = stmt.executeQuery(selectID);
+            stmt = DBC.createStatement();
+            rs = stmt.executeQuery(selectID);
             while (rs.next()) {
                 employee.setId(rs.getInt(1));
                 System.out.println(rs.getInt(1));
             }       
-          
-        //pstmt.close();
-        //stmt.close();
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE,
                        "Not insert a new row into DB or not get row ID", ex);
+        } finally {              
+            try {
+                stmt.close();
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
+                        "no close DB connection in insertRowIntoTable()", ex);
+            }
         }        
     }
     
     //DEL_EMPTY_ROWS************************************************************
     public void delEmptyRows() {
+        Statement stmt = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         //delete from table
         try {            
             String query = "SELECT ID FROM EMPLOYEE "
                          + "WHERE Name = '' AND Surname = '';";
             System.out.println(query);
-            Statement stmt = DBC.createStatement();
-            ResultSet rs = stmt.executeQuery(query); 
+            stmt = DBC.createStatement();
+            rs = stmt.executeQuery(query); 
                         
             //get id rows for del
             int i = 1;
-            
-            //if not empty rows
-            //if (rs.) {return;}
-            
+                        
             //if there are empty rows
-            while (rs.next()) { 
-                System.out.println("I = : " + i + " RS: " + rs.getInt(i));
+            while (rs.next()) {                 
                 for (int j = 0; j < getData().size(); j++) {                                        
                     if (((Employee) getDataByIndex(j)).getId() == rs.getInt(i)) {
-                        removeRow(j);
-                        System.out.println("J DEL: " + j);
+                        removeRow(j);                        
                     }
                 }
             }
@@ -370,13 +407,22 @@ public class EmployeeModel extends AbstractTableModel{
             String queryDelDB = "DELETE FROM EMPLOYEE "
                     + "WHERE Name = '' AND Surname = '' AND Middlename = '';";
             System.out.println(queryDelDB);
-            PreparedStatement pstmt = DBC.prepareStatement(queryDelDB);
+            pstmt = DBC.prepareStatement(queryDelDB);
             pstmt.execute();          
             
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
                              "Cannot delete empty rows", ex);
-        }
+        } finally {
+            try {
+                pstmt.close();
+                stmt.close();
+                rs.close();       
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeModel.class.getName()).log(Level.SEVERE, 
+                                "not close DB connection in delEmptyRows()", ex);
+            }      
+        }       
     }
       
     //GETTERS*******************************************************************

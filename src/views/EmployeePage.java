@@ -10,6 +10,7 @@ package views;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -57,7 +58,7 @@ public class EmployeePage extends JPanel {
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
         table.setRowSorter(new TableRowSorter(empModel));
-        //table.setDefaultEditor(java.sql.Date.class, new DateCellEditor());
+        table.setDefaultEditor(Date.class, new DateCellEditor());
         table.setDefaultRenderer(String.class, new MultiLineCell());
         //table.setRowSelectionAllowed(true);        
     } 
@@ -71,8 +72,9 @@ public class EmployeePage extends JPanel {
         scrlPane = new JScrollPane(table); 
         scrlPane.setVisible(true);
         
-        //scrlPane.setBackground(new Color(80, 80, 80, 30));
-        //scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
+        //Color newColor = new Color(80, 80, 80, 30);        
+        //scrlPane.setBackground(newColor);
+        //scrlPane.getViewport().setBackground(newColor);
                 
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);                

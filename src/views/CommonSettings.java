@@ -18,7 +18,7 @@ public class CommonSettings {
         obj.setLayout(null);
         obj.setSize(Manager.getWidthWithInsets(), 
                     Manager.getHeightWithInsets());
-        obj.setOpaque(false);       
+        obj.setOpaque(false);              
     }
     
     //FONTS*********************************************************************
