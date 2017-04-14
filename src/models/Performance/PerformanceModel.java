@@ -28,12 +28,12 @@ public class PerformanceModel extends AbstractTableModel{
     private ArrayList <Performance> data = new ArrayList();  
         
     //HEADER********************************************************************
-    //service array for original columnNames
+    //service array for original columnNames like in sqlTable
     private ArrayList <String> enColumnNames = new ArrayList();    
     //table headers
     private String titles[] = {"ID", "Название", "Фонограмма", "Дизайн костюма", 
                                "Фото костюма", "Описание", "Сезон"};     
-    //order like in sqlTable; then name, surname are swaped 
+    //viewing in table column names_rus
     private ArrayList <String> columnNames = new ArrayList();    
     //list of columns type 
     private ArrayList <Object> columnTypes = new ArrayList();     
@@ -118,7 +118,6 @@ public class PerformanceModel extends AbstractTableModel{
                 type = Class.forName(rsmd.getColumnClassName(i+1));
                 setColumnTypes(type);                 
             } 
-            System.out.println(enColumnNames);
                                      
             //?something for table
             fireTableStructureChanged();
@@ -301,10 +300,10 @@ public class PerformanceModel extends AbstractTableModel{
         //change table view
         fireTableRowsInserted(rowIndex, rowIndex);
         //insert into db
-        insertRowIntoTable(newRow, rowIndex);
+        insertRowIntoTable(newRow);
     }
     
-    private void insertRowIntoTable (Performance performance, int rowIndex)  {        
+    private void insertRowIntoTable (Performance performance)  {        
         try {     
             int tempID = 0;
             //get ID added empty row
@@ -346,8 +345,7 @@ public class PerformanceModel extends AbstractTableModel{
             int i = 1;
                         
             //if there are empty rows
-            while (rs.next()) {     
-                System.out.println("EMPTY ROWS ID: " + rs.getInt(i));
+            while (rs.next()) {                     
                 for (int j = 0; j < getData().size(); j++) {
                     if (((Performance) getDataByIndex(j)).getId() == rs.getInt(i)) {
                         //delete rows from data and table
@@ -433,7 +431,7 @@ public class PerformanceModel extends AbstractTableModel{
         return getColumnNames().size();
     }
     //get cell column type
-    public Class getColumnClass(int column) {
+    public Class getColumnClass(int column) { 
         return (Class)getColumnTypes().get(column);
     }
     //get cell name

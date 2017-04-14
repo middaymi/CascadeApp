@@ -157,11 +157,9 @@ public class Manager {
                 getPerPage().setVisible(true);
                 getComBtnPanel().useBtns(20);
                 break;
-            case(41):
-                System.out.println("THERE");
+            case(41):                
                 if (getPerEditPage() == null) createPerEditPage();
-                getPerEditPage().setVisible(true);
-                //change, add backBtn
+                getPerEditPage().setVisible(true);                
                 getComBtnPanel().useBtns(30);
                 break;
             case(50):

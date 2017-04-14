@@ -1,4 +1,4 @@
-package controllers.Performance;
+package controllers.PerformancePage;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

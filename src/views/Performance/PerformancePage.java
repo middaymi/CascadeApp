@@ -49,7 +49,7 @@ public class PerformancePage extends JPanel {
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
         CommonSettings.settingFont30(table);
-        table.setRowSorter(new TableRowSorter(perModel));
+        table.setRowSorter(new TableRowSorter(perModel));        
     } 
     public JTable getTable() {
         return this.table;
@@ -60,10 +60,6 @@ public class PerformancePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
-        //color
-        //scrlPane.setBackground(new Color(80, 80, 80, 30));
-        //scrlPane.getViewport().setBackground(new Color(80, 80, 80, 30));
-        
         scrlPane.setSize(2000, 1180);
         scrlPane.setLocation(584, 230);
         this.add(scrlPane);
@@ -77,7 +73,7 @@ public class PerformancePage extends JPanel {
         changeBtn.setLocation(2334, 1440);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
-        changeBtn.addActionListener(new controllers.Performance.
+        changeBtn.addActionListener(new controllers.PerformancePage.
                                         ChangeBtnListener());
     }  
         private void setEditBtnSettings() {
@@ -88,7 +84,7 @@ public class PerformancePage extends JPanel {
         editBtn.setVisible(false);
         CommonSettings.settingFont30(editBtn);
         this.add(editBtn);       
-        editBtn.addActionListener(new controllers.Performance.
+        editBtn.addActionListener(new controllers.PerformancePage.
                                         EditBtnListener());
     }     
     private void setDelBtnSettings() {
@@ -99,7 +95,7 @@ public class PerformancePage extends JPanel {
         delBtn.setVisible(false);
         CommonSettings.settingFont30(delBtn);
         this.add(delBtn);
-        delBtn.addActionListener(new controllers.Performance.
+        delBtn.addActionListener(new controllers.PerformancePage.
                                      DelBtnListener());
     }     
     private void setAddBtnSettings() {
@@ -110,7 +106,7 @@ public class PerformancePage extends JPanel {
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
-        addBtn.addActionListener(new controllers.Performance.
+        addBtn.addActionListener(new controllers.PerformancePage.
                                      AddBtnListener());
     }     
     public void setBtnsMode(boolean mode) {
