@@ -10,8 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.JTextField;
 import views.CommonSettings;
 
 public class PerformanceEditPage extends JPanel { 
@@ -22,7 +21,6 @@ public class PerformanceEditPage extends JPanel {
     private JList list = null;    
     private JScrollPane scrl = null;
     private JComboBox athletesComboBox;
-    private String season;
     
     //athletes
     private JLabel athleteLbl;
@@ -35,6 +33,9 @@ public class PerformanceEditPage extends JPanel {
     private JComboBox seasonComboBox;
     private JButton addSeasonBtn;
     private JButton delSeasonBtn; 
+    
+    //text
+    private JTextField textField;
     
     //edit row of performance
     private int editingRow;
@@ -58,18 +59,30 @@ public class PerformanceEditPage extends JPanel {
         chooseBtnSeason();
         addBtnSeason();
         delBtnSeason();
+        
+        setTextField();
+    }
+    
+    //
+    private void setTextField() {
+        textField = new JTextField();
+        textField.setSize(690, 100);
+        textField.setLocation(1300, 530);
+        textField.setVisible(false);
+        this.add(textField);  
+        textField.addActionListener(new controllers.PerformanceEditPage.AddSeasonCB());
     }
         
     //ATHLETE*******************************************************************
     private void labelAthletes() {
-        setAthleteLbl(new JLabel("Список спортсменов-участников"));
-        getAthleteLbl().setSize(800, 100);
-        getAthleteLbl().setLocation(400, 200);
-        CommonSettings.settingFont30(getAthleteLbl());
-        CommonSettings.settingGrayBorder(getAthleteLbl());
-        getAthleteLbl().setOpaque(true);
-        getAthleteLbl().setBackground(Color.LIGHT_GRAY);
-        this.add(getAthleteLbl());
+        athleteLbl = new JLabel("Список спортсменов-участников");
+        athleteLbl.setSize(800, 100);
+        athleteLbl.setLocation(400, 200);
+        CommonSettings.settingFont30(athleteLbl);
+        CommonSettings.settingGrayBorder(athleteLbl);
+        athleteLbl.setOpaque(true);
+        athleteLbl.setBackground(Color.LIGHT_GRAY);
+        this.add(athleteLbl);
     } 
     
     private void listAthletes() {
@@ -84,10 +97,10 @@ public class PerformanceEditPage extends JPanel {
     
     //scroll for a list
     private void scrollAthletes() {
-        setScrl(new JScrollPane(getList()));
-        getScrl().setSize(800, 950);
-        getScrl().setLocation(400, 310);
-        this.add(getScrl());    
+        scrl = new JScrollPane(getList());
+        scrl.setSize(800, 950);
+        scrl.setLocation(400, 310);
+        this.add(scrl);    
     }
     
     private void comboAthletes() {
@@ -102,117 +115,89 @@ public class PerformanceEditPage extends JPanel {
     
     private void addBtnAthletes() {
         //button: add athlete to performance
-        setAddAthleteBtn(new JButton("+"));
-        getAddAthleteBtn().setFocusable(false);
-        getAddAthleteBtn().setSize(100, 100);
-        getAddAthleteBtn().setLocation(1100, 1270);
-        CommonSettings.settingFont30(getAddAthleteBtn());
-        getAddAthleteBtn().setBackground(Color.LIGHT_GRAY);
-        getAddAthleteBtn().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String element = (String)getAthletesComboBox().getSelectedItem();
-                getListModel().addElement(element);
-                int index = getListModel().size() - 1;
-                getList().setSelectedIndex(index);
-                getList().ensureIndexIsVisible(index);
-            }
-        });
-        this.add(getAddAthleteBtn());   
+        addAthleteBtn = new JButton("+");
+        addAthleteBtn.setFocusable(false);
+        addAthleteBtn.setSize(100, 100);
+        addAthleteBtn.setLocation(1100, 1270);
+        CommonSettings.settingFont30(addAthleteBtn);
+        addAthleteBtn.setBackground(Color.LIGHT_GRAY);
+        addAthleteBtn.addActionListener(new controllers.PerformanceEditPage.
+                                                        AddAthleteListener());
+        this.add(addAthleteBtn);   
     }
     
     private void delBtnAthletes() {
         //button: delete athlete from performance
-        setDelAthleteBtn(new JButton("-"));
+        delAthleteBtn = new JButton("-");
         CommonSettings.settingFont30(getDelAthleteBtn());
         getDelAthleteBtn().setFocusable(false);
         getDelAthleteBtn().setSize(100, 100);
         getDelAthleteBtn().setLocation(1100, 1380);
         getDelAthleteBtn().setBackground(Color.LIGHT_GRAY);
-        getDelAthleteBtn().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                getListModel().remove(getList().getSelectedIndex());
-            }
-        });
+        getDelAthleteBtn().addActionListener(new controllers.PerformanceEditPage.
+                                                        DelAthleteListener());
         this.add(getDelAthleteBtn());
-        //if athlete not chosen, not enable btn del
-        getList().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                if (getList().getSelectedIndex() >= 0) {
-                    getDelAthleteBtn().setEnabled(true);
-                } else {
-                    getDelAthleteBtn().setEnabled(false);
-                }
-            }
-        });
+        //if athlete not chosen, not enable btn del       
     }
     
-    //SEASON********************************************************************    
-    private String[] seasons = {
-            "2015/2016",
-            "2016/2017",
-        };
-    
+    //SEASON********************************************************************        
     private void labelSeason() {
-        setSeasonLbl(new JLabel("Настройка сезона постановки"));
-        getSeasonLbl().setSize(800, 100);
-        getSeasonLbl().setLocation(1300, 200);
-        CommonSettings.settingFont30(getSeasonLbl());
-        CommonSettings.settingGrayBorder(getSeasonLbl());
-        getSeasonLbl().setOpaque(true);
-        getSeasonLbl().setBackground(Color.LIGHT_GRAY);
-        this.add(getSeasonLbl());
+        seasonLbl = new JLabel("<html>Настройка сезона постановки. " +
+                               "<p align=center> " +
+                               "Для подтверждения смены сезона нажмите ✔. " +
+                               "<html>");
+        seasonLbl.setSize(800, 100);
+        seasonLbl.setLocation(1300, 200);
+        CommonSettings.settingFont30(seasonLbl);
+        CommonSettings.settingGrayBorder(seasonLbl);
+        seasonLbl.setOpaque(true);
+        seasonLbl.setBackground(Color.LIGHT_GRAY);
+        this.add(seasonLbl);
     }
     
     private void comboSeason() {
-        setSeasonComboBox(new JComboBox(seasons));
+        seasonComboBox = new JComboBox();
+        seasonComboBox.setEditable(false);
         CommonSettings.settingFont30(getSeasonComboBox());
-        getSeasonComboBox().setEditable(true);
-        getSeasonComboBox().setSize(690, 100);
-        getSeasonComboBox().setLocation(1300, 310);
-        this.add(getSeasonComboBox());
+        seasonComboBox.setSize(690, 100);
+        seasonComboBox.setLocation(1300, 310);
+        this.add(seasonComboBox);
     }
     
     private void chooseBtnSeason() {
-        setSetSeasonBtn(new JButton("✔"));
-        getSetSeasonBtn().setFocusable(false);
-        getSetSeasonBtn().setSize(100, 100);
-        getSetSeasonBtn().setLocation(2000, 310);
-        CommonSettings.settingFont30(getSetSeasonBtn());
-        getSetSeasonBtn().setBackground(Color.LIGHT_GRAY);
-        getSetSeasonBtn().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {               
-            }
-        });
-        this.add(getSetSeasonBtn());
+        setSeasonBtn = new JButton("✔");
+        setSeasonBtn.setFocusable(false);
+        setSeasonBtn.setSize(100, 100);
+        setSeasonBtn.setLocation(2000, 310);
+        CommonSettings.settingFont30(setSeasonBtn);
+        setSeasonBtn.setBackground(Color.LIGHT_GRAY);
+        setSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
+                                                       SetSeasonListener());
+        this.add(setSeasonBtn);
     }
     
     private void addBtnSeason() {
-        setAddSeasonBtn(new JButton("Добавить сезон"));
-        getAddSeasonBtn().setFocusable(false);
-        getAddSeasonBtn().setSize(340, 100);
-        getAddSeasonBtn().setLocation(1300, 420);
-        CommonSettings.settingFont30(getAddSeasonBtn());
-        getAddSeasonBtn().setBackground(Color.LIGHT_GRAY);
-        getAddSeasonBtn().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            }
-        });
-        this.add(getAddSeasonBtn());
+        addSeasonBtn = new JButton("Добавить сезон");
+        addSeasonBtn.setFocusable(false);
+        addSeasonBtn.setSize(340, 100);
+        addSeasonBtn.setLocation(1300, 420);
+        CommonSettings.settingFont30(addSeasonBtn);
+        addSeasonBtn.setBackground(Color.LIGHT_GRAY);
+        addSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
+                                                              AddSeasonBtnListener());
+        this.add(addSeasonBtn);
     }
     
     private void delBtnSeason() {
-        setDelSeasonBtn(new JButton("Удалить сезон"));
-        CommonSettings.settingFont30(getDelSeasonBtn());
-        getDelSeasonBtn().setFocusable(false);
-        getDelSeasonBtn().setSize(340, 100);
-        getDelSeasonBtn().setLocation(1650, 420);
-        getDelSeasonBtn().setBackground(Color.LIGHT_GRAY);
-        getDelSeasonBtn().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                //listModel.remove(list.getSelectedIndex());
-            }
-        });
-        this.add(getDelSeasonBtn());   
+        delSeasonBtn = new JButton("Удалить сезон");
+        CommonSettings.settingFont30(delSeasonBtn);
+        delSeasonBtn.setFocusable(false);
+        delSeasonBtn.setSize(340, 100);
+        delSeasonBtn.setLocation(1650, 420);
+        delSeasonBtn.setBackground(Color.LIGHT_GRAY);
+        delSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
+                                                    DelSeasonBtnListener());
+        this.add(delSeasonBtn);   
     }   
 
     public JList getList() {
@@ -220,45 +205,15 @@ public class PerformanceEditPage extends JPanel {
     }
     public DefaultListModel getListModel() {
         return listModel;
-    }
-    public JScrollPane getScrl() {
-        return scrl;
-    }
+    } 
     public JComboBox getAthletesComboBox() {
         return athletesComboBox;
-    }
-    public String getSeason() {
-        return season;
-    }
-    public JLabel getAthleteLbl() {
-        return athleteLbl;
-    }
-    public JButton getDelAthleteBtn() {
-        return delAthleteBtn;
-    }
-    public JButton getAddAthleteBtn() {
-        return addAthleteBtn;
-    }
-    public JLabel getSeasonLbl() {
-        return seasonLbl;
-    }
-    public JButton getSetSeasonBtn() {
-        return setSeasonBtn;
     }
     public JComboBox getSeasonComboBox() {
         return seasonComboBox;
     }
-    public JButton getAddSeasonBtn() {
-        return addSeasonBtn;
-    }
-    public JButton getDelSeasonBtn() {
-        return delSeasonBtn;
-    }
     public int getEditingRow() {
         return editingRow;
-    }
-    public String getSeasons() {
-        return season;
     }
 
     public void setList(JList list) {
@@ -267,43 +222,19 @@ public class PerformanceEditPage extends JPanel {
     public void setListModel(DefaultListModel listModel) {
         this.listModel = listModel;
     }
-    public void setScrl(JScrollPane scrl) {
-        this.scrl = scrl;
-    }
     public void setAthletesComboBox(JComboBox athletesComboBox) {
         this.athletesComboBox = athletesComboBox;
-    }
-    public void setSeason(String season) {
-        this.season = season;
-    }
-    public void setAthleteLbl(JLabel athleteLbl) {
-        this.athleteLbl = athleteLbl;
-    }
-    public void setDelAthleteBtn(JButton delAthleteBtn) {
-        this.delAthleteBtn = delAthleteBtn;
-    }
-    public void setAddAthleteBtn(JButton addAthleteBtn) {
-        this.addAthleteBtn = addAthleteBtn;
-    }
-    public void setSeasonLbl(JLabel seasonLbl) {
-        this.seasonLbl = seasonLbl;
-    }
-    public void setSetSeasonBtn(JButton setSeasonBtn) {
-        this.setSeasonBtn = setSeasonBtn;
     }
     public void setSeasonComboBox(JComboBox seasonComboBox) {
         this.seasonComboBox = seasonComboBox;
     }
-    public void setAddSeasonBtn(JButton addSeasonBtn) {
-        this.addSeasonBtn = addSeasonBtn;
-    }
-    public void setDelSeasonBtn(JButton delSeasonBtn) {
-        this.delSeasonBtn = delSeasonBtn;
-    }
     public void setEditingRow(int editingRow) {
         this.editingRow = editingRow;
     }
-    public void setSeasons(String season) {
-        this.season = season;
+    public JButton getDelAthleteBtn() {
+        return delAthleteBtn;
+    }
+    public JTextField getTextField() {
+        return textField;
     }
 }

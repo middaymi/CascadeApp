@@ -1,8 +1,8 @@
 //list.setToolTipText("bbliblbiu"); set text by Pointing
 
-
 package models.Performance;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import data.Athlete;
 import data.Season;
 import dataBase.DataBaseConnection;
@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.*;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import views.Manager;
 import views.Performance.PerformanceEditPage;
 
@@ -31,9 +33,12 @@ public class PerformanceEditModel {
     
     //athletes without which are in a list 
     private ArrayList<Athlete> athlets = new ArrayList<>();
-    
+        
     //edit row of performance
     private int editingRow;
+    
+    //actual actualSeason
+    private Season actualSeason = new Season();
     
     //singletone, get an object link
     public static PerformanceEditModel getPerformanceEditModelInstance() {
@@ -42,19 +47,25 @@ public class PerformanceEditModel {
         return performanceEditModelInstance;
     } 
 
-    private PerformanceEditModel() {}
-
+    private PerformanceEditModel() {};
+    
+    public Season getActualSeason() {
+        return actualSeason;
+    }
+    
     //update all fields
      public void updateInfo() {
-        //list
+        //create a list
         setDatatoList();
-        //combobox
+        //create a combobox
         getAllAthletes();
+        //create a combobox
+        setAllSeasonstoCombobox();
     }   
     
     /*set values for list and arrays
     pick athlets, season*/
-    public void setDatatoList() { 
+    private void setDatatoList() { 
         //a big bad crutch
         perEditPage = Manager.getManagerInstance().getPerEditPage();
         //for geting a query
@@ -66,10 +77,10 @@ public class PerformanceEditModel {
         editingRow = perModel.selRow();  
         
         //clear all arrays and variables         
-        athletesByPerf.clear();
+        athletesByPerf.clear();        
         perEditPage.getListModel().clear();
-        perEditPage.setSeason("");
         perEditPage.getAthletesComboBox().removeAllItems();
+        perEditPage.getSeasonComboBox().removeAllItems();
         
         /*select performance by selected-row id
         which row-settings to afford
@@ -104,12 +115,10 @@ public class PerformanceEditModel {
 
                 //get a season of performance
                 if(cicleTemp == 0)  {
-                    Season season = new Season();
-                    season.setId(rsAthletes.getInt(5));
-                    season.setPeriod(rsAthletes.getString(6));                    
-                    //add it selected performance-season  to field                                        
-                    perEditPage.setSeason(season.getPeriod());
+                    actualSeason.setId(rsAthletes.getInt(5));
+                    actualSeason.setPeriod(rsAthletes.getString(6));                    
                 }
+            
                 //not get season later
                 cicleTemp++;
                 
@@ -121,7 +130,7 @@ public class PerformanceEditModel {
             for (int i = 0; i < athletesByPerf.size(); i++) {                               
                 perEditPage.getListModel().addElement(athletesByPerf.get(i));
             }            
-            perEditPage.getList().setModel(perEditPage.getListModel());           
+            perEditPage.getList().setModel(perEditPage.getListModel());               
             
         } catch (SQLException ex) {
         Logger.getLogger(PerformanceEditPage.class.getName()).log(Level.SEVERE, 
@@ -143,7 +152,9 @@ public class PerformanceEditModel {
     /*set values for combobox
     athlets which are not at a performance list
     performance athlet's list + athletes in combobox = all athlets*/
-    public void getAllAthletes() {
+    private void getAllAthletes() {
+        athlets.clear();
+        perEditPage.getAthletesComboBox().removeAllItems();
         Statement stmtAllAthletes = null;
         ResultSet rsAllAthletes = null;
         String allAthletes;
@@ -179,7 +190,8 @@ public class PerformanceEditModel {
                 athlets.add(athlete); 
             }                            
         } catch (SQLException ex) {
-            Logger.getLogger(PerformanceEditPage.class.getName()).log(Level.SEVERE, 
+            Logger.getLogger(PerformanceEditPage.class.getName()).
+                             log(Level.SEVERE, 
                              "no get all athletes, to show in combobox", ex);
         }
         //close connection to DB
@@ -193,5 +205,253 @@ public class PerformanceEditModel {
                         "no close connection to DB getAllAthletes()", ex);
             }
         }
-    }  
+    }   
+      
+    //get values to combobox of seasons
+    public void setAllSeasonstoCombobox() {        
+        //clear combobox
+        perEditPage.getSeasonComboBox().removeAllItems(); 
+        
+        //add new items
+        for (int i = 0; i < perModel.getSeasons().size(); i++ ) {
+            perEditPage.getSeasonComboBox().addItem
+                                       (perModel.getSeasons().get(i)); 
+        }
+        //view actual season of performance in combobox
+        perEditPage.getSeasonComboBox().setSelectedItem(actualSeason);
+    }
+    
+    //CHANGE_SEASON*************************************************************
+    //change season in db and view
+    public void changeSeason() {
+        PreparedStatement pstmtChangeSeason = null;        
+        String chSeason;
+        
+        try {            
+            chSeason= "UPDATE SEASON_PERFORMANCE " +
+                      "SET IDseason = " + ((Season) perEditPage.getSeasonComboBox().
+                                          getSelectedItem()).getId() + " " +
+                      "WHERE SEASON_PERFORMANCE.IDperformance = " +
+                      perModel.getValueAt(editingRow, 0) + ";"; 
+            System.out.println("UPDATE SEASON: " + chSeason);
+            
+            //change season in db
+            pstmtChangeSeason = DBC.prepareStatement(chSeason);
+            pstmtChangeSeason.executeUpdate();
+            
+            //change actual season field  (at view)                       
+            actualSeason.setPeriod(((Season)perEditPage.getSeasonComboBox().
+                                            getSelectedItem()).getPeriod());       
+            actualSeason.setId(((Season)(perEditPage.getSeasonComboBox().
+                                         getSelectedItem())).getId());
+                        
+            JOptionPane.showMessageDialog(Manager.getPerPage(),
+                        "Сезон успешно изменен!",
+                        "Информация", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                           log(Level.SEVERE, 
+                           "not execute chSeason quetry in changeSeason()", ex);
+        }
+        finally {
+            try {
+                pstmtChangeSeason.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).log(Level.SEVERE, 
+                        "no close connection to DB, changeSeason()", ex);
+            }
+        }
+    }
+    
+    //ADD_ATHLETE_TO_PERFORMANCE************************************************
+    //add athlete to db and view
+    public void addAthlete() {
+        PreparedStatement pstmtaddAthl = null;
+        String addAthl;
+        
+        if (perEditPage.getAthletesComboBox().getItemCount() == 0) {
+            JOptionPane.showMessageDialog(Manager.getPerPage(),
+                        "Список спортсменов, доступных для добавления пуст",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        try {   
+            addAthl = "INSERT INTO SEASON_PERFORMANCE " + 
+                      "VALUES (" +
+                                actualSeason.getId() + ", " +
+                                ((Athlete)(perEditPage.getAthletesComboBox().
+                                           getSelectedItem())).getId() + ", " +
+                                perModel.getValueAt(editingRow, 0)  + " " +
+                              ");";
+            
+            //add to db
+            pstmtaddAthl = DBC.prepareStatement(addAthl);
+            pstmtaddAthl.execute();
+            
+            //addd to list
+            perEditPage.getListModel().addElement(((Athlete)perEditPage.
+                                                 getAthletesComboBox().
+                                                 getSelectedItem()).
+                                                 toString());
+            int index = perEditPage.getListModel().size() - 1;
+            //perEditPage.getList().setSelectedIndex(index);
+            perEditPage.getList().ensureIndexIsVisible(index);
+            
+            //remove athletes in combobox
+            getAllAthletes();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                    log(Level.SEVERE, 
+                    "some problems with add athlete, add to db or viewing, " +
+                    "addAthlete()", ex);
+        } finally {
+            try {
+                pstmtaddAthl.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                        log(Level.SEVERE, 
+                        "no close connection to db, addAthlete()", ex);
+            }
+        }
+    }
+
+    //DEL_ATHLETE_FROM_PERFORMANCE**********************************************
+    //from db and view
+    public void delAthlete() {
+        if (perEditPage.getList().getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(Manager.getPerPage(),
+                        "Перед удалением необходимо выделить спортсмена",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }        
+        PreparedStatement pstmtdelAthl = null;
+        String delAthl;
+            try {
+                delAthl = "DELETE FROM SEASON_PERFORMANCE " +
+                          "WHERE SEASON_PERFORMANCE.IDathlete = " +
+                               ((Athlete)perEditPage.getList().
+                               getSelectedValue()).getId() + ";";
+                //del from db
+                pstmtdelAthl = DBC.prepareStatement(delAthl);
+                pstmtdelAthl.execute();
+
+                //remove from list
+                perEditPage.getListModel().remove
+                (perEditPage.getList().getSelectedIndex());
+                
+                //add to combobox
+                getAllAthletes();
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                   log(Level.SEVERE, 
+                   "some problems with del athlete, add to db or viewing, " +
+                   "addAthlete()", ex);
+        } finally {
+            try {
+                pstmtdelAthl.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                       log(Level.SEVERE, 
+                       "no close connection to db, delAthlete()", ex);
+            }
+        }
+    }
+    
+    public void addSeason() {
+        JTextField txt = perEditPage.getTextField();
+        txt.setVisible(true);              
+    }
+    
+    public int getNewSeasonID() {
+        String query;
+        int tempID = 0;
+
+        Statement stmt;
+        ResultSet rs;
+        try {
+            //get ID added empty row
+            query = "SELECT IDENT_CURRENT('SEASON')";
+            stmt = DBC.createStatement();
+            rs = stmt.executeQuery(query);
+            
+            while (rs.next()) {
+                tempID = rs.getInt(1)+ 1;
+            }
+            stmt.close();
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                         log(Level.SEVERE, 
+                             "not get ID for new season", ex);
+        }
+        return tempID;
+    }
+    
+    
+    public void addSeasonToDB(String value) {
+        PreparedStatement pstmt = null;
+        String query;        
+      try {
+            query = "INSERT INTO SEASON VALUES ('" + value + "');";
+            System.out.println(query);
+            
+            //add to db
+            pstmt = DBC.prepareStatement(query);
+            pstmt.execute();
+            
+        } catch(SQLException ex){
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                   log(Level.SEVERE, 
+                   "some problems with add season to db", ex);
+        } finally {
+            try {
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                       log(Level.SEVERE, 
+                       "no close connection to db, delAthlete()", ex);
+            }
+        }    
+    }
+    public boolean delSeasonFromDB(int value) {
+        PreparedStatement pstmt = null;
+        String query; 
+         try {
+            query = "DELETE FROM SEASON WHERE ID = " + value + ";";
+            System.out.println(query);
+            
+            //add to db
+            pstmt = DBC.prepareStatement(query);
+            pstmt.execute();
+            
+            pstmt.close();
+            
+        } catch(SQLServerException ex){
+            try {
+                JOptionPane.showMessageDialog(Manager.getPerPage(),
+                        "Невозможно удалить используемый сезон",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+                pstmt.close();
+                return false;
+            } catch (SQLException ex1) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                             log(Level.SEVERE, null, ex1);
+            }
+        } catch (SQLException ex) {
+            try {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                             log(Level.SEVERE, "", ex);
+                pstmt.close();
+            } catch (SQLException ex1) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).
+                             log(Level.SEVERE, null, ex1);
+                return false;
+            }
+        }
+         return true;
+    }
 }
+  

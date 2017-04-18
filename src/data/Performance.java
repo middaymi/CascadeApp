@@ -2,8 +2,8 @@ package data;
 
 //storage data class
 public class Performance { 
-    private int id;
-    private String season;
+    private int id;    
+    private Season season;
     private String fullName;
     private String phonogram;
     private String costumeDesign;
@@ -28,7 +28,7 @@ public class Performance {
     public String getDescription() {
         return description;
     }
-     public String getSeason() {
+     public Season getSeason() {
         return season;
     }
 
@@ -50,9 +50,15 @@ public class Performance {
     public void setDescription(String description) {
         this.description = description;
     }
+    public void setSeason(int season) {        
+        this.season.setId(season);
+    }
     public void setSeason(String season) {
+        this.season.setPeriod(season);
+    }
+    public void setSeason(Season season) {
         this.season = season;
-    }    
+    }
 }
 
 

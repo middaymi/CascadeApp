@@ -5,8 +5,9 @@
         <group>
             <file>file:/E:/GD/GitHub/CascadeApp/src/models/Performance/PerformanceModel.java</file>
             <file>file:/E:/GD/GitHub/CascadeApp/src/views/Performance/PerformanceEditPage.java</file>
+            <file>file:/E:/GD/GitHub/CascadeApp/src/controllers/PerformanceEditPage/DelSeason.java</file>
             <file>file:/E:/GD/GitHub/CascadeApp/src/models/Performance/PerformanceEditModel.java</file>
-            <file>file:/E:/GD/GitHub/CascadeApp/src/views/Performance/PerformancePage.java</file>
+            <file>file:/E:/GD/GitHub/CascadeApp/src/controllers/PerformanceEditPage/AddSeason.java</file>
         </group>
     </open-files>
 </project-private>
