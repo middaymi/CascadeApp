@@ -1,3 +1,9 @@
+/*
+TABLE
+SEASONS
+*/
+
+
 package models.Performance;
 
 import dataBase.DataBaseConnection;
@@ -18,7 +24,7 @@ import data.Performance;
 import data.Season;
 import javax.swing.JComboBox;
 
-public class PerformanceModel extends AbstractTableModel{
+public class PerformanceModel extends AbstractTableModel {
 
     private static PerformanceModel performanceModelInstance = null;
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
@@ -28,6 +34,8 @@ public class PerformanceModel extends AbstractTableModel{
         
     //DATA**********************************************************************
     private ArrayList <Performance> data = new ArrayList();  
+    //array of all seasons
+    private ArrayList<Season> seasons = new ArrayList<>(); 
         
     //HEADER********************************************************************
     //service array for original columnNames like in sqlTable
@@ -38,22 +46,20 @@ public class PerformanceModel extends AbstractTableModel{
     //viewing in table column names_rus
     private ArrayList <String> columnNames = new ArrayList();    
     //list of columns type 
-    private ArrayList <Object> columnTypes = new ArrayList(); 
-
-    //array of seasons
-    private ArrayList<Season> seasons = new ArrayList<>();  
+    private ArrayList <Object> columnTypes = new ArrayList();     
     
-    private JComboBox comboSeasons = new JComboBox();;
+    //combobox of seasons in a table
+    private JComboBox comboSeasons = new JComboBox();
     //**************************************************************************
     
-    //constructor
     private PerformanceModel() {
+        //can edit this table
         setEditable(true);
         //get all seasons
         getAllSeasonsFromDB();
-        //get all seasons and create combobox of them
-        createComboSeasons();
-        
+        /*get all seasons and 
+        create combobox of them*/
+        createComboSeasons();        
     }
     
     //singletone, get an object link
@@ -66,49 +72,51 @@ public class PerformanceModel extends AbstractTableModel{
     //editing
     public boolean isEditable() {
         return editable;
+    }       
+    
+    //TABLE*********************************************************************    
+    //OPEN EDIT MODE************************************************************
+    public int selRow() {
+        int sel = 0;
+        JTable perTable = Manager.getPerPage().getTable();
+        //get selected row
+        sel = perTable.getSelectedRow(); 
+        if (sel == -1) {    
+                JOptionPane.showMessageDialog(Manager.getPerPage(),
+                "Не выбрана постановка для редактирования",
+                "Ошибка", JOptionPane.WARNING_MESSAGE);                
+        }
+        return sel; 
     }
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    } 
     
-    //combobox-seasons cell 
-    public void createComboSeasons() {  
-        comboSeasons.removeAllItems();
-        comboSeasons.setEditable(false);
-        for (int i = 0; i < seasons.size(); i++) {
-            comboSeasons.addItem(seasons.get(i));
-        }           
-    }    
-    public JComboBox getComboSeasons() {
-        return comboSeasons;
-    }
-    
-    //SELECT ALL****************************************************************
-    //query: select all data from db
-    String selectAllFromPerformance =  "SELECT PERFORMANCE.*, " +
-                                             "SEASON.ID AS IDseason, " +
-                                             "SEASON.Period " +
-                                       "FROM PERFORMANCE, SEASON_PERFORMANCE, " +
-                                             "SEASON " +
-                                       "WHERE PERFORMANCE.ID = SEASON_PERFORMANCE.IDperformance " +
-                                              "AND " +
-                                              "SEASON_PERFORMANCE.IDseason = SEASON.ID " +
-                                       "GROUP BY PERFORMANCE.ID, " +
-                                              "PERFORMANCE.FullName, " +
-                                              "PERFORMANCE.Phonogram, " +
-                                                "PERFORMANCE.CostumeDesign, " +
-                                              "PERFORMANCE.CostumePhoto, " +
-                                              "PERFORMANCE.Description, " + 
-                                              "SEASON.ID, " +
-                                              "SEASON.Period " +
-                                       "ORDER BY PERFORMANCE.FullName DESC;";
-    
+    //GET AND SET DATA**********************************************************
+    //select all data from db
     private ResultSet getDataFromDB() {
+    String query; 
+      //select all from performance
+      query = "SELECT PERFORMANCE.*, " +
+                    "SEASON.ID AS IDseason, " +
+                    "SEASON.Period " +
+              "FROM PERFORMANCE, SEASON_PERFORMANCE, " +
+                    "SEASON " +
+              "WHERE PERFORMANCE.ID = SEASON_PERFORMANCE.IDperformance " +
+                     "AND " +
+                     "SEASON_PERFORMANCE.IDseason = SEASON.ID " +
+              "GROUP BY PERFORMANCE.ID, " +
+                     "PERFORMANCE.FullName, " +
+                     "PERFORMANCE.Phonogram, " +
+                       "PERFORMANCE.CostumeDesign, " +
+                     "PERFORMANCE.CostumePhoto, " +
+                     "PERFORMANCE.Description, " + 
+                     "SEASON.ID, " +
+                     "SEASON.Period " +
+              "ORDER BY PERFORMANCE.FullName DESC;";
+
         Statement stmt;
         ResultSet rs = null;
         try {
             stmt = DBC.createStatement();            
-            rs = stmt.executeQuery(selectAllFromPerformance); 
+            rs = stmt.executeQuery(query); 
         } catch (SQLException ex) {
             Logger.getLogger(PerformanceModel.class.getName()).
                              log(Level.SEVERE,"no executed "
@@ -116,10 +124,10 @@ public class PerformanceModel extends AbstractTableModel{
         }
         return rs;
     }
-    
-    //CREATE VALUES|ROWS FOR TABLE**********************************************
-    //get selectAllFromPerformance data from ResultSet, 
-    //push it to the data storage (there:performance)
+        
+    /*create values|rows for table
+    get selectAllFromPerformance data from ResultSet, 
+    push it to the data storage (there:performance)*/
      public void setDataSource() {        
         ResultSet rs = null; 
         Class type = null;
@@ -201,7 +209,7 @@ public class PerformanceModel extends AbstractTableModel{
         }        
     } 
      
-    //GET_VALUE*****************************************************************
+    //get selected value
     public Object getValueAt(int row, int column) {        
         Performance perLink;        
         perLink = (Performance)getData().get(row);        
@@ -234,7 +242,7 @@ public class PerformanceModel extends AbstractTableModel{
         return returnField;        
     }  
     
-    //CATCH CHANGE CELL VALUE***************************************************
+    //catch changes cell value
     public void setValueAt(Object value, int row, int column) {                        
         //will get an edited class
         Performance setClass;        
@@ -261,13 +269,14 @@ public class PerformanceModel extends AbstractTableModel{
                 setClass.setSeason(((Season)value).getId());
                 break;
             case ("Period"):                
-                setClass.setSeason((((Season)value)));
+                setClass.setSeason((Season)value);
                 break;
         }             
         updateData(row, column, value);      
-   }  
-       
-    //UPDATE FIELDS IN DB AFTER EDIT TABLE CELL*********************************
+    }  
+    
+    //UPDATE DATA***************************************************************
+    //update fields in db after edit table cell  
     public void updateData(int row, int column, Object value) {
         String query;
         try { 
@@ -290,6 +299,60 @@ public class PerformanceModel extends AbstractTableModel{
                          log(Level.SEVERE, "Something wrong with SQLquery,"
                                          + "no update", ex);
         } 
+    }
+    
+    //INSERT_ROW****************************************************************
+    //to view
+    public void addPerformance() {
+        //get the least index, bottom add
+        int rowIndex = getData().size();
+        //create empty data class
+        Performance newRow = new Performance();        
+        newRow.setFullName("");
+        newRow.setPhonogram("");
+        newRow.setCostumeDesign("");
+        newRow.setCostumePhoto("");
+        newRow.setDescription("");        
+        setData(newRow);        
+        //change table view
+        fireTableRowsInserted(rowIndex, rowIndex);
+        //insert into db
+        insertRowIntoTable(newRow);
+    }
+    //insert to db
+    private void insertRowIntoTable (Performance performance)  { 
+        String query;
+        String selectID;
+        int tempID = 0;
+        
+        Statement stmt;
+        ResultSet rs;
+        try {               
+            //get ID added empty row
+            selectID = "SELECT IDENT_CURRENT('PERFORMANCE')";
+            stmt = DBC.createStatement();
+            rs = stmt.executeQuery(selectID);
+            while (rs.next()) {
+                tempID = rs.getInt(1)+ 1;
+                performance.setId(tempID);
+            }            
+            
+            //add empty row
+            query = "INSERT INTO PERFORMANCE " +
+                    "VALUES (" + tempID + ", '', '', '', ''); \n" +
+                    "INSERT INTO SEASON_PERFORMANCE " +
+                    "VALUES ((SELECT TOP 1 ID from SEASON), NULL, " + tempID + ");";                   
+
+            System.out.println(query);
+            PreparedStatement pstmt = DBC.prepareStatement(query);
+            pstmt.execute();                
+          
+        pstmt.close();
+        stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceModel.class.getName()).log(Level.SEVERE,
+                       "Not insert a new row into DB or not get row ID", ex);
+        }        
     }
     
    //DELETE_ROW*****************************************************************  
@@ -328,60 +391,7 @@ public class PerformanceModel extends AbstractTableModel{
         getData().remove(sel);
         fireTableRowsDeleted(sel, sel);
     } 
-    
-    //INSERT_ROW****************************************************************
-    public void addPerformance() {
-        //get the least index, bottom add
-        int rowIndex = getData().size();
-        //create empty data class
-        Performance newRow = new Performance();        
-        newRow.setFullName("");
-        newRow.setPhonogram("");
-        newRow.setCostumeDesign("");
-        newRow.setCostumePhoto("");
-        newRow.setDescription("");        
-        setData(newRow);        
-        //change table view
-        fireTableRowsInserted(rowIndex, rowIndex);
-        //insert into db
-        insertRowIntoTable(newRow);
-    }
-    
-    private void insertRowIntoTable (Performance performance)  { 
-        String query;
-        String selectID;
-        int tempID = 0;
         
-        Statement stmt;
-        ResultSet rs;
-        try {               
-            //get ID added empty row
-            selectID = "SELECT IDENT_CURRENT('PERFORMANCE')";
-            stmt = DBC.createStatement();
-            rs = stmt.executeQuery(selectID);
-            while (rs.next()) {
-                tempID = rs.getInt(1)+ 1;
-                performance.setId(tempID);
-            }            
-            
-            //add empty row
-            query = "INSERT INTO PERFORMANCE " +
-                    "VALUES (" + tempID + ", '', '', '', ''); \n" +
-                    "INSERT INTO SEASON_PERFORMANCE " +
-                    "VALUES ((SELECT TOP 1 ID from SEASON), NULL, " + tempID + ");";                   
-
-            System.out.println(query);
-            PreparedStatement pstmt = DBC.prepareStatement(query);
-            pstmt.execute();                
-          
-        pstmt.close();
-        stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(PerformanceModel.class.getName()).log(Level.SEVERE,
-                       "Not insert a new row into DB or not get row ID", ex);
-        }        
-    }
-    
     //DEL_EMPTY_ROWS************************************************************
     public void delEmptyRows() {        
         try { 
@@ -426,23 +436,20 @@ public class PerformanceModel extends AbstractTableModel{
             Logger.getLogger(PerformanceModel.class.getName()).log(Level.SEVERE, 
                              "Cannot delete empty rows", ex);
         }
-    }
+    }    
+    //**********************************###*************************************
     
-    //OPEN EDIT MODE************************************************************
-    public int selRow() {
-        int sel = 0;
-        JTable perTable = Manager.getPerPage().getTable();
-        //get selected row
-        sel = perTable.getSelectedRow(); 
-        if (sel == -1) {    
-                JOptionPane.showMessageDialog(Manager.getPerPage(),
-                "Не выбрана постановка для редактирования",
-                "Ошибка", JOptionPane.WARNING_MESSAGE);
-                
-        }
-        return sel; 
-    }
     
+    //SEASONS*******************************************************************
+    //combobox-seasons cell 
+    public void createComboSeasons() {  
+        comboSeasons.removeAllItems();
+        comboSeasons.setEditable(false);
+        for (int i = 0; i < seasons.size(); i++) {
+            comboSeasons.addItem(seasons.get(i));
+        }           
+    }
+
     //GET ALL SEASONS AND ADD THEM TO AN ARRAY**********************************
     public void getAllSeasonsFromDB() {
         seasons.clear();
@@ -462,7 +469,7 @@ public class PerformanceModel extends AbstractTableModel{
                 season.setPeriod(rsAllSeasons.getString(2));
                 seasons.add(season);              
             }
-            System.out.println("newseasons array " + seasons);
+            
         } catch (SQLException ex) {
             Logger.getLogger(PerformanceEditModel.class.getName()).
                              log(Level.SEVERE, 
@@ -477,23 +484,35 @@ public class PerformanceModel extends AbstractTableModel{
                                  log(Level.SEVERE, 
                                  "no close connection to DB, getAllSeason()", ex);
             }
-        }
+        }        
     }
+    //**********************************###*************************************
     
+  
+      
+    //GETTERS*******************************************************************
     //return the array of all seasons (for comboboxes)
     public ArrayList<Season> getSeasons() {
         return this.seasons;
     }
-      
-    //GETTERS*******************************************************************
+    //get all seasons
+    public JComboBox getComboSeasons() {
+        return comboSeasons;
+    }
     //can edit or not
     public boolean isCellEditable(int row, int column) {
-		return getCellEditable();
-    }    
+        return getCellEditable();
+    }  
+    
+    //DELETE ONE OF THEM
     //get a link of Employee class with set data
     public ArrayList getEmployeeDataLink() {
         return data;	 
     }
+    public ArrayList getData() {
+        return data;
+    } 
+    
     //get rows number
     public int getRowCount() {
         synchronized (getData()) {
@@ -511,14 +530,10 @@ public class PerformanceModel extends AbstractTableModel{
     }
     public Performance getDataByIndex(int i) {
         return (Performance)data.get(i);
-    }
-    public ArrayList getData() {
-        return data;
-    }    
+    }   
     public boolean getCellEditable() {
         return editable;
     }
-
     //get columns number
     public int getColumnCount() {
         return getColumnNames().size();
@@ -533,6 +548,10 @@ public class PerformanceModel extends AbstractTableModel{
     } 
     
     //SETTERS*******************************************************************
+    //set editable of a table
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
     public void setColumnNames(String str) {
         this.columnNames.add(str);
     }

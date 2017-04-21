@@ -10,31 +10,38 @@
 
 package views;
 
+import views.TestCom.TestComPage;
 import views.Performance.PerformancePage;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import views.Performance.*;
-import views.TestingCompetition.*;
+import views.TestCom.*;
 
 public class Manager {
     
     private static Manager managerInstance = null;
     
     private static MainFrame mFrame = null;
+    private static CommonButtonsPanel comBtnPanel = null;
     private static StartPage stPage = null;
     private static OrganizationPage orgPage = null;
     private static EmployeePage empPage = null;
     private static AthletePage athPage = null;
     private static PerformancePage perPage = null;
     private static PerformanceEditPage perEditPage = null;
-    private static TestingCompetitionPage testCompPage = null;
-    private static CommonButtonsPanel comBtnPanel = null;
+    private static TestComPage testCompPage = null;
+    private static OfpEditPage ofpEditPage = null;
+    private static SfpEditPage sfpEditPage = null;
+    private static SingleEditPage singleEditPage = null;
+    private static GlasialEditPage glasialEditPage = null;    
     
     private static int width;
     private static int height;
     private static int insetsTopBottom;
     private static int insetsLeftRight;
+    
+    private static int chosenPage = -1;
            
     private Manager() { 
         width = getResolution().width;
@@ -113,10 +120,26 @@ public class Manager {
     }
 
     //TESTING_AND_COMPETITION_PAGE**********************************************
-     private static void createTestingCompetitionPage() {
-        testCompPage = new TestingCompetitionPage();
-        getmFrame().getContentPane().add(getTestCompPage(), BorderLayout.CENTER);
-    }   
+    private static void createTestingCompetitionPage() {
+        testCompPage = new TestComPage();
+        getmFrame().getContentPane().add(testCompPage, BorderLayout.CENTER);
+    } 
+    private static void createGlasialEditPage() {
+        glasialEditPage = new GlasialEditPage();
+        getmFrame().getContentPane().add(glasialEditPage, BorderLayout.CENTER);
+    }
+    private static void createOfpEditPage() {
+        ofpEditPage = new OfpEditPage();
+        getmFrame().getContentPane().add(ofpEditPage, BorderLayout.CENTER);
+    }
+    private static void createSfpEditPage() {
+        sfpEditPage = new SfpEditPage();
+        getmFrame().getContentPane().add(sfpEditPage, BorderLayout.CENTER);
+    }
+    private static void createSingleEditPage() {
+        singleEditPage = new SingleEditPage();
+        getmFrame().getContentPane().add(singleEditPage, BorderLayout.CENTER);
+    }
     
     //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
     private static void hideAllPanels() {
@@ -127,6 +150,10 @@ public class Manager {
         if (getPerPage() != null) getPerPage().setVisible(false);
         if (getPerEditPage() != null) getPerEditPage().setVisible(false);
         if (getTestCompPage() != null) getTestCompPage().setVisible(false);
+        if (glasialEditPage != null) glasialEditPage.setVisible(false);
+        if (ofpEditPage != null) ofpEditPage.setVisible(false);
+        if (sfpEditPage != null) sfpEditPage.setVisible(false);
+        if (singleEditPage != null) singleEditPage.setVisible(false);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -136,39 +163,73 @@ public class Manager {
             case(0):
                 getStPage().setVisible(true);
                 getComBtnPanel().useBtns(0);
-                break;  
+                chosenPage = 0;
+                break;                 
             case(10):
                 if (getOrgPage() == null) createOrganizationPage();
                 getOrgPage().setVisible(true);
                 getComBtnPanel().useBtns(10);
+                chosenPage = 10;
                 break;
             case(20):
                 if (getEmpPage() == null) createEmployeePage();
                 getEmpPage().setVisible(true); 
                 getComBtnPanel().useBtns(20);
+                chosenPage = 20;
                 break;
             case(30):
                 if (getAthPage() == null) createAthletePage();
                 getAthPage().setVisible(true);
                 getComBtnPanel().useBtns(20);
+                chosenPage = 30;
                 break;
             case(40):
                 if (getPerPage() == null) createPerformancePage();
                 getPerPage().setVisible(true);
                 getComBtnPanel().useBtns(20);
+                chosenPage = 40;
                 break;
             case(41):                
                 if (getPerEditPage() == null) createPerEditPage();
                 getPerEditPage().setVisible(true);                
                 getComBtnPanel().useBtns(30);
+                chosenPage = 41;
                 break;
             case(50):
-                if (getPerPage() == null) createPerformancePage();
+                if (getTestCompPage() == null) createTestingCompetitionPage();
                 getTestCompPage().setVisible(true);
                 getComBtnPanel().useBtns(20);
+                chosenPage = 50;
                 break;
-        }
+            case(51):
+                if (glasialEditPage == null) createGlasialEditPage();
+                glasialEditPage.setVisible(true);                
+                getComBtnPanel().useBtns(30);
+                chosenPage = 51;
+                break;
+            case(52):
+                if (ofpEditPage == null) createOfpEditPage();
+                ofpEditPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 52;
+                break;
+            case(53):
+                if (sfpEditPage == null) createSfpEditPage();
+                sfpEditPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 53;
+                break;
+            case(54):
+                if (singleEditPage == null) createSingleEditPage();
+                singleEditPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 54;
+                break;                
+        }        
     } 
+    public int chosenPage() {
+        return chosenPage;
+    }
 
     //get panels
     public static MainFrame getmFrame() {
@@ -176,6 +237,9 @@ public class Manager {
     }
     public static StartPage getStPage() {
         return stPage;
+    }
+    public static CommonButtonsPanel getComBtnPanel() {
+        return comBtnPanel;
     }
     public static OrganizationPage getOrgPage() {
         return orgPage;
@@ -192,10 +256,19 @@ public class Manager {
     public static PerformanceEditPage getPerEditPage() {
         return perEditPage;
     }            
-    public static TestingCompetitionPage getTestCompPage() {
+    public static TestComPage getTestCompPage() {
         return testCompPage;
+    }  
+    public static SfpEditPage getSfpEditPage() {
+            return sfpEditPage;
     }
-    public static CommonButtonsPanel getComBtnPanel() {
-        return comBtnPanel;
+    public static OfpEditPage getOfpEditPage() {
+        return ofpEditPage;
+    }
+    public static GlasialEditPage getGlasialEdtiPage() {
+        return glasialEditPage;
+    }
+    public static SingleEditPage getSingleEditPage() {
+        return singleEditPage;
     }
 }

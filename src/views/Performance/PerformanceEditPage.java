@@ -1,8 +1,6 @@
 package views.Performance;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -62,17 +60,7 @@ public class PerformanceEditPage extends JPanel {
         
         setTextField();
     }
-    
-    //
-    private void setTextField() {
-        textField = new JTextField();
-        textField.setSize(690, 100);
-        textField.setLocation(1300, 530);
-        textField.setVisible(false);
-        this.add(textField);  
-        textField.addActionListener(new controllers.PerformanceEditPage.AddSeasonCB());
-    }
-        
+            
     //ATHLETE*******************************************************************
     private void labelAthletes() {
         athleteLbl = new JLabel("Список спортсменов-участников");
@@ -129,7 +117,7 @@ public class PerformanceEditPage extends JPanel {
     private void delBtnAthletes() {
         //button: delete athlete from performance
         delAthleteBtn = new JButton("-");
-        CommonSettings.settingFont30(getDelAthleteBtn());
+        CommonSettings.settingFont30(delAthleteBtn);
         getDelAthleteBtn().setFocusable(false);
         getDelAthleteBtn().setSize(100, 100);
         getDelAthleteBtn().setLocation(1100, 1380);
@@ -140,7 +128,7 @@ public class PerformanceEditPage extends JPanel {
         //if athlete not chosen, not enable btn del       
     }
     
-    //SEASON********************************************************************        
+    //SEASON********************************************************************
     private void labelSeason() {
         seasonLbl = new JLabel("<html>Настройка сезона постановки. " +
                                "<p align=center> " +
@@ -198,8 +186,18 @@ public class PerformanceEditPage extends JPanel {
         delSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
                                                     DelSeasonBtnListener());
         this.add(delSeasonBtn);   
-    }   
-
+    }
+    
+    //text field for add season
+    private void setTextField() {
+        textField = new JTextField();
+        textField.setSize(690, 100);
+        textField.setLocation(1300, 530);
+        textField.setVisible(false);
+        this.add(textField);  
+        textField.addActionListener(new controllers.PerformanceEditPage.AddSeasonCB());
+    }
+    
     public JList getList() {
         return list;
     }

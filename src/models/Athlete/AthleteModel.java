@@ -155,7 +155,7 @@ public class AthleteModel extends AbstractTableModel {
                             rowAthlete.setSex(rs.getBoolean(i + 1));
                             break;
                     }                 
-                }
+                }                
                 synchronized (getData()) {                    
                     setData(rowAthlete);
                     //info about added row
@@ -396,8 +396,7 @@ public class AthleteModel extends AbstractTableModel {
                         
             //if there are empty rows
             while (rs.next()) {                  
-                for (int j = 0; j < getData().size(); j++) {
-                    System.out.println("RS: " + rs.getInt(i));
+                for (int j = 0; j < getData().size(); j++) {                    
                     System.out.println(((Athlete) getDataByIndex(j)).getId());
                     if (((Athlete) getDataByIndex(j)).getId() == rs.getInt(i)) {
                         removeRow(j);  

@@ -7,7 +7,8 @@ import views.Manager;
 
 public class ChangeBtnListener implements ActionListener {
     Manager manager = Manager.getManagerInstance();
-    private PerformanceModel perModel = PerformanceModel.getPerformanceModelInstance();
+    private PerformanceModel perModel = PerformanceModel.
+                                        getPerformanceModelInstance();
     boolean change = false;
     public void actionPerformed(ActionEvent e) {        
         if (manager.getPerPage() != null) {

@@ -1,8 +1,7 @@
-//list.setToolTipText("bbliblbiu"); set text by Pointing
+ //list.setToolTipText("bbliblbiu"); set text by Pointing
 
 package models.Performance;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import data.Athlete;
 import data.Season;
 import dataBase.DataBaseConnection;
@@ -16,10 +15,13 @@ import java.util.logging.*;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import views.Manager;
-import views.Performance.PerformanceEditPage;
+import views.Performance.
+        PerformanceEditPage;
+import com.microsoft.sqlserver.
+        jdbc.SQLServerException;
 
 public class PerformanceEditModel {
-    ///this
+   
     private static PerformanceEditModel performanceEditModelInstance = null;
     
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
@@ -47,27 +49,26 @@ public class PerformanceEditModel {
         return performanceEditModelInstance;
     } 
 
-    private PerformanceEditModel() {};
-    
-    public Season getActualSeason() {
-        return actualSeason;
-    }
+    private PerformanceEditModel() {};  
     
     //update all fields
      public void updateInfo() {
         //create a list
         setDatatoList();
-        //create a combobox
+        //create a combobox of athletes
         getAllAthletes();
-        //create a combobox
+        //create a combobox of seasons
         setAllSeasonstoCombobox();
-    }   
+    }  
     
+    //ATHLETE*******************************************************************
+     
     /*set values for list and arrays
     pick athlets, season*/
-    private void setDatatoList() { 
+    private void setDatatoList() {         
         //a big bad crutch
         perEditPage = Manager.getManagerInstance().getPerEditPage();
+        
         //for geting a query
         PreparedStatement pstmtAthletes = null;
         ResultSet rsAthletes = null;
@@ -205,66 +206,9 @@ public class PerformanceEditModel {
                         "no close connection to DB getAllAthletes()", ex);
             }
         }
-    }   
-      
-    //get values to combobox of seasons
-    public void setAllSeasonstoCombobox() {        
-        //clear combobox
-        perEditPage.getSeasonComboBox().removeAllItems(); 
-        
-        //add new items
-        for (int i = 0; i < perModel.getSeasons().size(); i++ ) {
-            perEditPage.getSeasonComboBox().addItem
-                                       (perModel.getSeasons().get(i)); 
-        }
-        //view actual season of performance in combobox
-        perEditPage.getSeasonComboBox().setSelectedItem(actualSeason);
-    }
+    } 
     
-    //CHANGE_SEASON*************************************************************
-    //change season in db and view
-    public void changeSeason() {
-        PreparedStatement pstmtChangeSeason = null;        
-        String chSeason;
-        
-        try {            
-            chSeason= "UPDATE SEASON_PERFORMANCE " +
-                      "SET IDseason = " + ((Season) perEditPage.getSeasonComboBox().
-                                          getSelectedItem()).getId() + " " +
-                      "WHERE SEASON_PERFORMANCE.IDperformance = " +
-                      perModel.getValueAt(editingRow, 0) + ";"; 
-            System.out.println("UPDATE SEASON: " + chSeason);
-            
-            //change season in db
-            pstmtChangeSeason = DBC.prepareStatement(chSeason);
-            pstmtChangeSeason.executeUpdate();
-            
-            //change actual season field  (at view)                       
-            actualSeason.setPeriod(((Season)perEditPage.getSeasonComboBox().
-                                            getSelectedItem()).getPeriod());       
-            actualSeason.setId(((Season)(perEditPage.getSeasonComboBox().
-                                         getSelectedItem())).getId());
-                        
-            JOptionPane.showMessageDialog(Manager.getPerPage(),
-                        "Сезон успешно изменен!",
-                        "Информация", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException ex) {
-            Logger.getLogger(PerformanceEditModel.class.getName()).
-                           log(Level.SEVERE, 
-                           "not execute chSeason quetry in changeSeason()", ex);
-        }
-        finally {
-            try {
-                pstmtChangeSeason.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(PerformanceEditModel.class.getName()).log(Level.SEVERE, 
-                        "no close connection to DB, changeSeason()", ex);
-            }
-        }
-    }
-    
-    //ADD_ATHLETE_TO_PERFORMANCE************************************************
-    //add athlete to db and view
+    //add athlete to performance (db and view)
     public void addAthlete() {
         PreparedStatement pstmtaddAthl = null;
         String addAthl;
@@ -279,11 +223,10 @@ public class PerformanceEditModel {
         try {   
             addAthl = "INSERT INTO SEASON_PERFORMANCE " + 
                       "VALUES (" +
-                                actualSeason.getId() + ", " +
-                                ((Athlete)(perEditPage.getAthletesComboBox().
-                                           getSelectedItem())).getId() + ", " +
-                                perModel.getValueAt(editingRow, 0)  + " " +
-                              ");";
+                               actualSeason.getId() + ", " +
+                               ((Athlete)(perEditPage.getAthletesComboBox().
+                                          getSelectedItem())).getId() + ", " +
+                               perModel.getValueAt(editingRow, 0)  + " " + ");";
             
             //add to db
             pstmtaddAthl = DBC.prepareStatement(addAthl);
@@ -292,10 +235,9 @@ public class PerformanceEditModel {
             //addd to list
             perEditPage.getListModel().addElement(((Athlete)perEditPage.
                                                  getAthletesComboBox().
-                                                 getSelectedItem()).
-                                                 toString());
+                                                 getSelectedItem()));
+            
             int index = perEditPage.getListModel().size() - 1;
-            //perEditPage.getList().setSelectedIndex(index);
             perEditPage.getList().ensureIndexIsVisible(index);
             
             //remove athletes in combobox
@@ -316,9 +258,8 @@ public class PerformanceEditModel {
             }
         }
     }
-
-    //DEL_ATHLETE_FROM_PERFORMANCE**********************************************
-    //from db and view
+    
+    //del athletes from performance (db and view)
     public void delAthlete() {
         if (perEditPage.getList().getSelectedValue() == null) {
             JOptionPane.showMessageDialog(Manager.getPerPage(),
@@ -359,12 +300,72 @@ public class PerformanceEditModel {
             }
         }
     }
+    //**********************************###*************************************
     
+    
+    //SEASON********************************************************************
+    
+    //get values to combobox of seasons
+    public void setAllSeasonstoCombobox() {        
+        //clear combobox
+        perEditPage.getSeasonComboBox().removeAllItems(); 
+        
+        //add new items
+        for (int i = 0; i < perModel.getSeasons().size(); i++ ) {
+            perEditPage.getSeasonComboBox().addItem
+                                       (perModel.getSeasons().get(i)); 
+        }
+        //view actual season of performance in combobox
+        perEditPage.getSeasonComboBox().setSelectedItem(actualSeason);
+    }
+
+    //change season in db and view
+    public void changeSeason() {
+        PreparedStatement pstmtChangeSeason = null;        
+        String chSeason;
+        
+        try {            
+            chSeason= "UPDATE SEASON_PERFORMANCE " +
+                      "SET IDseason = " + ((Season) perEditPage.getSeasonComboBox().
+                                          getSelectedItem()).getId() + " " +
+                      "WHERE SEASON_PERFORMANCE.IDperformance = " +
+                      perModel.getValueAt(editingRow, 0) + ";";             
+            
+            //change season in db
+            pstmtChangeSeason = DBC.prepareStatement(chSeason);
+            pstmtChangeSeason.executeUpdate();
+            
+            //change actual season field  (at view)                       
+            actualSeason.setPeriod(((Season)perEditPage.getSeasonComboBox().
+                                            getSelectedItem()).getPeriod());       
+            actualSeason.setId(((Season)(perEditPage.getSeasonComboBox().
+                                         getSelectedItem())).getId());
+                        
+            JOptionPane.showMessageDialog(Manager.getPerPage(),
+                        "Сезон успешно изменен!",
+                        "Информация", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            Logger.getLogger(PerformanceEditModel.class.getName()).
+                           log(Level.SEVERE, 
+                           "not execute chSeason quetry in changeSeason()", ex);
+        }
+        finally {
+            try {
+                pstmtChangeSeason.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(PerformanceEditModel.class.getName()).log(Level.SEVERE, 
+                        "no close connection to DB, changeSeason()", ex);
+            }
+        }
+    }
+    
+    //if btn "add season" is pressed    
     public void addSeason() {
         JTextField txt = perEditPage.getTextField();
         txt.setVisible(true);              
     }
     
+    //get new id for season from db
     public int getNewSeasonID() {
         String query;
         int tempID = 0;
@@ -388,9 +389,9 @@ public class PerformanceEditModel {
                              "not get ID for new season", ex);
         }
         return tempID;
-    }
+    }    
     
-    
+    //add new season to db
     public void addSeasonToDB(String value) {
         PreparedStatement pstmt = null;
         String query;        
@@ -416,6 +417,8 @@ public class PerformanceEditModel {
             }
         }    
     }
+    
+    //del selected in combobox season from db
     public boolean delSeasonFromDB(int value) {
         PreparedStatement pstmt = null;
         String query; 
@@ -453,5 +456,11 @@ public class PerformanceEditModel {
         }
          return true;
     }
+    //************************************##************************************
+
+    //GETTERS*******************************************************************
+    public Season getActualSeason() {
+        return actualSeason;
+    }  
 }
   
