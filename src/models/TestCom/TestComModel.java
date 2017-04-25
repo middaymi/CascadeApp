@@ -1,6 +1,7 @@
 package models.TestCom;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import data.Athlete;
 import data.Competition;
 import data.CompetitionKind;
 import dataBase.DataBaseConnection;
@@ -20,6 +21,10 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import models.Performance.PerformanceModel;
 import views.Manager;
+import views.TestCom.GlasialEditPage;
+import views.TestCom.OfpEditPage;
+import views.TestCom.SfpEditPage;
+import views.TestCom.SingleEditPage;
 
 public class TestComModel extends AbstractTableModel {
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
@@ -29,7 +34,8 @@ public class TestComModel extends AbstractTableModel {
     private ArrayList <String> enColumnNames = new ArrayList();    
     //table headers
     private String titles[] = {"Тип", "IDсор", "IDтипа", "Название", 
-                               "<html>Внешн/<p>внутр<html>", "Дата и время", "Адрес", "Описание"};    
+                               "<html>Внешн/<p>внутр<html>", "Дата и время", 
+                               "Адрес", "Описание"};    
     //viewing in table column names_rus
     private ArrayList <String> columnNames = new ArrayList();    
     //list of columns type 
@@ -45,6 +51,18 @@ public class TestComModel extends AbstractTableModel {
     
     //edit or not the table
     private boolean editable;
+    
+    //edit pages
+    private SfpEditPage sfpEditPage;
+    private OfpEditPage ofpEditPage;
+    private GlasialEditPage glasialEditPage;
+    private SingleEditPage singleEditPage;
+    
+    //edit pages models
+    private SfpEditModel sfpEditModel;
+    private OfpEditModel ofpEditModel;
+    private GlasialEditModel glasialEditModel;
+    private SingleEditModel singleEditModel;
     
     private static TestComModel testComModelInstance = null;
     
@@ -184,9 +202,7 @@ public class TestComModel extends AbstractTableModel {
                              log(Level.SEVERE, 
                              "not define class type of data", ex);
         } 
-    } 
-    
-    
+    }  
     //************************************###***********************************       
     
      
@@ -235,7 +251,8 @@ public class TestComModel extends AbstractTableModel {
         switch (getEnColumnNames().get(column)) {                 
             case ("FullNameKind"):                        
                 setClass.getKind().setFullName(((CompetitionKind)value).getFullName());
-                break;             
+                setClass.getKind().setId(((CompetitionKind)value).getId());
+                break; 
             case ("FullName"):
                 setClass.setFullName(((String)value).trim());
                 break;
@@ -445,17 +462,206 @@ public class TestComModel extends AbstractTableModel {
     public void setEditable(boolean editable) {
         this.editable = editable;
     }
+    
+    ////////////////////////////EDITORS/////////////////////////////////////////
+    /////////////////GET DATA FOR EDIT PAGES, COMMON CHAIN//////////////////////
+    
+    //ATHLETS   
+    /*get athletes, TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at list*/
+    public void setAthletesList (int i) {
+        int selRow = this.selRow();
+        String queryLst;        
+        PreparedStatement prstLst = null;        
+        ResultSet rsLst = null; 
+                        
+        //database lst  
+        try {           
+            queryLst = "SELECT DISTINCT ATHLETE.ID, " +
+                            "ATHLETE.Surname, ATHLETE.Name, " +
+                            "ATHLETE.Middlename " +
+                        "FROM COMPETITION, COMPETITION_ATHLETE_LINK, " +
+                            "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                    getValueAt(selRow, 1) +  
+                    "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete;";
+            prstLst = DBC.prepareStatement(queryLst);
+            rsLst = prstLst.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TestComModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }      
+        
+        //data lst
+        //clear data lst
+        try { 
+            //get links, 
+            //clear the array of lst, 
+            //clear view of lst
+            switch (i) {
+                case(53):
+                    //get links
+                    sfpEditPage = Manager.getSfpEditPage();
+                    sfpEditModel = SfpEditModel.getSfpEditModelInstance();
+                    //clear all from list
+                    sfpEditModel.getAthletesByComp().clear();           
+                    sfpEditPage.getAthlLstModel().clear();
+                    break;
+                case(52):
+                    ofpEditPage = Manager.getOfpEditPage();
+                    ofpEditModel = OfpEditModel.getOfpEditModelInstance();
+                    ofpEditModel.getAthletesByComp().clear();            
+                    ofpEditPage.getAthlLstModel().clear();
+                    break;
+                case(51):
+                    glasialEditPage = Manager.getGlasialEdtiPage();                        
+                    glasialEditModel = GlasialEditModel.getGlasialEditModelInstance();
+                    glasialEditModel.getAthletesByComp().clear();            
+                    glasialEditPage.getAthlLstModel().clear(); 
+                    break;
+                case(54):
+                    singleEditPage = Manager.getSingleEditPage();
+                    singleEditModel = SingleEditModel.getSingleEditModelInstance();
+                    singleEditModel.getAthletesByComp().clear();            
+                    singleEditPage.getAthlLstModel().clear();
+                    break;    
+            }
+            //lst        
+            while (rsLst.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsLst.getInt(1));
+                athlete.setName(rsLst.getString(3));
+                athlete.setSurname(rsLst.getString(2));
+                athlete.setMiddlename(rsLst.getString(4));
+                System.out.println(athlete);
+                //do it for save data in dif arrays 
+                //in dif models
+                switch(i) {
+                    case(53):
+                        //add to data and view-model of a list
+                        sfpEditModel.getAthletesByComp().add(athlete);
+                        sfpEditPage.getAthlLstModel().addElement(athlete);                                                
+                        break;
+                    case(52):
+                        ofpEditModel.getAthletesByComp().add(athlete);
+                        ofpEditPage.getAthlLstModel().addElement(athlete);                                
+                        break;
+                    case(51):
+                        glasialEditModel.getAthletesByComp().add(athlete);
+                        glasialEditPage.getAthlLstModel().addElement(athlete);
+                        break;
+                    case(54):
+                        singleEditModel.getAthletesByComp().add(athlete);
+                        singleEditPage.getAthlLstModel().addElement(athlete);
+                        break;
+                }
+            }
+            prstLst.close();
+            rsLst.close();
+        } catch (SQLException ex) {
+                Logger.getLogger(SfpEditModel.class.getName()).
+                       log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    /*get athletes, DON'T TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at combobox*/
+    public void setAthletesCombo(int i) {
+        int selRow = this.selRow();
+        String queryCmb;
+        PreparedStatement prstCmb = null;
+        ResultSet rsCmb = null;
+                
+        //database cmb 
+        try {            
+            queryCmb = "SELECT DISTINCT ATHLETE.ID, ATHLETE.Surname, " +
+                                    "ATHLETE.Name, ATHLETE.Middlename " +
+                        "FROM ATHLETE " +
+                        "WHERE NOT ATHLETE.ID = ANY(" +
+                            "SELECT DISTINCT ATHLETE.ID " +
+                            "FROM COMPETITION_ATHLETE_LINK, " +
+                                 "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                               getValueAt(selRow, 1) + " " +
+                        "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete);";
+            //System.out.println(queryCmb);
+            prstCmb = DBC.prepareStatement(queryCmb);
+            rsCmb = prstCmb.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TestComModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }
+        try { 
+            //get links, 
+            //clear the array of cmb, 
+            //clear view of cmb
+            switch (i) {
+                case(53):
+                    //get links
+                    sfpEditPage = Manager.getSfpEditPage();
+                    sfpEditModel = SfpEditModel.getSfpEditModelInstance();
+                    //clear all from combo
+                    sfpEditModel.getAthlets().clear();
+                    sfpEditPage.getAthlCombo().removeAllItems();
+                    break;
+                case(52):
+                    ofpEditPage = Manager.getOfpEditPage();
+                    ofpEditModel = OfpEditModel.getOfpEditModelInstance();
+                    ofpEditModel.getAthlets().clear();
+                    ofpEditPage.getAthlCombo().removeAllItems();
+                    break;
+                case(51):
+                    glasialEditPage = Manager.getGlasialEdtiPage();                        
+                    glasialEditModel = GlasialEditModel.getGlasialEditModelInstance();
+                    glasialEditModel.getAthlets().clear();
+                    glasialEditPage.getAthlCombo().removeAllItems();
+                    break;
+                case(54):
+                    singleEditPage = Manager.getSingleEditPage();
+                    singleEditModel = SingleEditModel.getSingleEditModelInstance();
+                    singleEditModel.getAthlets().clear();
+                    singleEditPage.getAthlCombo().removeAllItems();
+                    break;    
+            }
+            //cmb
+            while (rsCmb.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsCmb.getInt(1));
+                athlete.setName(rsCmb.getString(3));
+                athlete.setSurname(rsCmb.getString(2));
+                athlete.setMiddlename(rsCmb.getString(4));
+                System.out.println(athlete);                
+                //do it for save data in dif arrays 
+                //in dif models
+                switch(i) {
+                    case(53):
+                        //add to data and view-model of a combo
+                        sfpEditModel.getAthlets().add(athlete);
+                        sfpEditPage.getAthlCombo().addItem(athlete);                                                
+                        break;
+                    case(52):
+                        ofpEditModel.getAthlets().add(athlete);
+                        ofpEditPage.getAthlCombo().addItem(athlete);
+                        break;
+                    case(51):
+                        glasialEditModel.getAthlets().add(athlete);
+                        glasialEditPage.getAthlCombo().addItem(athlete);
+                        break;
+                    case(54):
+                        singleEditModel.getAthlets().add(athlete);
+                        singleEditPage.getAthlCombo().addItem(athlete);
+                        break;
+                }
+            }
+            prstCmb.close();
+            rsCmb.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }         
+    }
 }
-
-//for (int i = 0; i < competitions.size(); i++) { 
-//            System.out.println("#############################################");
-//            System.out.println(competitions.get(i).getKind().getFullName());
-//            System.out.println(competitions.get(i).getId());
-//            System.out.println(competitions.get(i).getKind().getId());
-//            System.out.println(competitions.get(i).getFullName());
-//            System.out.println(competitions.get(i).isType());
-//            System.out.println(competitions.get(i).getDateTime());
-//            System.out.println(competitions.get(i).getAddress());
-//            System.out.println(competitions.get(i).getDescription());
-//            System.out.println("#############################################");
-//}

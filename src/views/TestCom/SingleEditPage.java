@@ -73,12 +73,12 @@ public class SingleEditPage extends JPanel {
     }
     
      private void createLabel(int i, JLabel lbl) {
-        lbl = new JLabel();
+        lbl = new JLabel();        
         if (i == 1) lbl.setText("Список спортсменов");
-        if (i == 2) lbl.setText("Список судей");        
+        if (i == 2) lbl.setText("Список судей");
         lbl.setVisible(true);
         lbl.setSize(800, 100);
-        lbl.setLocation(734 + (i-1)*900, 200);
+        lbl.setLocation(284 + (i-1)*900, 200);
         CommonSettings.settingFont30(lbl);
         CommonSettings.settingGrayBorder(lbl);
         lbl.setOpaque(true);
@@ -88,14 +88,6 @@ public class SingleEditPage extends JPanel {
     
     private void createList(int i, JList lst) {
         lst = new JList();
-        if (i == 1) {
-            athlLstModel = new DefaultListModel();
-            lst.setModel(athlLstModel);
-        }
-        else if (i == 2) {
-            judLstModel = new DefaultListModel();
-            lst.setModel(judLstModel);
-        }
         CommonSettings.settingFont30(lst);
         lst.setVisible(true);        
         lst.setBackground(Color.WHITE);
@@ -104,8 +96,18 @@ public class SingleEditPage extends JPanel {
         
         JScrollPane scrl = new JScrollPane(lst);
         scrl.setSize(800, 950);
-        scrl.setLocation(734 + (i-1)*900, 310);
+        scrl.setLocation(284 + (i-1)*900, 310);
         this.add(scrl);
+        if (i == 1) {
+            athlLstModel = new DefaultListModel();
+            lst.setModel(athlLstModel);
+            athlLst = lst;
+        }
+        else if (i == 2) {
+            judLstModel = new DefaultListModel();
+            lst.setModel(judLstModel);
+            judLst = lst;
+        }
     } 
     
     private void createDelBtn(int i, JButton btn) {
@@ -113,9 +115,19 @@ public class SingleEditPage extends JPanel {
         CommonSettings.settingFont30(btn);
         btn.setFocusable(false);
         btn.setSize(100, 100);
-        btn.setLocation(734 + i*900 - 200, 1380);
+        btn.setLocation(284 + i*900 - 200, 1380);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
+        if (i == 1) {
+            athlDelBtn = btn;
+            athlDelBtn.addActionListener(new controllers.TestComEditPages.
+                                             SingleEditPage.DelAthlete());
+        }
+        else if (i == 2) {
+            judDelBtn = btn;
+            judDelBtn.addActionListener(new controllers.TestComEditPages.
+                                              SingleEditPage.DelJudge());
+        }
     }
     
     private void createComboAndBtn(int i, JComboBox cmb, JButton btn) {
@@ -124,16 +136,70 @@ public class SingleEditPage extends JPanel {
         CommonSettings.settingFont30(cmb);
         cmb.setEditable(false);
         cmb.setSize(690, 100);
-        cmb.setLocation(734 + (i-1)*900, 1270);
-        this.add(cmb);       
+        cmb.setLocation(284 + (i-1)*900, 1270);
+        this.add(cmb);        
+        if (i == 1) athlCombo = cmb;
+        else if (i == 2) judCombo = cmb;
         
         //btns
         btn = new JButton("+");      
         btn.setFocusable(false);
         btn.setSize(100, 100);
-        btn.setLocation(734 + i*900 - 200, 1270);
+        btn.setLocation(284 + i*900 - 200, 1270);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);
-        this.add(btn);
-    }     
+        this.add(btn); 
+        if (i == 1) {
+            athlAddBtn = btn;
+            athlAddBtn.addActionListener(new controllers.TestComEditPages.
+                                             SingleEditPage.AddAthlete());
+        }
+        else if (i == 2) {
+            judAddBtn = btn;
+            judAddBtn.addActionListener(new controllers.TestComEditPages.
+                                              SingleEditPage.AddJudge());
+        }        
+    } 
+
+    //GETTERS*******************************************************************
+    public JList getAthlLst() {
+        return athlLst;
+    }
+    public JList getJudLst() {
+        return judLst;
+    }
+    public DefaultListModel getAthlLstModel() {
+        return athlLstModel;
+    }
+    public DefaultListModel getJudLstModel() {
+        return judLstModel;
+    }
+    public JComboBox getAthlCombo() {
+        return athlCombo;
+    }
+    public JComboBox getJudCombo() {
+        return judCombo;
+    }
+
+    //SETTERS*******************************************************************
+    public void setAthlLst(JList athlLst) {
+        this.athlLst = athlLst;
+    }
+    public void setJudLst(JList judLst) {
+        this.judLst = judLst;
+    }
+
+    public void setAthlLstModel(DefaultListModel athlLstModel) {
+        this.athlLstModel = athlLstModel;
+    }
+    public void setJudLstModel(DefaultListModel judLstModel) {
+        this.judLstModel = judLstModel;
+    }
+
+    public void setAthlCombo(JComboBox athlCombo) {
+        this.athlCombo = athlCombo;
+    }
+    public void setJudCombo(JComboBox judCombo) {
+        this.judCombo = judCombo;
+    }
 }

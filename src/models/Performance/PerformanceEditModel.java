@@ -30,7 +30,7 @@ public class PerformanceEditModel {
                                         getPerformanceModelInstance();  
     private PerformanceEditPage perEditPage;
     
-    //athlets take part in selected performance
+    //  take part in selected performance
     private ArrayList<Athlete> athletesByPerf = new ArrayList<>();
     
     //athletes without which are in a list 

@@ -12,8 +12,7 @@ import models.TestCom.TestComModel;
 import views.CommonSettings;
 import views.Manager;
 
-public class SfpEditPage extends JPanel {
-    
+public class SfpEditPage extends JPanel {    
     private JLabel welcome;
     private Manager manager;
     private TestComModel tcModel;
@@ -101,18 +100,6 @@ public class SfpEditPage extends JPanel {
     
     private void createList(int i, JList lst) {
         lst = new JList();
-        if (i == 1) {
-            elLstModel = new DefaultListModel();
-            lst.setModel(elLstModel);
-        }
-        else if (i == 2) {
-            athlLstModel = new DefaultListModel();
-            lst.setModel(athlLstModel);
-        }
-        else if (i == 3) {
-            judLstModel = new DefaultListModel();
-            lst.setModel(judLstModel);
-        }
         CommonSettings.settingFont30(lst);
         lst.setVisible(true);        
         lst.setBackground(Color.WHITE);
@@ -123,6 +110,21 @@ public class SfpEditPage extends JPanel {
         scrl.setSize(800, 950);
         scrl.setLocation(284 + (i-1)*900, 310);
         this.add(scrl);
+        if (i == 1) {
+            elLstModel = new DefaultListModel();            
+            lst.setModel(elLstModel);
+            elLst = lst;
+        }
+        else if (i == 2) {
+            athlLstModel = new DefaultListModel();
+            lst.setModel(athlLstModel);
+            athlLst = lst;
+        }
+        else if (i == 3) {
+            judLstModel = new DefaultListModel();
+            lst.setModel(judLstModel);
+            judLst = lst;
+        }
     } 
     
     private void createDelBtn(int i, JButton btn) {
@@ -133,6 +135,20 @@ public class SfpEditPage extends JPanel {
         btn.setLocation(284 + i*900 - 200, 1380);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
+        if (i == 1) {
+            elDelBtn = btn;
+            //elDelBtn.addActionListener();
+        }
+        else if (i == 2) {
+            athlDelBtn = btn;
+            athlDelBtn.addActionListener(new controllers.TestComEditPages.
+                                             SfpEditPage.DelAthlete());
+        }
+        else if (i == 3) {
+            judDelBtn = btn;
+            judDelBtn.addActionListener(new controllers.TestComEditPages.
+                                                 SfpEditPage.DelJudge());
+        }
     }
     
     private void createComboAndBtn(int i, JComboBox cmb, JButton btn) {
@@ -142,7 +158,10 @@ public class SfpEditPage extends JPanel {
         cmb.setEditable(false);
         cmb.setSize(690, 100);
         cmb.setLocation(284 + (i-1)*900, 1270);
-        this.add(cmb);       
+        this.add(cmb);
+        if (i == 1) elCombo = cmb;
+        else if (i == 2) athlCombo = cmb;
+        else if (i == 3) judCombo = cmb;
         
         //btns
         btn = new JButton("+");      
@@ -151,6 +170,82 @@ public class SfpEditPage extends JPanel {
         btn.setLocation(284 + i*900 - 200, 1270);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);
-        this.add(btn);
-    }     
+        this.add(btn); 
+        if (i == 1) {
+            elAddBtn = btn;
+            //elAddBtn.addActionListener();
+        }
+        else if (i == 2) {
+            athlAddBtn = btn;
+            athlAddBtn.addActionListener(new controllers.TestComEditPages.
+                                             SfpEditPage.AddAthlete());
+        }
+        else if (i == 3) {
+            judAddBtn = btn;
+            judAddBtn.addActionListener(new controllers.TestComEditPages.
+                                                 SfpEditPage.AddJudge());
+        }        
+    } 
+    
+    //GETTERS*******************************************************************
+     public JList getElLst() {
+        return elLst;
+    }
+    public JList getAthlLst() {
+        return athlLst;
+    }
+    public JList getJudLst() {
+        return judLst;
+    }
+
+    public DefaultListModel getElLstModel() {
+        return elLstModel;
+    }
+    public DefaultListModel getAthlLstModel() {
+        return athlLstModel;
+    }
+    public DefaultListModel getJudLstModel() {
+        return judLstModel;
+    }
+    
+    public JComboBox getElCombo() {
+        return elCombo;
+    }
+    public JComboBox getAthlCombo() {
+        return athlCombo;
+    }
+    public JComboBox getJudCombo() {
+        return judCombo;
+    }
+
+    //SETTERS*******************************************************************
+    public void setElLst(JList elLst) {
+        this.elLst = elLst;
+    }
+    public void setAthlLst(JList athlLst) {
+        this.athlLst = athlLst;
+    }
+    public void setJudLst(JList judLst) {
+        this.judLst = judLst;
+    }
+
+    public void setElLstModel(DefaultListModel elLstModel) {
+        this.elLstModel = elLstModel;
+    }
+    public void setAthlLstModel(DefaultListModel athlLstModel) {
+        this.athlLstModel = athlLstModel;
+    }
+    public void setJudLstModel(DefaultListModel judLstModel) {
+        this.judLstModel = judLstModel;
+    }
+
+    public void setElCombo(JComboBox elCombo) {
+        this.elCombo = elCombo;
+    }
+    public void setAthlCombo(JComboBox athlCombo) {
+        this.athlCombo = athlCombo;
+    }
+    public void setJudCombo(JComboBox judCombo) {
+        this.judCombo = judCombo;
+    }
 }
