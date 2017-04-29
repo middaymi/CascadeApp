@@ -137,7 +137,8 @@ public class SfpEditPage extends JPanel {
         this.add(btn);
         if (i == 1) {
             elDelBtn = btn;
-            //elDelBtn.addActionListener();
+            elDelBtn.addActionListener(new controllers.TestComEditPages.
+                                                SfpEditPage.DelElement());
         }
         else if (i == 2) {
             athlDelBtn = btn;
@@ -173,7 +174,8 @@ public class SfpEditPage extends JPanel {
         this.add(btn); 
         if (i == 1) {
             elAddBtn = btn;
-            //elAddBtn.addActionListener();
+            elAddBtn.addActionListener(new controllers.TestComEditPages.
+                                              SfpEditPage.AddElement());
         }
         else if (i == 2) {
             athlAddBtn = btn;

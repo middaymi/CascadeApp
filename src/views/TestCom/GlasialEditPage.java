@@ -137,7 +137,8 @@ private JLabel welcome;
         this.add(btn);
         if (i == 1) {
             elDelBtn = btn;
-            //elDelBtn.addActionListener();
+            elDelBtn.addActionListener(new controllers.TestComEditPages.
+                                          GlasialEditPage.DelElement());
         }
         else if (i == 2) {
             athlDelBtn = btn;
@@ -173,7 +174,8 @@ private JLabel welcome;
         this.add(btn); 
         if (i == 1) {
             elAddBtn = btn;
-            //elAddBtn.addActionListener();
+            elAddBtn.addActionListener(new controllers.TestComEditPages.
+                                          GlasialEditPage.AddElement());
         }
         else if (i == 2) {
             athlAddBtn = btn;

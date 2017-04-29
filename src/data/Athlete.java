@@ -58,6 +58,10 @@ public class Athlete {
         return sex;
     }
 
+    public int getAge() {
+        // TODO
+        return 5;
+    }
     
     public void setId(int id) {
         this.id = id;

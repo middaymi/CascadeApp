@@ -92,7 +92,7 @@ public class TestComModel extends AbstractTableModel {
           System.out.println("row selected " + sel);
         if (sel == -1) {    
                 JOptionPane.showMessageDialog(Manager.getPerPage(),
-                "Не выбрано соревнование для редактирования!",
+                "Соревнование не выбрано!",
                 "Ошибка", JOptionPane.WARNING_MESSAGE);                
         }
         return sel; 
@@ -206,11 +206,11 @@ public class TestComModel extends AbstractTableModel {
     //************************************###***********************************       
     
      
-     public Object getValueAt(int row, int column) {               
+     public Object getValueAt(int row, int column) { 
+        Object returnField = null;        
         Competition comLink;        
         comLink = (Competition)competitions.get(row);       
         String colName = enColumnNames.get(column);
-        Object returnField = null;
 
         switch (colName) {
             case ("IDcompetitionKind"):
@@ -381,7 +381,7 @@ public class TestComModel extends AbstractTableModel {
         } catch (ArrayIndexOutOfBoundsException ex) {
             if (sel == -1) {    
                 JOptionPane.showMessageDialog(Manager.getPerPage(),
-                "Перед удалением необходимо выделить строку",
+                "Перед удалением необходимо выделить строку!",
                 "Ошибка", JOptionPane.WARNING_MESSAGE);
                 return;
             }            
@@ -534,8 +534,7 @@ public class TestComModel extends AbstractTableModel {
                 athlete.setId(rsLst.getInt(1));
                 athlete.setName(rsLst.getString(3));
                 athlete.setSurname(rsLst.getString(2));
-                athlete.setMiddlename(rsLst.getString(4));
-                System.out.println(athlete);
+                athlete.setMiddlename(rsLst.getString(4));                
                 //do it for save data in dif arrays 
                 //in dif models
                 switch(i) {
@@ -587,7 +586,7 @@ public class TestComModel extends AbstractTableModel {
                         "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
                                getValueAt(selRow, 1) + " " +
                         "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete);";
-            //System.out.println(queryCmb);
+            System.out.println(queryCmb);
             prstCmb = DBC.prepareStatement(queryCmb);
             rsCmb = prstCmb.executeQuery(); 
             
@@ -633,8 +632,7 @@ public class TestComModel extends AbstractTableModel {
                 athlete.setId(rsCmb.getInt(1));
                 athlete.setName(rsCmb.getString(3));
                 athlete.setSurname(rsCmb.getString(2));
-                athlete.setMiddlename(rsCmb.getString(4));
-                System.out.println(athlete);                
+                athlete.setMiddlename(rsCmb.getString(4));                              
                 //do it for save data in dif arrays 
                 //in dif models
                 switch(i) {

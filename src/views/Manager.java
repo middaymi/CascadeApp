@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import views.Performance.*;
+import views.TestCom.StartCom.StComPage;
 import views.TestCom.*;
 
 public class Manager {
@@ -34,7 +35,9 @@ public class Manager {
     private static OfpEditPage ofpEditPage = null;
     private static SfpEditPage sfpEditPage = null;
     private static SingleEditPage singleEditPage = null;
-    private static GlasialEditPage glasialEditPage = null;    
+    private static GlasialEditPage glasialEditPage = null;  
+    private static StComPage sfpStComPage = null;
+    
     
     private static int width;
     private static int height;
@@ -141,6 +144,12 @@ public class Manager {
         getmFrame().getContentPane().add(singleEditPage, BorderLayout.CENTER);
     }
     
+    //START_AND_PROTOCOL_PANELS*************************************************
+    private static void createSfpStartCompPage() {
+        sfpStComPage = new StComPage();
+        getmFrame().getContentPane().add(sfpStComPage, BorderLayout.CENTER);
+    }
+       
     //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
     private static void hideAllPanels() {
         if (getStPage() != null) getStPage().setVisible(false);
@@ -154,6 +163,7 @@ public class Manager {
         if (ofpEditPage != null) ofpEditPage.setVisible(false);
         if (sfpEditPage != null) sfpEditPage.setVisible(false);
         if (singleEditPage != null) singleEditPage.setVisible(false);
+        if (sfpStComPage != null) sfpStComPage.setVisible(false);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -224,7 +234,13 @@ public class Manager {
                 singleEditPage.setVisible(true);
                 getComBtnPanel().useBtns(30);
                 chosenPage = 54;
-                break;                
+                break;
+            case(61):
+                if (sfpStComPage == null) createSfpStartCompPage();
+                sfpStComPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 61;
+                break;
         }        
     } 
     public int chosenPage() {
@@ -270,5 +286,8 @@ public class Manager {
     }
     public static SingleEditPage getSingleEditPage() {
         return singleEditPage;
+    }
+    public static StComPage getSfpStComPage() {
+        return sfpStComPage;
     }
 }

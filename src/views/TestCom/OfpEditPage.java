@@ -137,7 +137,8 @@ public class OfpEditPage extends JPanel {
         this.add(btn);
          if (i == 1) {
             elDelBtn = btn;
-            //elDelBtn.addActionListener();
+            elDelBtn.addActionListener(new controllers.TestComEditPages.
+                                              OfpEditPage.DelElement());
         }
         else if (i == 2) {
             athlDelBtn = btn;
@@ -173,7 +174,8 @@ public class OfpEditPage extends JPanel {
         this.add(btn);
            if (i == 1) {
             elAddBtn = btn;
-            //elAddBtn.addActionListener();
+            elAddBtn.addActionListener(new controllers.TestComEditPages.
+                                              OfpEditPage.AddElement());
         }
         else if (i == 2) {
             athlAddBtn = btn;

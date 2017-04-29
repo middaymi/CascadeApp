@@ -22,8 +22,7 @@ public class TestComPage extends JPanel {
     private JButton addBtn;
     private JButton editBtn;
     
-    private JButton outwitBtn;
-    private JButton resultBtn;
+    private JButton startComBtn;    
     private JButton protocolBtn;
     
     public TestComPage() {
@@ -45,8 +44,7 @@ public class TestComPage extends JPanel {
         setAddBtnSettings();
         
         //left btns
-        setBtnOutwit();
-        setBtnResults();
+        setBtnStart();        
         setBtnProtocols();
     }
     
@@ -81,17 +79,7 @@ public class TestComPage extends JPanel {
     public void setEditableBtnsMode() {
         
     }
-    
-    public void setBtnOutwit() {
-        outwitBtn = new JButton("Провести");              
-        outwitBtn.setBackground(Color.LIGHT_GRAY);
-        outwitBtn.setSize(250, 100);
-        outwitBtn.setLocation(167, 640);
-        outwitBtn.setVisible(true);
-        CommonSettings.settingFont30(outwitBtn);
-        this.add(outwitBtn);
-    }
-    
+     
     private void setChangeBtnSettings() {
         changeBtn = new JButton("Изменить");        
         changeBtn.setBackground(Color.LIGHT_GRAY);
@@ -144,22 +132,23 @@ public class TestComPage extends JPanel {
         editBtn.setVisible(mode);
         table.setEnabled(mode); 
     }
-        
-    public void setBtnResults() {
-        resultBtn = new JButton("Результаты");              
-        resultBtn.setBackground(Color.LIGHT_GRAY);
-        resultBtn.setSize(250, 100);
-        resultBtn.setLocation(167, 770);
-        resultBtn.setVisible(true);
-        CommonSettings.settingFont30(resultBtn);
-        this.add(resultBtn);
+    
+      public void setBtnStart() {
+        startComBtn = new JButton("Провести");              
+        startComBtn.setBackground(Color.LIGHT_GRAY);
+        startComBtn.setSize(250, 100);
+        startComBtn.setLocation(167, 705);
+        startComBtn.setVisible(true);
+        CommonSettings.settingFont30(startComBtn);
+        this.add(startComBtn);
+        startComBtn.addActionListener(new controllers.TestComPage.StartCom());
     }
     
     public void setBtnProtocols() {
-        protocolBtn = new JButton("Протоколы");              
+        protocolBtn = new JButton("Протокол");              
         protocolBtn.setBackground(Color.LIGHT_GRAY);
         protocolBtn.setSize(250, 100);
-        protocolBtn.setLocation(167, 900);
+        protocolBtn.setLocation(167, 835);
         protocolBtn.setVisible(true);
         CommonSettings.settingFont30(protocolBtn);
         this.add(protocolBtn);

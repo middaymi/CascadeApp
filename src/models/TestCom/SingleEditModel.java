@@ -20,15 +20,15 @@ public class SingleEditModel {
     private TestComModel tcModel;
     private SingleEditPage singleEditPage;
     
-    /*athlets take part in selected performance
+    /*athlets take part in selected competition
     for view at list*/
     private ArrayList<Athlete> athletesByComp = new ArrayList<>();    
     //athletes without which are in a list 
     private ArrayList<Athlete> athlets = new ArrayList<>();
     
-    /*judges take part in selected performance
+    /*judges take part in selected competition
     for view at list*/
-    private ArrayList<Judge> judgeByComp = new ArrayList<>();
+    private ArrayList<Judge> judgesByComp = new ArrayList<>();
     //judges without which are in a list 
     private ArrayList<Judge> judges = new ArrayList<>();
         
@@ -42,6 +42,122 @@ public class SingleEditModel {
     }
     
     //********************************ATHLETES**********************************
+    /*get athletes, TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at list*/
+    public void setAthletesList () {
+        tcModel = TestComModel.getTestComModelInstance(); 
+        int selRow = tcModel.selRow();
+        String queryLst;        
+        PreparedStatement prstLst = null;        
+        ResultSet rsLst = null; 
+                        
+        //database lst  
+        try {           
+            queryLst = "SELECT DISTINCT ATHLETE.ID, " +
+                            "ATHLETE.Surname, ATHLETE.Name, " +
+                            "ATHLETE.Middlename " +
+                        "FROM COMPETITION, COMPETITION_ATHLETE_LINK, " +
+                            "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                    tcModel.getValueAt(selRow, 1) +  
+                    "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete;";
+            prstLst = DBC.prepareStatement(queryLst);
+            rsLst = prstLst.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(SingleEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }      
+        
+        //data lst
+        //clear data lst
+        try { 
+            //get links, 
+            //clear the array of lst, 
+            //clear view of lst
+            singleEditPage = Manager.getSingleEditPage();                   
+            athletesByComp.clear();            
+            singleEditPage.getAthlLstModel().clear();
+            
+            //lst        
+            while (rsLst.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsLst.getInt(1));
+                athlete.setName(rsLst.getString(3));
+                athlete.setSurname(rsLst.getString(2));
+                athlete.setMiddlename(rsLst.getString(4));                
+                //do it for save data in dif arrays 
+                //in dif models
+                athletesByComp.add(athlete);
+                singleEditPage.getAthlLstModel().addElement(athlete);
+            }
+            prstLst.close();
+            rsLst.close();
+        } catch (SQLException ex) {
+                Logger.getLogger(SingleEditModel.class.getName()).
+                       log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    /*get athletes, DON'T TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at combobox*/
+    public void setAthletesCombo() {
+        tcModel = TestComModel.getTestComModelInstance(); 
+        int selRow = tcModel.selRow();
+        String queryCmb;
+        PreparedStatement prstCmb = null;
+        ResultSet rsCmb = null;
+                
+        //database cmb 
+        try {            
+            queryCmb = "SELECT DISTINCT ATHLETE.ID, ATHLETE.Surname, " +
+                                    "ATHLETE.Name, ATHLETE.Middlename " +
+                        "FROM ATHLETE " +
+                        "WHERE NOT ATHLETE.ID = ANY(" +
+                            "SELECT DISTINCT ATHLETE.ID " +
+                            "FROM COMPETITION_ATHLETE_LINK, " +
+                                 "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                               tcModel.getValueAt(selRow, 1) + " " +
+                        "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete);";
+            System.out.println(queryCmb);
+            prstCmb = DBC.prepareStatement(queryCmb);
+            rsCmb = prstCmb.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(SingleEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }
+        try { 
+            //get links, 
+            //clear the array of cmb, 
+            //clear view of cmb
+            singleEditPage = Manager.getSingleEditPage();           
+            athlets.clear();
+            singleEditPage.getAthlCombo().removeAllItems();
+
+            //cmb
+            while (rsCmb.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsCmb.getInt(1));
+                athlete.setName(rsCmb.getString(3));
+                athlete.setSurname(rsCmb.getString(2));
+                athlete.setMiddlename(rsCmb.getString(4));                              
+                //do it for save data in dif arrays 
+                //in dif models
+                athlets.add(athlete);
+                singleEditPage.getAthlCombo().addItem(athlete);
+            }
+            prstCmb.close();
+            rsCmb.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SingleEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }         
+    }
+    
     //add athlete chosen from combobox        
     public void addAthlete() {
         singleEditPage = Manager.getSingleEditPage();
@@ -154,7 +270,7 @@ public class SingleEditModel {
             /*get links, clear the array of lst, 
             clear view of lst*/
             singleEditPage = Manager.getSingleEditPage();                                    
-            judgeByComp.clear();            
+            judgesByComp.clear();            
             singleEditPage.getJudLstModel().clear();                 
             
             //lst        
@@ -166,7 +282,7 @@ public class SingleEditModel {
                 judge.setMiddlename(rsLst.getString(4));                
                 //do it for save data in dif arrays 
                 //in dif models
-                judgeByComp.add(judge);
+                judgesByComp.add(judge);
                 singleEditPage.getJudLstModel().addElement(judge);
             }
             prstLst.close();
@@ -242,7 +358,7 @@ public class SingleEditModel {
         //add to list
         singleEditPage.getJudLstModel().addElement(newJudge);
         //insert to array data
-        judgeByComp.add(newJudge);
+        judgesByComp.add(newJudge);
         
         //del from combo
         singleEditPage.getJudCombo().removeItem(newJudge);        
@@ -284,7 +400,7 @@ public class SingleEditModel {
         
         //del from list
         singleEditPage.getJudLstModel().removeElement(newJudge);
-        judgeByComp.remove(newJudge);
+        judgesByComp.remove(newJudge);
         
         //add to combobox
         singleEditPage.getJudCombo().addItem(newJudge);

@@ -1,6 +1,7 @@
 package models.TestCom;
 
 import data.Athlete;
+import data.Element;
 import data.Judge;
 import dataBase.DataBaseConnection;
 import java.sql.Connection;
@@ -20,17 +21,23 @@ public class OfpEditModel {
     private TestComModel tcModel;
     private OfpEditPage ofpEditPage;
     
-    /*athlets take part in selected performance
+    /*athlets take part in selected competition
     for view at list*/
     private ArrayList<Athlete> athletesByComp = new ArrayList<>();    
     //athletes without which are in a list 
     private ArrayList<Athlete> athlets = new ArrayList<>();
     
-    /*judges take part in selected performance
+    /*judges take part in selected competition
     for view at list*/
-    private ArrayList<Judge> judgeByComp = new ArrayList<>();
+    private ArrayList<Judge> judgesByComp = new ArrayList<>();
     //judges without which are in a list 
     private ArrayList<Judge> judges = new ArrayList<>();
+    
+    /*elements selected competition
+    for view at list*/
+    private ArrayList<Element> elementsByComp = new ArrayList<>();
+    //judges without which are in a list 
+    private ArrayList<Element> elements = new ArrayList<>();
       
     private static OfpEditModel ofpEditModelInstace = null;  
     private OfpEditModel() {}    
@@ -42,6 +49,122 @@ public class OfpEditModel {
     }
        
     //**********************************ATHLETES********************************
+    /*get athletes, TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at list*/
+    public void setAthletesList () {
+        tcModel = TestComModel.getTestComModelInstance(); 
+        int selRow = tcModel.selRow();
+        String queryLst;        
+        PreparedStatement prstLst = null;        
+        ResultSet rsLst = null; 
+                        
+        //database lst  
+        try {           
+            queryLst = "SELECT DISTINCT ATHLETE.ID, " +
+                            "ATHLETE.Surname, ATHLETE.Name, " +
+                            "ATHLETE.Middlename " +
+                        "FROM COMPETITION, COMPETITION_ATHLETE_LINK, " +
+                            "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                    tcModel.getValueAt(selRow, 1) +  
+                    "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete;";
+            prstLst = DBC.prepareStatement(queryLst);
+            rsLst = prstLst.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }      
+        
+        //data lst
+        //clear data lst
+        try { 
+            //get links, 
+            //clear the array of lst, 
+            //clear view of lst            
+            ofpEditPage = Manager.getOfpEditPage();            
+            athletesByComp.clear();            
+            ofpEditPage.getAthlLstModel().clear();
+                    
+            //lst        
+            while (rsLst.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsLst.getInt(1));
+                athlete.setName(rsLst.getString(3));
+                athlete.setSurname(rsLst.getString(2));
+                athlete.setMiddlename(rsLst.getString(4));                
+                //do it for save data in dif arrays 
+                //in dif models                
+                athletesByComp.add(athlete);
+                ofpEditPage.getAthlLstModel().addElement(athlete);                                
+            }
+            prstLst.close();
+            rsLst.close();
+        } catch (SQLException ex) {
+                Logger.getLogger(OfpEditModel.class.getName()).
+                       log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    /*get athletes, DON'T TAKING PART IN COMPETITION from DB
+    save to array as data
+    view it at combobox*/
+    public void setAthletesCombo() {
+        tcModel = TestComModel.getTestComModelInstance();
+        int selRow = tcModel.selRow();
+        String queryCmb;
+        PreparedStatement prstCmb = null;
+        ResultSet rsCmb = null;
+                
+        //database cmb 
+        try {            
+            queryCmb = "SELECT DISTINCT ATHLETE.ID, ATHLETE.Surname, " +
+                                    "ATHLETE.Name, ATHLETE.Middlename " +
+                        "FROM ATHLETE " +
+                        "WHERE NOT ATHLETE.ID = ANY(" +
+                            "SELECT DISTINCT ATHLETE.ID " +
+                            "FROM COMPETITION_ATHLETE_LINK, " +
+                                 "ATHLETE " +
+                        "WHERE COMPETITION_ATHLETE_LINK.IDcompetition = " + 
+                               tcModel.getValueAt(selRow, 1) + " " +
+                        "AND ATHLETE.ID = COMPETITION_ATHLETE_LINK.IDathlete);";
+            System.out.println(queryCmb);
+            prstCmb = DBC.prepareStatement(queryCmb);
+            rsCmb = prstCmb.executeQuery(); 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }
+        try { 
+            //get links, 
+            //clear the array of cmb, 
+            //clear view of cmb
+            ofpEditPage = Manager.getOfpEditPage();                   
+            athlets.clear();
+            ofpEditPage.getAthlCombo().removeAllItems();
+                    
+            //cmb
+            while (rsCmb.next()) {            
+                Athlete athlete = new Athlete();
+                athlete.setId(rsCmb.getInt(1));
+                athlete.setName(rsCmb.getString(3));
+                athlete.setSurname(rsCmb.getString(2));
+                athlete.setMiddlename(rsCmb.getString(4));                              
+                //do it for save data in dif arrays 
+                //in dif models
+                athlets.add(athlete);
+                ofpEditPage.getAthlCombo().addItem(athlete);
+            }
+            prstCmb.close();
+            rsCmb.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }         
+    }
+
     //add athlete chosen from combobox        
     public void addAthlete() {
         ofpEditPage = Manager.getOfpEditPage();
@@ -73,7 +196,7 @@ public class OfpEditModel {
            Logger.getLogger(SfpEditModel.class.getName()).
                   log(Level.SEVERE, null, ex);
         } catch (NullPointerException ex) {           
-            JOptionPane.showMessageDialog(Manager.getGlasialEdtiPage(),
+            JOptionPane.showMessageDialog(Manager.getOfpEditPage(),
                         "Список спортсменов, доступных для добавления пуст!",
                         "Ошибка", JOptionPane.WARNING_MESSAGE);
             return;
@@ -85,7 +208,7 @@ public class OfpEditModel {
         tcModel = TestComModel.getTestComModelInstance(); 
         
           if (ofpEditPage.getAthlLst().getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(Manager.getPerPage(),
+            JOptionPane.showMessageDialog(Manager.getOfpEditPage(),
                         "Перед удалением необходимо выделить спортсмена",
                         "Ошибка", JOptionPane.WARNING_MESSAGE);
             return;
@@ -154,7 +277,7 @@ public class OfpEditModel {
             /*get links, clear the array of lst, 
             clear view of lst*/
             ofpEditPage = Manager.getOfpEditPage();                                    
-            judgeByComp.clear();            
+            judgesByComp.clear();            
             ofpEditPage.getJudLstModel().clear();                 
             
             //lst        
@@ -166,7 +289,7 @@ public class OfpEditModel {
                 judge.setMiddlename(rsLst.getString(4));                
                 //do it for save data in dif arrays 
                 //in dif models
-                judgeByComp.add(judge);
+                judgesByComp.add(judge);
                 ofpEditPage.getJudLstModel().addElement(judge);
             }
             prstLst.close();
@@ -242,7 +365,7 @@ public class OfpEditModel {
         //add to list
         ofpEditPage.getJudLstModel().addElement(newJudge);
         //insert to array data
-        judgeByComp.add(newJudge);
+        judgesByComp.add(newJudge);
         
         //del from combo
         ofpEditPage.getJudCombo().removeItem(newJudge);        
@@ -284,7 +407,7 @@ public class OfpEditModel {
         
         //del from list
         ofpEditPage.getJudLstModel().removeElement(newJudge);
-        judgeByComp.remove(newJudge);
+        judgesByComp.remove(newJudge);
         
         //add to combobox
         ofpEditPage.getJudCombo().addItem(newJudge);
@@ -296,6 +419,194 @@ public class OfpEditModel {
                           "WHERE IDjudge = " + newJudge.getId() + " AND " + 
                                 "IDcompetition = " + 
                                 tcModel.getValueAt(tcModel.selRow(), 1) + ";" ;           
+           System.out.println(query);
+           PreparedStatement pstmt = DBC.prepareStatement(query);
+           pstmt.execute();
+        } catch (SQLException ex) {
+           Logger.getLogger(OfpEditModel.class.getName()).
+                  log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //*******************************ELEMENTS***********************************
+    //GET ELEMENTS 
+    /*get elements in COMPETITION from DB
+    save to array as data
+    view it at list*/
+    public void setElementsList () {
+        tcModel = TestComModel.getTestComModelInstance();
+        ofpEditPage = Manager.getOfpEditPage();
+        int selRow = tcModel.selRow();
+        
+        String queryLst;        
+        PreparedStatement prstLst = null;        
+        ResultSet rsLst = null; 
+                        
+        //database lst  
+        try {           
+            queryLst = "SELECT OFP_SPECIFICATION. * " +
+                        "FROM OFP_SPECIFICATION, TESTS_ELEMENTS_LINK " +
+                        "WHERE TESTS_ELEMENTS_LINK.IDelement = OFP_SPECIFICATION.ID " +
+                        "AND TESTS_ELEMENTS_LINK.IDcompetition = " +
+                        tcModel.getValueAt(selRow, 1) + ";";
+            System.out.println(queryLst);
+            prstLst = DBC.prepareStatement(queryLst);
+            rsLst = prstLst.executeQuery();            
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, 
+                   "Not get  elements for list", ex);
+        }      
+        
+        //data lst        
+        try { 
+            /*get links, clear the array of lst, 
+            clear view of lst*/
+            ofpEditPage = Manager.getOfpEditPage();                                    
+            //elementsByComp.clear();            
+            ofpEditPage.getElLstModel().clear();                 
+            
+            //lst        
+            while (rsLst.next()) {            
+                Element element = new Element();
+                element.setId(rsLst.getInt(1));
+                element.setUnits(rsLst.getString(2));
+                element.setDescription(rsLst.getString(3));
+                element.setFullName(rsLst.getString(4));               
+                //do it for save data in dif arrays 
+                //in dif models
+                elementsByComp.add(element);
+                ofpEditPage.getElLstModel().addElement(element);                
+                System.out.println(element);
+            }
+            prstLst.close();
+            rsLst.close();
+        } catch (SQLException ex) {
+                Logger.getLogger(SfpEditModel.class.getName()).
+                       log(Level.SEVERE, null, ex);
+        }        
+    }
+    
+    /*get elements, not in competition from DB
+    save to array as data
+    view it at combobox*/
+    public void setElementsCombo() {
+        tcModel = TestComModel.getTestComModelInstance();
+        int selRow = tcModel.selRow();
+        
+        String queryCmb;
+        PreparedStatement prstCmb = null;
+        ResultSet rsCmb = null;
+                
+        //database  
+        try {            
+            queryCmb =  "SELECT OFP_SPECIFICATION. * " +
+                        "FROM OFP_SPECIFICATION " +
+                        "WHERE NOT OFP_SPECIFICATION.ID = ANY( " +
+                            "SELECT OFP_SPECIFICATION.ID " +
+                            "FROM OFP_SPECIFICATION, TESTS_ELEMENTS_LINK " +
+                            "WHERE TESTS_ELEMENTS_LINK.IDcompetition = " + 
+                                   tcModel.getValueAt(selRow, 1) + " " +
+                            "AND TESTS_ELEMENTS_LINK.IDelement = OFP_SPECIFICATION.ID);";
+            
+            prstCmb = DBC.prepareStatement(queryCmb);
+            rsCmb = prstCmb.executeQuery();             
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }
+        try { 
+            /*get links, clear the array of cmb, 
+            clear view of cmb*/
+            ofpEditPage = Manager.getOfpEditPage();                                    
+            ofpEditPage.getElCombo().removeAllItems();  
+            elements.clear();            
+            //cmb
+            while (rsCmb.next()) {            
+                Element element = new Element();
+                element.setId(rsCmb.getInt(1));
+                element.setUnits(rsCmb.getString(2));
+                element.setDescription(rsCmb.getString(3));
+                element.setFullName(rsCmb.getString(4));               
+                //do it for save data in dif arrays 
+                //in dif models
+                elements.add(element);
+                ofpEditPage.getElCombo().addItem(element);
+            }              
+            prstCmb.close();
+            rsCmb.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(OfpEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }
+    }
+ 
+    //add element chosen from combobox        
+    public void addElement() {
+        ofpEditPage = Manager.getOfpEditPage();
+        tcModel = TestComModel.getTestComModelInstance(); 
+        
+        //selected judge
+        Element newElement = (Element)ofpEditPage.getElCombo().getSelectedItem();        
+        
+        //add to list
+        ofpEditPage.getElLstModel().addElement(newElement);
+        //insert to array data
+        elementsByComp.add(newElement);
+        
+        //del from combo
+        ofpEditPage.getElCombo().removeItem(newElement);        
+        //del from array data of combo
+        elements.remove(newElement);       
+        
+        //insert into db
+        try {
+           String query = "INSERT INTO TESTS_ELEMENTS_LINK VALUES (" +
+                   tcModel.getValueAt(tcModel.selRow(), 1) + ", " +
+                   newElement.getId() + ")";
+           
+           System.out.println(query);
+           PreparedStatement pstmt = DBC.prepareStatement(query);
+           pstmt.execute();
+        } catch (SQLException ex) {
+           Logger.getLogger(OfpEditModel.class.getName()).
+                  log(Level.SEVERE, null, ex);
+        } catch (NullPointerException ex) {           
+            JOptionPane.showMessageDialog(Manager.getOfpEditPage(),
+                        "Список элементов, доступных для добавления пуст!",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }   
+    }
+    
+    public void delElement() { 
+        ofpEditPage = Manager.getOfpEditPage();
+        tcModel = TestComModel.getTestComModelInstance(); 
+
+       if (ofpEditPage.getElLst().getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(Manager.getOfpEditPage(),
+                        "Перед удалением необходимо выделить элемент!",
+                        "Ошибка", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        //selected athlete
+        Element newElement = (Element)ofpEditPage.getElLst().getSelectedValue();
+
+        //del from list
+        ofpEditPage.getElLstModel().removeElement(newElement);
+        elementsByComp.remove(newElement);
+
+        //add to combobox
+        ofpEditPage.getElCombo().addItem(newElement);
+        elements.add(newElement);
+
+        //del from database         
+        try {
+           String query =  "DELETE FROM TESTS_ELEMENTS_LINK " +
+                           "WHERE IDcompetition =  " +
+                            tcModel.getValueAt(tcModel.selRow(), 1) + " AND " +
+                            "IDelement = " + newElement.getId() + ";";
            System.out.println(query);
            PreparedStatement pstmt = DBC.prepareStatement(query);
            pstmt.execute();
