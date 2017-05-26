@@ -21,20 +21,22 @@ public class SingleEditPage extends JPanel {
          
     private JLabel athl;
     private JLabel jud;
+    private JLabel rank;
         
     private JList athlLst;
     private JList judLst;    
     private DefaultListModel athlLstModel;
     private DefaultListModel judLstModel;
         
+    private JButton setRankBtn;    
     private JButton athlDelBtn;
-    private JButton judDelBtn;
-        
+    private JButton judDelBtn;        
     private JButton athlAddBtn;
     private JButton judAddBtn;
         
     private JComboBox athlCombo;
     private JComboBox judCombo;
+    private JComboBox rankCombo;
     
     public SingleEditPage() {
         CommonSettings.panelSettings(this);
@@ -47,6 +49,7 @@ public class SingleEditPage extends JPanel {
         createWelcomeLabel();        
         createLabel(1, athl);
         createLabel(2, jud);
+        createLabel(3, rank);
                         
         createList(1, athlLst);
         createList(2, judLst); 
@@ -56,6 +59,7 @@ public class SingleEditPage extends JPanel {
         
         createComboAndBtn(1, athlCombo, athlAddBtn);
         createComboAndBtn(2, judCombo, judAddBtn);
+        createRanksComponents();
     }
 
     private void createWelcomeLabel() {
@@ -76,6 +80,8 @@ public class SingleEditPage extends JPanel {
         lbl = new JLabel();        
         if (i == 1) lbl.setText("Список спортсменов");
         if (i == 2) lbl.setText("Список судей");
+        if (i == 3) lbl.setText("<html>Разряды <p>" + 
+                                "Для подтверждения выбора разряда нажмите ✔.</html>");
         lbl.setVisible(true);
         lbl.setSize(800, 100);
         lbl.setLocation(284 + (i-1)*900, 200);
@@ -159,7 +165,28 @@ public class SingleEditPage extends JPanel {
             judAddBtn.addActionListener(new controllers.TestComEditPages.
                                               SingleEditPage.AddJudge());
         }        
-    } 
+    }
+    
+    private void createRanksComponents() {
+        //combo
+        rankCombo = new JComboBox();        
+        CommonSettings.settingFont30(getRankCombo());
+        getRankCombo().setEditable(false);
+        getRankCombo().setSize(690, 100);
+        getRankCombo().setLocation(2084, 320);        
+        this.add(getRankCombo());        
+        
+        //btn
+        setRankBtn = new JButton("✔");      
+        setRankBtn.setFocusable(false);
+        setRankBtn.setSize(100, 100);
+        setRankBtn.setLocation(2784, 320);
+        CommonSettings.settingFont30(setRankBtn);
+        setRankBtn.setBackground(Color.LIGHT_GRAY);
+        this.add(setRankBtn); 
+        setRankBtn.addActionListener(new controllers.TestComEditPages.
+                                             SingleEditPage.SetRank());
+    }
 
     //GETTERS*******************************************************************
     public JList getAthlLst() {
@@ -201,5 +228,9 @@ public class SingleEditPage extends JPanel {
     }
     public void setJudCombo(JComboBox judCombo) {
         this.judCombo = judCombo;
+    }
+
+    public JComboBox getRankCombo() {
+        return rankCombo;
     }
 }

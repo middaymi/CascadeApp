@@ -10,6 +10,7 @@
 
 package views;
 
+import views.TestCom.StartCom.SingleStComPage;
 import views.TestCom.TestComPage;
 import views.Performance.PerformancePage;
 import java.awt.BorderLayout;
@@ -36,7 +37,9 @@ public class Manager {
     private static SfpEditPage sfpEditPage = null;
     private static SingleEditPage singleEditPage = null;
     private static GlasialEditPage glasialEditPage = null;  
-    private static StComPage sfpStComPage = null;
+    private static StComPage stComPage = null;
+    private static SingleStComPage singleComPage = null;
+    private static ProtocolPage protocolPage = null;
     
     
     private static int width;
@@ -145,9 +148,17 @@ public class Manager {
     }
     
     //START_AND_PROTOCOL_PANELS*************************************************
-    private static void createSfpStartCompPage() {
-        sfpStComPage = new StComPage();
-        getmFrame().getContentPane().add(sfpStComPage, BorderLayout.CENTER);
+    private static void createStComPage() {
+        stComPage = new StComPage();
+        getmFrame().getContentPane().add(stComPage, BorderLayout.CENTER);
+    }    
+    private static void createSingleComPage() {
+        singleComPage = new SingleStComPage();
+        getmFrame().getContentPane().add(singleComPage, BorderLayout.CENTER);
+    }    
+    private static void createProtocolPage() {
+        protocolPage = new ProtocolPage();
+        getmFrame().getContentPane().add(protocolPage, BorderLayout.CENTER);
     }
        
     //NOT_VISIBLE_FOR_ALL_CREATED_PANELS****************************************
@@ -163,7 +174,9 @@ public class Manager {
         if (ofpEditPage != null) ofpEditPage.setVisible(false);
         if (sfpEditPage != null) sfpEditPage.setVisible(false);
         if (singleEditPage != null) singleEditPage.setVisible(false);
-        if (sfpStComPage != null) sfpStComPage.setVisible(false);
+        if (stComPage != null) stComPage.setVisible(false);
+        if (singleComPage != null) singleComPage.setVisible(false);
+        if (protocolPage != null) protocolPage.setVisible(false);
     }
     
     //CHOOSE_PANELS*************************************************************
@@ -235,11 +248,23 @@ public class Manager {
                 getComBtnPanel().useBtns(30);
                 chosenPage = 54;
                 break;
+            case(55):                
+                if (protocolPage == null) createProtocolPage();
+                protocolPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 55;
+                break;
             case(61):
-                if (sfpStComPage == null) createSfpStartCompPage();
-                sfpStComPage.setVisible(true);
+                if (stComPage == null) createStComPage();
+                stComPage.setVisible(true);
                 getComBtnPanel().useBtns(30);
                 chosenPage = 61;
+                break;
+            case(62):
+                if (singleComPage == null) createSingleComPage();
+                singleComPage.setVisible(true);
+                getComBtnPanel().useBtns(30);
+                chosenPage = 62;
                 break;
         }        
     } 
@@ -287,7 +312,13 @@ public class Manager {
     public static SingleEditPage getSingleEditPage() {
         return singleEditPage;
     }
-    public static StComPage getSfpStComPage() {
-        return sfpStComPage;
+    public static StComPage getStComPage() {
+        return stComPage;
+    }
+    public static SingleStComPage getSingleComPage() {
+        return singleComPage;
+    }
+    public static ProtocolPage getProtocolPage() {
+        return protocolPage;
     }
 }

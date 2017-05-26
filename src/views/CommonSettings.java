@@ -8,7 +8,8 @@ import javax.swing.border.LineBorder;
 public class CommonSettings {
     
     private static LineBorder  lightGrayLineBorder = null; 
-    private static LineBorder  grayLineBorder = null;     
+    private static LineBorder  grayLineBorder = null; 
+    private static LineBorder  narrowLightGrayBorder = null;
     private static Font font30 = null;
     private static Font fontBold30 = null;
     private static Font font50 = null; 
@@ -39,6 +40,9 @@ public class CommonSettings {
     public static <T extends JComponent> void settingGrayBorder (T obj) {        
         obj.setBorder(grayLineBorderInstance());
     }
+    public static <T extends JComponent> void settingNarrowLightGrayBorder (T obj) {        
+        obj.setBorder(narrowLightGrayBorder());
+    }
      
     //PRIVATE_FUNCTIONS*********************************************************
     //set grayLineBoard
@@ -53,6 +57,13 @@ public class CommonSettings {
             grayLineBorder = new LineBorder(Color.GRAY, 
                                  (int)(0.00125 * Manager.getWidth()));
         return grayLineBorder;        
+    }
+    
+    private static LineBorder narrowLightGrayBorder() {
+        if (narrowLightGrayBorder == null)
+            narrowLightGrayBorder = new LineBorder(Color.LIGHT_GRAY, 
+                                 (int)(Manager.getWidthWithInsets())/1584);
+        return narrowLightGrayBorder;        
     }
     
     private static Font font30Instance() {

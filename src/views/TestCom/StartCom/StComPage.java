@@ -8,21 +8,20 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
-import javax.lang.model.util.Elements;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import models.TestCom.StartCom.SportsmanResult;
+import data.SportsmanResult;
+import models.TestCom.StartCom.StComModel;
 import models.TestCom.TestComModel;
 import views.CommonSettings;
 
 public class StComPage extends JPanel {
     private TestComModel tcModel;
+    private StComModel stComModel;
     
     private JPanel mainPanel;
     private JList judLst;
@@ -44,6 +43,7 @@ public class StComPage extends JPanel {
         createJudScrl();
         createJudgeLabel();
         createFinishBtn();
+        createPdfBtn();
     }
 
     private void createWelcomeLabel() {
@@ -59,18 +59,21 @@ public class StComPage extends JPanel {
     } 
     
     private void createMainScrl() {
+        stComModel = StComModel.getStComModelInstance();
+        
         mainPanel.setLayout(null);
-        mainScrl = new JScrollPane(mainPanel);
-        mainScrl.setAutoscrolls(true);
-        mainScrl.setSize(2588, 1400);
-        mainScrl.setLocation(50, 177);
-        mainScrl.setBackground(Color.ORANGE);
+        mainPanel.setSize(5000, 5000);            
+        mainScrl = new JScrollPane(mainPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                              JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); 
+        //mainScrl.setSize(2588, 1400);
+        mainScrl.setLocation(50, 177); 
+        mainScrl.getViewport().setBackground(Color.ORANGE);
         mainScrl.setVisible(true);
         this.add(mainScrl);
     }    
     
     private void createJudScrl() {
-        CommonSettings.settingFont30(judLst);
+        CommonSettings.settingFont30(judLst);        
         judLst.setModel(lstModel);
         judScrl = new JScrollPane(judLst);
         judScrl.setSize(430, 600);
@@ -100,41 +103,71 @@ public class StComPage extends JPanel {
         CommonSettings.settingGrayBorder(finBtn);
         CommonSettings.settingFontBold30(finBtn);
         this.add(finBtn);
-    } 
+        finBtn.addActionListener(new controllers.TestComPage.StComPages.FinishCom());
+    }
     
-    public void setSportsmanLabels(Collection<SportsmanResult> values) { 
-        int i = 0;
+    private void createPdfBtn() {
+        JButton savePdf = new JButton("<html>Сохранить<p align=center>" +
+                                                        "в PDF<html>");
+        savePdf.setSize(430, 100);
+        savePdf.setLocation(2688, 1130);
+        savePdf.setBackground(Color.LIGHT_GRAY);
+        CommonSettings.settingGrayBorder(savePdf);
+        CommonSettings.settingFontBold30(savePdf);
+        this.add(savePdf);
+        savePdf.addActionListener(new controllers.TestComPage.StComPages.SavePdf());
+    }
+    
+    public void setSportsmanLabels(Collection<SportsmanResult> values, int j) { 
+        int i = 0;  
+        HeaderTextArea label = null;
         for (SportsmanResult value : values) {
-            HeaderLabel label = new HeaderLabel(true, ++i, (i - 1) + ". " + value.getAthlete().toString());
+            if (j == 1) {
+                label = new HeaderTextArea(true, ++i + j, 
+                        (i) + ". " + value.getAthlete().toString());
+            }
+            else {
+                label = new HeaderTextArea(true, ++i, 
+                        (i) + ". " + value.getAthlete().toString());
+            }
             mainPanel.add(label);
         }
     }
     
     public void setElementLabels(Collection<Element> values) { 
         int i = 0;
+        HeaderTextArea label = null;
         for (Element value : values) {
-            HeaderLabel label = new HeaderLabel(false, i++, value.getFullName());
+            String unit = value.getUnits();
+            if (unit != null) {
+                label = new HeaderTextArea(false, i++, (value.getFullName() +  ", (" + value.getUnits() + ")"));
+            } else {
+                label = new HeaderTextArea(false, i++, value.getFullName());    
+            }
             mainPanel.add(label);
         }
     }
     
     public void setElementWithJudgesLabels(Collection<Element> values, Collection<Judge> judges) { 
+        int k = 0; //for common location count
         int i = 0;
         for (Element value : values) {
-            HeaderLabel label = new HeaderLabel(false, i++, value.getFullName(), new Dimension(300 * judges.size(), 100));
-            mainPanel.add(label);
+            HeaderTextArea label = new HeaderTextArea(false, i++, value.getFullName(), 
+                                       new Dimension(125 * judges.size(), 100));
+            mainPanel.add(label);            
             int j = 0;        
             for (Judge judge : judges) {
-                HeaderLabel label1 = new HeaderLabel(false, i++, String.valueOf(i), 100);  
+                ++j;
+                HeaderTextArea label1 = new HeaderTextArea(false, k++, String.valueOf(j), 100, true);  
                 mainPanel.add(label1);
             }
         }                        
     }
     
     public void setFields(ArrayList<ArrayList<MarkCellData>> matrix, int top) {
+        stComModel = StComModel.getStComModelInstance();
         if (matrix.size() > 0) {
-            JPanel panel = new JPanel();
-            panel.setBackground(Color.ORANGE);
+            JPanel panel = new JPanel();            
             panel.setVisible(true);
             panel.setOpaque(true);
             GridLayout layout = new GridLayout(matrix.size(), matrix.get(0).size());
@@ -142,12 +175,40 @@ public class StComPage extends JPanel {
             for (ArrayList<MarkCellData> values : matrix) {
                 for (MarkCellData value : values) { 
                     MarkTextField field = new MarkTextField(value);
+                    String strValue = String.valueOf(value.getValue());
+                    if (strValue.equals("null")) {
+                        field.setText("");}
+                    else {
+                        field.setText(strValue);
+                    }
                     panel.add(field);
+                    field.addActionListener(new controllers.TestComPage.StComPages.
+                                                       SaveValue(field));
                 }
             }
-            panel.setSize(300 * matrix.get(0).size(), 100 * matrix.size());
-            panel.setLocation(400, top);            
-            mainPanel.add(panel);
+            //if glasial
+            if (tcModel.getCompetitions().get(tcModel.selRow()).getKind().getId() == 3) {
+                panel.setSize(125 * matrix.get(0).size(), 100 * matrix.size());
+                mainPanel.setPreferredSize(new Dimension(400 + panel.getWidth(), 200 + panel.getHeight()));
+            } else {
+                panel.setSize(250 * matrix.get(0).size(), 100 * matrix.size());
+                mainPanel.setPreferredSize(new Dimension(400 + panel.getWidth(), 100 + panel.getHeight()));
+            }
+            
+            //crop mainScrl if it possible
+            if (mainPanel.getPreferredSize().width < 2588) {
+                mainScrl.setSize(mainPanel.getPreferredSize().width + 20, 1400);
+            } else {
+                mainScrl.setSize(2588, 1400);
+            }
+            if (mainPanel.getPreferredSize().height < 1400) {
+                mainScrl.setSize(mainScrl.getWidth(), mainPanel.getPreferredSize().height + 20);
+            } else {
+                mainScrl.setSize(mainScrl.getWidth(), 1400);
+            }
+            
+            panel.setLocation(400, top);             
+            mainPanel.add(panel);            
         }
     }
 

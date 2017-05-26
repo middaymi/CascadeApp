@@ -14,9 +14,9 @@ import views.CommonSettings;
 public class TestComPage extends JPanel {
     private JTable table;
     private JScrollPane scrlPane;
-    private TestComModel tcModel = 
-            TestComModel.getTestComModelInstance();
-    private TestComColumnModel tcColModel;    
+    
+    private TestComColumnModel tcColModel;
+    private TestComModel tcModel;    
     private JButton changeBtn;
     private JButton delBtn;
     private JButton addBtn;
@@ -26,6 +26,7 @@ public class TestComPage extends JPanel {
     private JButton protocolBtn;
     
     public TestComPage() {
+        tcModel = TestComModel.getTestComModelInstance();
         //panel
         CommonSettings.panelSettings(this);
         //get data
@@ -54,6 +55,8 @@ public class TestComPage extends JPanel {
     }
     //table settings
     private void setTableSettings() {
+        tcModel = 
+            TestComModel.getTestComModelInstance();
         table = new JTable(tcModel);
         table.setVisible(true);
         table.setOpaque(true);
@@ -76,9 +79,6 @@ public class TestComPage extends JPanel {
     }
     
     //BUTTONS*******************************************************************
-    public void setEditableBtnsMode() {
-        
-    }
      
     private void setChangeBtnSettings() {
         changeBtn = new JButton("Изменить");        
@@ -145,12 +145,14 @@ public class TestComPage extends JPanel {
     }
     
     public void setBtnProtocols() {
-        protocolBtn = new JButton("Протокол");              
+        protocolBtn = new JButton("<html>Итоговый<p align=center>"+
+                                  "протокол</html>");              
         protocolBtn.setBackground(Color.LIGHT_GRAY);
         protocolBtn.setSize(250, 100);
         protocolBtn.setLocation(167, 835);
         protocolBtn.setVisible(true);
         CommonSettings.settingFont30(protocolBtn);
         this.add(protocolBtn);
+        protocolBtn.addActionListener(new controllers.TestComPage.ViewProtocol());
     }
 }

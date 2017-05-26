@@ -16,7 +16,9 @@ public class BackBtnListener implements ActionListener{
         case(52):
         case(53):
         case(54):
+        case(55):
         case(61): 
+        case(62): 
             manager.choosePanel(50);
             break;
         }

@@ -32,17 +32,17 @@ public class Element {
     public void setUnits(String units) {
         this.units = units;
     }
-    
-    @Override
-    public String toString() {
-        return fullName;
-    }
-
+   
     public String getTableName() {
         return tableName;
     }
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+    
+    @Override
+    public String toString() {
+        return fullName;
     }
 }

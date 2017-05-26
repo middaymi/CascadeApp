@@ -2,6 +2,7 @@ package models.TestCom;
 
 import data.Athlete;
 import data.Judge;
+import data.Rank;
 import dataBase.DataBaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +32,9 @@ public class SingleEditModel {
     private ArrayList<Judge> judgesByComp = new ArrayList<>();
     //judges without which are in a list 
     private ArrayList<Judge> judges = new ArrayList<>();
-        
+    
+    private ArrayList<Rank> ranks = new ArrayList<>();
+            
     private static SingleEditModel singleEditModelInstace = null;  
     private SingleEditModel() {}    
     public static SingleEditModel getSingleEditModelInstance() {
@@ -421,6 +424,84 @@ public class SingleEditModel {
         }
     }
     
+    //RANK**********************************************************************
+    public void setRanksCombo() {        
+        String queryCmb;
+        PreparedStatement prstCmb = null;
+        ResultSet rsCmb = null;
+        
+        try {            
+            queryCmb =  "SELECT * FROM RANK;";            
+            prstCmb = DBC.prepareStatement(queryCmb);
+            rsCmb = prstCmb.executeQuery();  
+            
+            singleEditPage = Manager.getSingleEditPage(); 
+            
+            singleEditPage.getRankCombo().removeAllItems();  
+            getRanks().clear(); 
+            
+            //get items
+            while (rsCmb.next()) {            
+                Rank rank = new Rank();
+                rank.setId(rsCmb.getInt(1));
+                rank.setFullName(rsCmb.getString(2));
+                rank.setRequirements(rsCmb.getString(3));
+                rank.setProgramStructure(rsCmb.getString(4)); 
+                rank.setProgramsCount(rsCmb.getInt(5)); 
+                
+                getRanks().add(rank);
+                singleEditPage.getRankCombo().addItem(rank);
+            }                     
+                singleEditPage.getRankCombo().setSelectedItem(setActiveRank());                            
+                       
+        } catch (SQLException ex) {
+            Logger.getLogger(SingleEditModel.class.getName()).
+                   log(Level.SEVERE, null, ex);
+        }    
+    }
+    
+    private Rank setActiveRank() {
+        tcModel = TestComModel.getTestComModelInstance();
+        int selRow = tcModel.selRow();        
+        Integer selRankId = tcModel.getCompetitions().get(selRow).getRankId();
+        
+        Rank selRank = null;
+        
+        for (Rank rank : ranks) {            
+            if (rank.getId() == selRankId) {
+                selRank = rank;
+            }
+        }
+        return selRank;
+    }
+    
+    public void setRank() {
+        singleEditPage = Manager.getSingleEditPage();
+        tcModel = TestComModel.getTestComModelInstance();
+        Rank selRank = (Rank) singleEditPage.getRankCombo().getSelectedItem();
+        
+        if (selRank == null) {
+            return;
+        }
+
+        //set new rank to competition
+        tcModel.getCompetitions().get(tcModel.selRow()).setRankId(selRank.getId());
+            
+        try {//update in db
+            String query;
+            PreparedStatement prst = null;
+            query = "UPDATE COMPETITION SET IDrank = " + selRank.getId() + " " +
+                    "WHERE COMPETITION.id = " +
+                    tcModel.getCompetitions().get(tcModel.selRow()).getId() + ";";
+            prst = DBC.prepareStatement(query);
+            prst.execute();       
+            prst.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SingleEditModel.class.getName()).log(Level.SEVERE, 
+                   "Do not update rank of competition", ex);
+        }
+    }   
+    
     //GETTERS*******************************************************************
     public ArrayList<Athlete> getAthletesByComp() {
         
@@ -429,5 +510,9 @@ public class SingleEditModel {
     public ArrayList<Athlete> getAthlets() {
         return athlets;
     }    
+
+    public ArrayList<Rank> getRanks() {
+        return ranks;
+    }
 }
  
