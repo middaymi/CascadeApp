@@ -130,11 +130,11 @@ public class ProtocolPage extends JPanel {
         sumRes.setSize(500, 70);
         place.setSize(500, 70);
         
-        fio.setLocation(0, 70*count);        
-        isDone.setLocation(500*1, 70*count);
-        sumPlaces.setLocation(500*2, 70*count);
-        sumRes.setLocation(500*3, 70*count);
-        place.setLocation(500*4, 70*count);
+        place.setLocation(0, 70*count);
+        fio.setLocation(500*1, 70*count);        
+        isDone.setLocation(500*4, 70*count);
+        sumPlaces.setLocation(500*3, 70*count);
+        sumRes.setLocation(500*2, 70*count);
                 
         if (count == 0) {
             fio.setText("Спортсмен");        

@@ -715,8 +715,7 @@ public class StComModel {
     
     public HashMap<Integer, SportsmanResult> getAthletesByComp() {
         return athletesByComp;
-    }
-    
+    }    
 
     public HashMap<Integer, Element> getElementsByComp() {
         return elementsByComp;
@@ -737,7 +736,7 @@ public class StComModel {
     public int getMode() {
         return mode;
     }
-
+    
     public void setMode(int mode) {
         this.mode = mode;
     }
