@@ -206,12 +206,10 @@ public class ComponentRow extends JPanel {
                         isuComModel.getCIAR().getCompetitionAthlId() +
                         " AND IDcomponent = " + compId + " AND IDjudge = " + judId + ";";
             }
-            System.out.println(query);
             prst = isuComModel.getDBC().prepareStatement(query);
             prst.execute();             
         } catch (SQLException ex) {
             Logger.getLogger(ElementRow.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("error");
         }
         finally {
             try {

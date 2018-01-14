@@ -11,22 +11,16 @@ package cascadeapp;
 */
 
 import views.Manager;
-
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class CascadeApp {
     static Manager manager;
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                manager = Manager.getManagerInstance();
-                System.out.println("WIDTH: " + Manager.getWidthWithInsets());
-                System.out.println("HEIGHT: " + Manager.getHeightWithInsets());
-                dataBase.DataBaseConnection.getInstanceDataBase();
-            }
-        });
-    }
+            manager = Manager.getManagerInstance();
+            System.out.println("WIDTH: " + Manager.getWidthWithInsets());
+            System.out.println("HEIGHT: " + Manager.getHeightWithInsets());
+            dataBase.DataBaseConnection.getInstanceDataBase();
+    };
 }
 
 

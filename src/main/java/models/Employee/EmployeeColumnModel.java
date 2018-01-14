@@ -1,19 +1,18 @@
 package models.Employee;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Enumeration;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+@RequiredArgsConstructor
 public class EmployeeColumnModel {
     
-    private JTable table;
+    private final JTable table;
     private TableColumnModel columnModel;
-    
-    public EmployeeColumnModel(JTable tbl) {
-        this.table = tbl;
-    }
     
     //table columns settings (setWidth, remove ID column, move some columns)
     public void setTableColumnsSettings() {

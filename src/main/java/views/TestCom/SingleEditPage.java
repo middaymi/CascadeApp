@@ -37,6 +37,9 @@ public class SingleEditPage extends JPanel {
     private JComboBox athlCombo;
     private JComboBox judCombo;
     private JComboBox rankCombo;
+
+    private int w = Manager.getWidthWithInsets();
+    private int h = Manager.getHeightWithInsets();
     
     public SingleEditPage() {
         CommonSettings.panelSettings(this);
@@ -66,8 +69,8 @@ public class SingleEditPage extends JPanel {
         String str = tcModel.getValueAt(sel, 0) + ". " +
                      tcModel.getValueAt(sel, 3);
         welcome = new JLabel(str);
-        welcome.setSize(800, 70);
-        welcome.setLocation(2084, 30);
+        welcome.setSize(w/4, 7*h/180);
+        welcome.setLocation(521*w/800, h/60);
         welcome.setVisible(true);
         welcome.setOpaque(true);
         welcome.setBackground(Color.LIGHT_GRAY);
@@ -83,8 +86,8 @@ public class SingleEditPage extends JPanel {
         if (i == 3) lbl.setText("<html>Разряды <p>" + 
                                 "Для подтверждения выбора разряда нажмите ✔.</html>");
         lbl.setVisible(true);
-        lbl.setSize(800, 100);
-        lbl.setLocation(284 + (i-1)*900, 200);
+        lbl.setSize(w/4, h/18);
+        lbl.setLocation(71*w/800 + (i-1)*(9*w/32), h/9);
         CommonSettings.settingFont30(lbl);
         CommonSettings.settingGrayBorder(lbl);
         lbl.setOpaque(true);
@@ -101,8 +104,8 @@ public class SingleEditPage extends JPanel {
         lst.setFocusable(false);  
         
         JScrollPane scrl = new JScrollPane(lst);
-        scrl.setSize(800, 950);
-        scrl.setLocation(284 + (i-1)*900, 310);
+        scrl.setSize(w/4, 19*h/36);
+        scrl.setLocation(71*w/800 + (i-1)*(9*w/32), 31*h/180);
         this.add(scrl);
         if (i == 1) {
             athlLstModel = new DefaultListModel();
@@ -120,8 +123,8 @@ public class SingleEditPage extends JPanel {
         btn = new JButton("-");
         CommonSettings.settingFont30(btn);
         btn.setFocusable(false);
-        btn.setSize(100, 100);
-        btn.setLocation(284 + i*900 - 200, 1380);
+        btn.setSize(w/32, h/18);
+        btn.setLocation(21*w/800 + i*9*w/32, 23*h/30);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
         if (i == 1) {
@@ -141,8 +144,8 @@ public class SingleEditPage extends JPanel {
         cmb = new JComboBox();        
         CommonSettings.settingFont30(cmb);
         cmb.setEditable(false);
-        cmb.setSize(690, 100);
-        cmb.setLocation(284 + (i-1)*900, 1270);
+        cmb.setSize(69*w/320, h/18);
+        cmb.setLocation(71*w/800 + (i-1)*(9*w/32), 127*h/180);
         this.add(cmb);        
         if (i == 1) athlCombo = cmb;
         else if (i == 2) judCombo = cmb;
@@ -150,8 +153,8 @@ public class SingleEditPage extends JPanel {
         //btns
         btn = new JButton("+");      
         btn.setFocusable(false);
-        btn.setSize(100, 100);
-        btn.setLocation(284 + i*900 - 200, 1270);
+        btn.setSize(w/32, h/18);
+        btn.setLocation(21*w/800 + i*9*w/32, 127*h/180);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn); 
@@ -172,15 +175,15 @@ public class SingleEditPage extends JPanel {
         rankCombo = new JComboBox();        
         CommonSettings.settingFont30(getRankCombo());
         getRankCombo().setEditable(false);
-        getRankCombo().setSize(690, 100);
-        getRankCombo().setLocation(2084, 320);        
+        getRankCombo().setSize(69*w/320, h/18);
+        getRankCombo().setLocation(521*w/800, 8*h/45);
         this.add(getRankCombo());        
         
         //btn
         setRankBtn = new JButton("✔");      
         setRankBtn.setFocusable(false);
-        setRankBtn.setSize(100, 100);
-        setRankBtn.setLocation(2784, 320);
+        setRankBtn.setSize(w/32, h/18);
+        setRankBtn.setLocation(87*w/100, 8*h/45);
         CommonSettings.settingFont30(setRankBtn);
         setRankBtn.setBackground(Color.LIGHT_GRAY);
         this.add(setRankBtn); 

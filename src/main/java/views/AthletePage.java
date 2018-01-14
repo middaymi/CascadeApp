@@ -77,7 +77,7 @@ public class AthletePage extends JPanel {
     private void setChangeBtnSettings() {
         changeBtn = new JButton("Изменить");        
         changeBtn.setBackground(Color.LIGHT_GRAY);
-        changeBtn.setSize(58*w/64, h/18);
+        changeBtn.setSize(5*w/64, h/18);
         changeBtn.setLocation(1417*w/1600, 4*h/5);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
@@ -108,7 +108,7 @@ public class AthletePage extends JPanel {
     }     
     public void setBtnsMode(boolean mode) {
         //editable or not regime
-        if (mode == true) {changeBtn.setText("Выйти");}
+        if (mode) {changeBtn.setText("Выйти");}
         else {changeBtn.setText("Изменить");}
         delBtn.setVisible(mode);
         addBtn.setVisible(mode);

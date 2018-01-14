@@ -675,7 +675,7 @@ public class PdfResultsCreator {
             tableWithResults.addCell(cell);
             cell.setPhrase(new Phrase(this.resultsSimple.get(i).getAverageMark() + "", myFont));
             tableWithResults.addCell(cell);
-            cell.setPhrase(new Phrase(this.resultsSimple.get(i).isIsDone() ? "+" : " ", myFont));
+            cell.setPhrase(new Phrase(this.resultsSimple.get(i).isDone() ? "+" : " ", myFont));
             tableWithResults.addCell(cell);
         }
 

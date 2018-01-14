@@ -5,10 +5,12 @@ judges are added
  */
 package data;
 
-public class MarkCellData {
+import lombok.Data;
 
+@Data
+public class MarkCellData {
     private Float value = null;
-    private Integer athleteId = null; 
+    private Integer athleteId = null;
     private Integer elementId = null;
     private Integer judgeId = null;
     private int normalMark = 0;
@@ -19,53 +21,5 @@ public class MarkCellData {
         this.elementId = elementId;
         this.judgeId = judgeId;
         this.value = value;
-    }
-
-    public Float getValue() {
-        return value;
-    }
-
-    public void setValue(Float value) {
-        this.value = value;
-    }
-
-    public Integer getAthleteId() {
-        return athleteId;
-    }
-
-    public void setAthleteId(Integer sportsmenId) {
-        this.athleteId = sportsmenId;
-    }
-
-    public Integer getElementId() {
-        return elementId;
-    }
-
-    public void setElementId(Integer elementId) {
-        this.elementId = elementId;
-    }
-
-    public Integer getJudgeId() {
-        return judgeId;
-    }
-
-    public void setJudgeId(Integer judgeId) {
-        this.judgeId = judgeId;
-    }
-
-    public int getNormalMark() {
-        return normalMark;
-    }
-
-    public void setNormalMark(int normalMark) {
-        this.normalMark = normalMark;
-    }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int place) {
-        this.place = place;
     }
 }

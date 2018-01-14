@@ -77,7 +77,7 @@ public class ViewProtocol implements ActionListener{
 
                 athleteResult.setPlace(rs.getInt(7));
                 athleteResult.setSumOfMarks(rs.getFloat(8));
-                athleteResult.setIsDone(rs.getBoolean(9));
+                athleteResult.setDone(rs.getBoolean(9));
                 athleteResult.setStartNumber(rs.getInt(10));
                 athleteResult.setSumOfAllElements(rs.getFloat(11));
                 athleteResult.setSumOfAllComponents(rs.getFloat(12));

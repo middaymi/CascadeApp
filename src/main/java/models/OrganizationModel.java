@@ -52,7 +52,7 @@ public class OrganizationModel {
                 organization.setFullName(res.getString("fullName"));
                 organization.setPhoneNumber(res.getString("PhoneNumber"));
                 organization.setSite(res.getString("Site"));
-                organization.seteMail(res.getString("EMail"));
+                organization.setEMail(res.getString("EMail"));
                 organization.setOGRN(res.getString("OGRN"));
                 organization.setKPP(res.getString("KPP"));
                 organization.setINN(res.getString("INN"));
@@ -80,7 +80,7 @@ public class OrganizationModel {
             psOrganization.setString(1, organization.getFullName());
             psOrganization.setString(2, organization.getPhoneNumber());
             psOrganization.setString(3, organization.getSite());
-            psOrganization.setString(4, organization.geteMail());
+            psOrganization.setString(4, organization.getEMail());
             psOrganization.setString(5, organization.getOGRN());
             psOrganization.setString(6, organization.getKPP());
             psOrganization.setString(7, organization.getINN());

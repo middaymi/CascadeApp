@@ -1,11 +1,14 @@
 package data;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Data
 public class CompetitionIsuAthleteResult {
         
-    private Athlete athlete;
+    private final Athlete athlete;
     private int startNumber = 0;    
     private float totalScore = 0;
     private float elementScore = 0;
@@ -18,11 +21,6 @@ public class CompetitionIsuAthleteResult {
     private ArrayList<ElementIsu> elementsList = new ArrayList<>();
     private ArrayList<ComponentIsu> componentsList = new ArrayList<>();    
  
-    public CompetitionIsuAthleteResult(Athlete athlete) {
-        this.athlete = athlete;
-    }
-    public CompetitionIsuAthleteResult() {
-    }
     public void calculate(float factor) {
         // calculate components
         componentScore = 0;
@@ -67,101 +65,18 @@ public class CompetitionIsuAthleteResult {
         // check rank        
         isDone = RankCalculation.calculateRankExecution(elementsList, elements, rank);
     }
-   
-    public Athlete getAthlete() {
-        return athlete;
-    }
-
-    public void setAthlete(Athlete athlete) {
-        this.athlete = athlete;
-    }
-
-    public int getStartNumber() {
-        return startNumber;
-    }
-	
-    public void setStartNumber(int startNumber) {
-        this.startNumber = startNumber;
-    }
-
-    public float getTotalScore() {
-        return totalScore;
-        
-    }
 
     public void setTotalScore(float totalScore) {        
         this.totalScore = Math.round(totalScore * 100.0f) / 100.0f;       
     }
-
-    public float getElementScore() {
-        return elementScore;
-    }
-
     public void setElementScore(float elementScore) {
         this.elementScore = Math.round(elementScore * 100.0f) / 100.0f;
     }
-
-    public float getComponentScore() {
-        return componentScore;
-    }
-
-    public void setComponentScore(float componentScore) {
-        this.componentScore = Math.round(componentScore * 100.0f) / 100.0f;
-    }
-
-    public float getDeductions() {
-        return deductions;
-    }
-
-    public void setDeductions(float deductions) {
-        this.deductions = deductions;
-    }
-
-    public ArrayList<ElementIsu> getElementsList() {
-        return elementsList;
-    }
-
+    public void setComponentScore(float componentScore) { this.componentScore = Math.round(componentScore * 100.0f) / 100.0f; }
     public void addToElLst(ElementIsu elIsu) {
         this.elementsList.add(elIsu);
     }
-
-    public ArrayList<ComponentIsu> getComponentsList() {
-        return componentsList;
-    }
-
     public void addToCompLst(ComponentIsu compIsu) {
         this.componentsList.add(compIsu);
-    }
-
-    public boolean isDone() {
-        return isDone;
-    }
-
-    public void setIsDone(boolean isDone) {
-        this.isDone = isDone;
-    }    
-
-    public int getCompetitionAthlId() {
-        return competitionAthlId;
-    }
-
-    public void setCompetitionAthlId(int competitionAthlId) {
-        this.competitionAthlId = competitionAthlId;
-    }
-
-    public int getPlace() {
-        return place;
-    }
-
-    public void setPlace(int place) {
-        this.place = place;
-    }
-
-    public int getResultId() {
-        return resultId;
-    }
-
-    public void setResultId(int resultId) {
-        this.resultId = resultId;
     }
 }

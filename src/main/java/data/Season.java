@@ -1,25 +1,14 @@
 package data;
 
+import lombok.Data;
+
+@Data
 public class Season {
     private int id;
-    private String period;
+    private String season;
 
-    public int getId() {
-        return id;
-    }
-    public String getPeriod() {
-        return period;
-    }
-    
-    public void setId(int id) {
-        this.id = id;
-    }
-    public void setPeriod(String period) {
-        this.period = period;
-    }
     @Override
     public String toString() {
-        return getPeriod();
+        return getSeason();
     }
-    
 }

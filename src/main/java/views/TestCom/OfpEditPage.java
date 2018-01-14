@@ -8,10 +8,13 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import lombok.Data;
 import models.TestCom.TestComModel;
 import views.CommonSettings;
 import views.Manager;
 
+@Data
 public class OfpEditPage extends JPanel {
     private JLabel welcome;
     private Manager manager;
@@ -41,7 +44,10 @@ public class OfpEditPage extends JPanel {
     private JComboBox elCombo;
     private JComboBox athlCombo;
     private JComboBox judCombo;
-    
+
+    private int w = Manager.getWidthWithInsets();
+    private int h = Manager.getHeightWithInsets();
+
     public OfpEditPage() {
         CommonSettings.panelSettings(this);
         manager = Manager.getManagerInstance();
@@ -73,8 +79,8 @@ public class OfpEditPage extends JPanel {
         String str = tcModel.getValueAt(sel, 0) + ". " +
                      tcModel.getValueAt(sel, 3);
         welcome = new JLabel(str);
-        welcome.setSize(800, 70);
-        welcome.setLocation(2084, 30);
+        welcome.setSize(w/4, 70);
+        welcome.setLocation(521*w/800, 30);
         welcome.setVisible(true);
         welcome.setOpaque(true);
         welcome.setBackground(Color.LIGHT_GRAY);
@@ -89,8 +95,8 @@ public class OfpEditPage extends JPanel {
         if (i == 2) lbl.setText("Список спортсменов");
         if (i == 3) lbl.setText("Список судей");
         lbl.setVisible(true);
-        lbl.setSize(800, 100);
-        lbl.setLocation(284 + (i-1)*900, 200);
+        lbl.setSize(w/4, 100);
+        lbl.setLocation(521*w/800 + (i-1)*9*w/32, 200);
         CommonSettings.settingFont30(lbl);
         CommonSettings.settingGrayBorder(lbl);
         lbl.setOpaque(true);
@@ -107,8 +113,8 @@ public class OfpEditPage extends JPanel {
         lst.setFocusable(false);  
         
         JScrollPane scrl = new JScrollPane(lst);
-        scrl.setSize(800, 950);
-        scrl.setLocation(284 + (i-1)*900, 310);
+        scrl.setSize(w/4, 950);
+        scrl.setLocation(71*w/800 + (i-1)*9*w/32, 310);
         this.add(scrl);
         if (i == 1) {
             elLstModel = new DefaultListModel();
@@ -131,8 +137,8 @@ public class OfpEditPage extends JPanel {
         btn = new JButton("-");
         CommonSettings.settingFont30(btn);
         btn.setFocusable(false);
-        btn.setSize(100, 100);
-        btn.setLocation(284 + i*900 - 200, 1380);
+        btn.setSize(w/32, 100);
+        btn.setLocation(21*w/800 + i*9*w/32, 1380);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
          if (i == 1) {
@@ -157,8 +163,8 @@ public class OfpEditPage extends JPanel {
         cmb = new JComboBox();        
         CommonSettings.settingFont30(cmb);
         cmb.setEditable(false);
-        cmb.setSize(690, 100);
-        cmb.setLocation(284 + (i-1)*900, 1270);
+        cmb.setSize(69*w/320, 100);
+        cmb.setLocation(71*w/800 + (i-1)*9*w/32, 1270);
         this.add(cmb); 
         if (i == 1) elCombo = cmb;
         else if (i == 2) athlCombo = cmb;
@@ -167,8 +173,8 @@ public class OfpEditPage extends JPanel {
         //btns
         btn = new JButton("+");      
         btn.setFocusable(false);
-        btn.setSize(100, 100);
-        btn.setLocation(284 + i*900 - 200, 1270);
+        btn.setSize(w/32, 100);
+        btn.setLocation(21*w/800 + i*9*w/32, 1270);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
@@ -187,67 +193,5 @@ public class OfpEditPage extends JPanel {
             judAddBtn.addActionListener(new controllers.TestComEditPages.
                                                  OfpEditPage.AddJudge());
         }
-    } 
-    
-    //GETTERS*******************************************************************
-     public JList getElLst() {
-        return elLst;
-    }
-    public JList getAthlLst() {
-        return athlLst;
-    }
-    public JList getJudLst() {
-        return judLst;
-    }
-
-    public DefaultListModel getElLstModel() {
-        return elLstModel;
-    }
-    public DefaultListModel getAthlLstModel() {
-        return athlLstModel;
-    }
-    public DefaultListModel getJudLstModel() {
-        return judLstModel;
-    }
-    
-    public JComboBox getElCombo() {
-        return elCombo;
-    }
-    public JComboBox getAthlCombo() {
-        return athlCombo;
-    }
-    public JComboBox getJudCombo() {
-        return judCombo;
-    }
-
-    //SETTERS*******************************************************************
-    public void setElLst(JList elLst) {
-        this.elLst = elLst;
-    }
-    public void setAthlLst(JList athlLst) {
-        this.athlLst = athlLst;
-    }
-    public void setJudLst(JList judLst) {
-        this.judLst = judLst;
-    }
-
-    public void setElLstModel(DefaultListModel elLstModel) {
-        this.elLstModel = elLstModel;
-    }
-    public void setAthlLstModel(DefaultListModel athlLstModel) {
-        this.athlLstModel = athlLstModel;
-    }
-    public void setJudLstModel(DefaultListModel judLstModel) {
-        this.judLstModel = judLstModel;
-    }
-
-    public void setElCombo(JComboBox elCombo) {
-        this.elCombo = elCombo;
-    }
-    public void setAthlCombo(JComboBox athlCombo) {
-        this.athlCombo = athlCombo;
-    }
-    public void setJudCombo(JComboBox judCombo) {
-        this.judCombo = judCombo;
     }
 }

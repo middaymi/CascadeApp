@@ -5,7 +5,6 @@ import lombok.Data;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-//storage data class
 @Data
 public class Athlete { 
     private int id;

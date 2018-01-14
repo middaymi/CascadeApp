@@ -183,13 +183,13 @@ public class PerformanceModel extends AbstractTableModel {
                             rowPerformance.setDescription(rs.getString(i + 1));
                             break;
                         case ("IDseason"):
-                            rowPerformance.setSeason(rs.getInt(i + 1));                            
+                            rowPerformance.getSeason().setId(rs.getInt(i + 1));
                             break;
                         case ("Period"):
-                            rowPerformance.setSeason(rs.getString(i + 1));
-                            comboSeasons.setSelectedItem(rowPerformance.getSeason());                            
+                            rowPerformance.getSeason().setSeason(rs.getString(i + 1));
+                            comboSeasons.setSelectedItem(rowPerformance.getSeason());
                             break;
-                    }                 
+                    }
                 }
                 synchronized (getData()) {                    
                     setData(rowPerformance);
@@ -266,10 +266,10 @@ public class PerformanceModel extends AbstractTableModel {
                 setClass.setDescription(((String)value).trim());
                 break; 
             case ("IDseason"):
-                setClass.setSeason(((Season)value).getId());
+                setClass.getSeason().setId(((Season)value).getId());
                 break;
             case ("Period"):                
-                setClass.setSeason((Season)value);
+                setClass.getSeason().setSeason((String)value);
                 break;
         }             
         updateData(row, column, value);      
@@ -466,7 +466,7 @@ public class PerformanceModel extends AbstractTableModel {
             while (rsAllSeasons.next()) {
                 Season season = new Season();
                 season.setId(rsAllSeasons.getInt(1));
-                season.setPeriod(rsAllSeasons.getString(2));
+                season.setSeason(rsAllSeasons.getString(2));
                 seasons.add(season);              
             }
             

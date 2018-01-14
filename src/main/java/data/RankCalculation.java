@@ -1,8 +1,11 @@
 package data;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Data
 public class RankCalculation {
 
     private static final int THRESHOLD = -1;

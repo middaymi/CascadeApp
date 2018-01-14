@@ -1,5 +1,7 @@
 package models.Performance;
 
+import lombok.Data;
+
 import java.util.Enumeration;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
@@ -7,15 +9,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+@Data
 public class PerformanceColumnModel {
     
-    private JTable table;
+    private final JTable table;
     private TableColumnModel columnModel;
     private DefaultTableCellRenderer render;
-    
-    public PerformanceColumnModel(JTable tbl) {
-        this.table = tbl;         
-    }
     
     //table columns settings (setWidth, remove ID column, move some columns)
     public void setTableColumnsSettings() {

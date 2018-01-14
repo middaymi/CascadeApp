@@ -1,15 +1,13 @@
 package data;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 
+@Data
 public class PointsTable {
-    private Integer elementId;
+    private final Integer elementId;
     private ArrayList<PointsRow> table = new ArrayList<>();
-
-    public PointsTable(Integer elementId) {
-        this.elementId = elementId;
-        //get value from table
-    }
 
     public int getNormalPoints(int points) {
         if (points == 0) return 0;
@@ -39,21 +37,5 @@ public class PointsTable {
             }
         }
         return -1;
-    }
-
-    public Integer getElementId() {
-        return elementId;
-    }
-
-    public ArrayList<PointsRow> getTable() {
-        return table;
-    }
-
-    public void setElementId(Integer elementId) {
-        this.elementId = elementId;
-    }
-
-    public void setTable(ArrayList<PointsRow> table) {
-        this.table = table;
     }
 }

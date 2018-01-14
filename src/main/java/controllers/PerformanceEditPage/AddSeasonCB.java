@@ -36,7 +36,7 @@ public class AddSeasonCB implements ActionListener {
         
         //check at equals values in combobox
         for (int i = 0; i < sc.getItemCount(); i++) {
-            if (str.equals(((Season)sc.getItemAt(i)).getPeriod())) {
+            if (str.equals(((Season)sc.getItemAt(i)).getSeason())) {
                 JOptionPane.showMessageDialog(Manager.getPerPage(),
                 "Добавлен существующий сезон",
                 "Ошибка", JOptionPane.WARNING_MESSAGE);               
@@ -46,7 +46,7 @@ public class AddSeasonCB implements ActionListener {
         }
         Season newSeason = new Season();       
         newSeason.setId(perEditModel.getNewSeasonID());
-        newSeason.setPeriod(str);
+        newSeason.setSeason(str);
         sc.addItem(newSeason);
         
         JOptionPane.showMessageDialog(Manager.getPerPage(),

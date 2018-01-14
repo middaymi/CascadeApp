@@ -577,10 +577,10 @@ public class StComModel {
             result.setAverageMark((float)1.0 * sum / marksList.get(0).size());
             int kind = (int) tcModel.getValueAt(tcModel.selRow(), 2);
             if (kind == 3) {
-                result.setIsDone(result.getAverageMark() >= 6 ? true : false);
+                result.setDone(result.getAverageMark() >= 6 ? true : false);
             }
             else {
-                result.setIsDone(true);
+                result.setDone(true);
             }
         }
     }
@@ -661,7 +661,7 @@ public class StComModel {
             query = "INSERT INTO RESULT " +
                     "VALUES (" + compId + ", " + athlete.getAthlete().getId() + ", " +
                     athlete.getPlace() + ", " + athlete.getSumOfMarks() + ", " +
-                    ((athlete.isIsDone()) ? 1 : 0) + ", " + "null, null, null, null , " + 
+                    ((athlete.isDone()) ? 1 : 0) + ", " + "null, null, null, null , " +
                     athlete.getSumOfRanks() + ", " + athlete.getAverageMark() + ");";
              
             System.out.println(query);

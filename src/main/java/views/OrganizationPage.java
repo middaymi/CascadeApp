@@ -56,7 +56,7 @@ public class OrganizationPage extends JPanel {
     private void createChangeButton() {
         changeBtn = new JButton("Изменить");
         changeBtn.setBackground(Color.LIGHT_GRAY);
-        changeBtn.setSize(50*w/64, h/18);
+        changeBtn.setSize(5*w/64, h/18);
         changeBtn.setLocation(31*w/50, 143*h/180);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
@@ -64,7 +64,7 @@ public class OrganizationPage extends JPanel {
                                         OrgChangeBtnListener());
     }
     public void changeTextButton(boolean mode) {
-        if (mode == true) {
+        if (mode) {
             changeBtn.setText("Сохранить");
         } else 
             changeBtn.setText("Изменить");
@@ -130,7 +130,7 @@ public class OrganizationPage extends JPanel {
         fullNameField = new JTextField(orgData.getFullName());
         phoneNumberField = new JTextField(orgData.getPhoneNumber());
         siteField = new JTextField(orgData.getSite());
-        eMailField  = new JTextField(orgData.geteMail());
+        eMailField  = new JTextField(orgData.getEMail());
         ogrnField = new JTextField(orgData.getOGRN());
         kppField = new JTextField(orgData.getKPP());
         innField = new JTextField(orgData.getINN());
@@ -156,7 +156,7 @@ public class OrganizationPage extends JPanel {
         orgData.setFullName(fullNameField.getText());
         orgData.setPhoneNumber(phoneNumberField.getText());
         orgData.setSite(siteField.getText());
-        orgData.seteMail(eMailField.getText());
+        orgData.setEMail(eMailField.getText());
         orgData.setOGRN(ogrnField.getText());
         orgData.setKPP(kppField.getText());
         orgData.setINN(innField.getText());

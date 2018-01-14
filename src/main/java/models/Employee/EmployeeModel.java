@@ -14,15 +14,18 @@ import data.Employee;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import lombok.Data;
 import views.Manager;
 
+@Data
 public class EmployeeModel extends AbstractTableModel{
 
     private static EmployeeModel employeeModelInstance = null;
     private final Connection DBC = DataBaseConnection.getInstanceDataBase().
                                    getDBconnection();  
     //edit or not the table
-    private boolean editable;
+    private boolean editable = true;
         
     //DATA**********************************************************************
     private ArrayList <Employee> data = new ArrayList();  
@@ -39,26 +42,13 @@ public class EmployeeModel extends AbstractTableModel{
     private ArrayList <Object> columnTypes = new ArrayList();     
     //**************************************************************************
     
-    //constructor
-    private EmployeeModel() {
-        setEditable(true);      
-    }
-    
     //singletone, get an object link
     public static EmployeeModel getEmployeeModelInstance() {
         if (employeeModelInstance == null)
             employeeModelInstance = new EmployeeModel();
         return employeeModelInstance;
     }
-    
-    //editing
-    public boolean isEditable() {
-        return editable;
-    }
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }   
-    
+
     //SELECT ALL****************************************************************
     //query: select all data from db
     String selectAllFromEmployee = "select * from employee";
@@ -439,22 +429,11 @@ public class EmployeeModel extends AbstractTableModel{
         synchronized (getData()) {
             return getData().size();
         }
-    }        
-    public ArrayList getColumnNames() {
-        return columnNames;
     }
-    public ArrayList <String> getEnColumnNames() {
-        return enColumnNames;
-    }
-    public ArrayList getColumnTypes() {
-        return columnTypes;
-    }
+
     public Employee getDataByIndex(int i) {
         return (Employee)data.get(i);
     }
-    public ArrayList getData() {
-        return data;
-    }    
     public boolean getCellEditable() {
         return editable;
     }

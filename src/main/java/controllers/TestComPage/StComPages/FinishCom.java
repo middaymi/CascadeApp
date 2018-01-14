@@ -17,7 +17,7 @@ public class FinishCom implements ActionListener {
             if (stComModel.checkAllValues()) {
                 //competition is finished and data is not editable
                 competition = tcModel.getCompetitions().get(tcModel.selRow());        
-                competition.setFinish(true);
+                competition.setFinished(true);
                 
                 stComModel.calculateResults();
                 stComModel.delValuesFromComp();
