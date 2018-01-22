@@ -11,11 +11,11 @@ import java.sql.SQLException;
 public class DataBaseConnection {
 
     private static DataBaseConnection DataBaseInstance = null;
-    private String dbURL = "jdbc:sqlserver://91.123.24.45;databaseName=cascade;integratedSecurity=false;user=sa;password=1908London";
+    private String dbURL = "jdbc:sqlserver://localhost:1401;databaseName=DB;integratedSecurity=false;user=SA;password=Sqldata123";
     private Connection DBconnection;
 
     private DataBaseConnection() {
-        //register sql drivaer
+        //register sql driver
         try {
             DriverManager.registerDriver(new SQLServerDriver());
         } catch (SQLException ex) {

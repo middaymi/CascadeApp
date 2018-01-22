@@ -458,7 +458,7 @@ public class SfpEditModel {
         try {           
             queryLst = "SELECT SFP_ELEMENT. * " +
                         "FROM SFP_ELEMENT, TESTS_ELEMENTS_LINK " +
-                        "WHERE TESTS_ELEMENTS_LINK.IDelement = SFP_ELEMENT.ID " +
+                        "WHERE TESTS_ELEMENTS_LINK.ID = SFP_ELEMENT.ID " +
                         "AND TESTS_ELEMENTS_LINK.IDcompetition = " +
                         tcModel.getValueAt(selRow, 1) + ";";
             System.out.println(queryLst);
@@ -518,7 +518,7 @@ public class SfpEditModel {
                             "FROM SFP_ELEMENT, TESTS_ELEMENTS_LINK " +
                             "WHERE TESTS_ELEMENTS_LINK.IDcompetition = " + 
                                    tcModel.getValueAt(selRow, 1) + " " +
-                            "AND TESTS_ELEMENTS_LINK.IDelement = SFP_ELEMENT.ID);";
+                            "AND TESTS_ELEMENTS_LINK.ID = SFP_ELEMENT.ID);";
             
             prstCmb = DBC.prepareStatement(queryCmb);
             rsCmb = prstCmb.executeQuery();             

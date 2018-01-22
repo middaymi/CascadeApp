@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTextArea;
 import views.CommonSettings;
+import views.Manager;
 
-public class HeaderTextArea extends JTextArea {  
+public class HeaderTextArea extends JTextArea {
+
+    private int w = Manager.getWidthWithInsets();
+    private int h = Manager.getHeightWithInsets();
     
-    private Dimension sizeRow = new Dimension(250, 100);
-    private Dimension sizeCol = new Dimension(400, 100);
+    private Dimension sizeRow = new Dimension(5*w/64, h/18);
+    private Dimension sizeCol = new Dimension(w/8, h/18);
     private int top = 0;
     private boolean rowOrCol;
     private int serial;
@@ -31,7 +35,7 @@ public class HeaderTextArea extends JTextArea {
     
     public HeaderTextArea(boolean rowOrCol, int serial, String text, int top, boolean halfOrNot) {        
         this(rowOrCol, serial, text);
-        if (halfOrNot == true) {            
+        if (halfOrNot) {
             this.top = top;
             this.sizeRow = new Dimension((int)sizeRow.getWidth()/2, (int)sizeRow.getHeight());
             calculate();
@@ -46,14 +50,14 @@ public class HeaderTextArea extends JTextArea {
 
     private void calculate() {        
         //FIOs
-        if (rowOrCol == true) {
+        if (rowOrCol) {
             this.setSize(sizeCol);
             this.setLocation(0, sizeCol.height * serial);            
         } 
         //elements
-        else if (rowOrCol == false) {
+        else if (!rowOrCol) {
             this.setSize(sizeRow);
-            this.setLocation(400 + sizeRow.width * serial, top); 
+            this.setLocation(w/8 + sizeRow.width * serial, top);
             
         }        
         this.setText(text);        

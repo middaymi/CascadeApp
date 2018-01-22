@@ -79,8 +79,8 @@ public class OfpEditPage extends JPanel {
         String str = tcModel.getValueAt(sel, 0) + ". " +
                      tcModel.getValueAt(sel, 3);
         welcome = new JLabel(str);
-        welcome.setSize(w/4, 70);
-        welcome.setLocation(521*w/800, 30);
+        welcome.setSize(w/4, 7*h/180);
+        welcome.setLocation(521*w/800, h/60);
         welcome.setVisible(true);
         welcome.setOpaque(true);
         welcome.setBackground(Color.LIGHT_GRAY);
@@ -95,8 +95,8 @@ public class OfpEditPage extends JPanel {
         if (i == 2) lbl.setText("Список спортсменов");
         if (i == 3) lbl.setText("Список судей");
         lbl.setVisible(true);
-        lbl.setSize(w/4, 100);
-        lbl.setLocation(521*w/800 + (i-1)*9*w/32, 200);
+        lbl.setSize(w/4, h/18);
+        lbl.setLocation(521*w/800 + (i-1)*9*w/32, h/9);
         CommonSettings.settingFont30(lbl);
         CommonSettings.settingGrayBorder(lbl);
         lbl.setOpaque(true);
@@ -113,8 +113,8 @@ public class OfpEditPage extends JPanel {
         lst.setFocusable(false);  
         
         JScrollPane scrl = new JScrollPane(lst);
-        scrl.setSize(w/4, 950);
-        scrl.setLocation(71*w/800 + (i-1)*9*w/32, 310);
+        scrl.setSize(w/4, 19*h/36);
+        scrl.setLocation(71*w/800 + (i-1)*9*w/32, 31*h/180);
         this.add(scrl);
         if (i == 1) {
             elLstModel = new DefaultListModel();
@@ -137,8 +137,8 @@ public class OfpEditPage extends JPanel {
         btn = new JButton("-");
         CommonSettings.settingFont30(btn);
         btn.setFocusable(false);
-        btn.setSize(w/32, 100);
-        btn.setLocation(21*w/800 + i*9*w/32, 1380);
+        btn.setSize(w/32, h/18);
+        btn.setLocation(21*w/800 + i*9*w/32, 23*h/30);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);
          if (i == 1) {
@@ -163,8 +163,8 @@ public class OfpEditPage extends JPanel {
         cmb = new JComboBox();        
         CommonSettings.settingFont30(cmb);
         cmb.setEditable(false);
-        cmb.setSize(69*w/320, 100);
-        cmb.setLocation(71*w/800 + (i-1)*9*w/32, 1270);
+        cmb.setSize(69*w/320, h/18);
+        cmb.setLocation(71*w/800 + (i-1)*9*w/32, 127*h/180);
         this.add(cmb); 
         if (i == 1) elCombo = cmb;
         else if (i == 2) athlCombo = cmb;
@@ -173,8 +173,8 @@ public class OfpEditPage extends JPanel {
         //btns
         btn = new JButton("+");      
         btn.setFocusable(false);
-        btn.setSize(w/32, 100);
-        btn.setLocation(21*w/800 + i*9*w/32, 1270);
+        btn.setSize(w/32, h/18);
+        btn.setLocation(21*w/800 + i*9*w/32, 127*h/180);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);
         this.add(btn);

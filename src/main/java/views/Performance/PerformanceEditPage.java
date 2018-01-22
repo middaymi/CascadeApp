@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import views.CommonSettings;
+import views.Manager;
 
 public class PerformanceEditPage extends JPanel { 
    
@@ -37,6 +38,10 @@ public class PerformanceEditPage extends JPanel {
     
     //edit row of performance
     private int editingRow;
+
+    //width and height of the screen with border for count size and location
+    private int w = Manager.getWidthWithInsets();
+    private int h = Manager.getHeightWithInsets();
        
     public PerformanceEditPage() {        
         //panel settings
@@ -64,8 +69,8 @@ public class PerformanceEditPage extends JPanel {
     //ATHLETE*******************************************************************
     private void labelAthletes() {
         athleteLbl = new JLabel("Список спортсменов-участников");
-        athleteLbl.setSize(800, 100);
-        athleteLbl.setLocation(400, 200);
+        athleteLbl.setSize(w/4, h/18);
+        athleteLbl.setLocation(w/8, h/9);
         CommonSettings.settingFont30(athleteLbl);
         CommonSettings.settingGrayBorder(athleteLbl);
         athleteLbl.setOpaque(true);
@@ -86,8 +91,8 @@ public class PerformanceEditPage extends JPanel {
     //scroll for a list
     private void scrollAthletes() {
         scrl = new JScrollPane(getList());
-        scrl.setSize(800, 950);
-        scrl.setLocation(400, 310);
+        scrl.setSize(w/4, 19*h/36);
+        scrl.setLocation(w/8, 31*h/180);
         this.add(scrl);    
     }
     
@@ -96,8 +101,8 @@ public class PerformanceEditPage extends JPanel {
         setAthletesComboBox(new JComboBox());
         CommonSettings.settingFont30(getAthletesComboBox());
         getAthletesComboBox().setEditable(true);
-        getAthletesComboBox().setSize(690, 100);
-        getAthletesComboBox().setLocation(400, 1270);
+        getAthletesComboBox().setSize(69*w/320, h/18);
+        getAthletesComboBox().setLocation(w/8, 127*h/180);
         this.add(getAthletesComboBox());
     }
     
@@ -105,8 +110,8 @@ public class PerformanceEditPage extends JPanel {
         //button: add athlete to performance
         addAthleteBtn = new JButton("+");
         addAthleteBtn.setFocusable(false);
-        addAthleteBtn.setSize(100, 100);
-        addAthleteBtn.setLocation(1100, 1270);
+        addAthleteBtn.setSize(w/32, h/18);
+        addAthleteBtn.setLocation(11*w/32, 127*h/180);
         CommonSettings.settingFont30(addAthleteBtn);
         addAthleteBtn.setBackground(Color.LIGHT_GRAY);
         addAthleteBtn.addActionListener(new controllers.PerformanceEditPage.
@@ -119,8 +124,8 @@ public class PerformanceEditPage extends JPanel {
         delAthleteBtn = new JButton("-");
         CommonSettings.settingFont30(delAthleteBtn);
         getDelAthleteBtn().setFocusable(false);
-        getDelAthleteBtn().setSize(100, 100);
-        getDelAthleteBtn().setLocation(1100, 1380);
+        getDelAthleteBtn().setSize(w/32, h/18);
+        getDelAthleteBtn().setLocation(11*w/32, 23*h/30);
         getDelAthleteBtn().setBackground(Color.LIGHT_GRAY);
         getDelAthleteBtn().addActionListener(new controllers.PerformanceEditPage.
                                                         DelAthleteListener());
@@ -134,8 +139,8 @@ public class PerformanceEditPage extends JPanel {
                                "<p align=center> " +
                                "Для подтверждения смены сезона нажмите ✔. " +
                                "<html>");
-        seasonLbl.setSize(800, 100);
-        seasonLbl.setLocation(1300, 200);
+        seasonLbl.setSize(w/4, h/18);
+        seasonLbl.setLocation(13*w/32, h/9);
         CommonSettings.settingFont30(seasonLbl);
         CommonSettings.settingGrayBorder(seasonLbl);
         seasonLbl.setOpaque(true);
@@ -147,16 +152,16 @@ public class PerformanceEditPage extends JPanel {
         seasonComboBox = new JComboBox();
         seasonComboBox.setEditable(false);
         CommonSettings.settingFont30(getSeasonComboBox());
-        seasonComboBox.setSize(690, 100);
-        seasonComboBox.setLocation(1300, 310);
+        seasonComboBox.setSize(69*w/320, h/18);
+        seasonComboBox.setLocation(13*w/32, 31*h/180);
         this.add(seasonComboBox);
     }
     
     private void chooseBtnSeason() {
         setSeasonBtn = new JButton("✔");
         setSeasonBtn.setFocusable(false);
-        setSeasonBtn.setSize(100, 100);
-        setSeasonBtn.setLocation(2000, 310);
+        setSeasonBtn.setSize(w/32, h/18);
+        setSeasonBtn.setLocation(w/16, 31*h/180);
         CommonSettings.settingFont30(setSeasonBtn);
         setSeasonBtn.setBackground(Color.LIGHT_GRAY);
         setSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
@@ -167,8 +172,8 @@ public class PerformanceEditPage extends JPanel {
     private void addBtnSeason() {
         addSeasonBtn = new JButton("Добавить сезон");
         addSeasonBtn.setFocusable(false);
-        addSeasonBtn.setSize(340, 100);
-        addSeasonBtn.setLocation(1300, 420);
+        addSeasonBtn.setSize(17*w/160, h/18);
+        addSeasonBtn.setLocation(13*w/32, 7*h/30);
         CommonSettings.settingFont30(addSeasonBtn);
         addSeasonBtn.setBackground(Color.LIGHT_GRAY);
         addSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
@@ -180,8 +185,8 @@ public class PerformanceEditPage extends JPanel {
         delSeasonBtn = new JButton("Удалить сезон");
         CommonSettings.settingFont30(delSeasonBtn);
         delSeasonBtn.setFocusable(false);
-        delSeasonBtn.setSize(340, 100);
-        delSeasonBtn.setLocation(1650, 420);
+        delSeasonBtn.setSize(17*w/160, h/18);
+        delSeasonBtn.setLocation(33*w/64, 7*h/30);
         delSeasonBtn.setBackground(Color.LIGHT_GRAY);
         delSeasonBtn.addActionListener(new controllers.PerformanceEditPage.
                                                     DelSeasonBtnListener());
@@ -191,8 +196,8 @@ public class PerformanceEditPage extends JPanel {
     //text field for add season
     private void setTextField() {
         textField = new JTextField();
-        textField.setSize(690, 100);
-        textField.setLocation(1300, 530);
+        textField.setSize(69*w/320, h/18);
+        textField.setLocation(13*w/32, 53*h/180);
         textField.setVisible(false);
         this.add(textField);  
         textField.addActionListener(new controllers.PerformanceEditPage.AddSeasonCB());

@@ -10,6 +10,7 @@ import javax.swing.table.TableRowSorter;
 import models.Performance.PerformanceColumnModel;
 import models.Performance.PerformanceModel;
 import views.CommonSettings;
+import views.Manager;
 
 public class PerformancePage extends JPanel {
     
@@ -22,6 +23,10 @@ public class PerformancePage extends JPanel {
     private JButton delBtn;
     private JButton addBtn;
     private JButton editBtn;
+
+    //width and height of the screen with border for count size and location
+    private int w = Manager.getWidthWithInsets();
+    private int h = Manager.getHeightWithInsets();
        
     public PerformancePage() { 
         CommonSettings.panelSettings(this); 
@@ -46,7 +51,7 @@ public class PerformancePage extends JPanel {
         table = new JTable(perModel);
         table.setVisible(true);
         table.setOpaque(true);
-        table.setRowHeight(50);
+        table.setRowHeight(1*h/36);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setEnabled(false);
         CommonSettings.settingFontBold30(table.getTableHeader());
@@ -62,8 +67,8 @@ public class PerformancePage extends JPanel {
     private void setScrlPaneSettings() {
         scrlPane = new JScrollPane(table);        
         scrlPane.setVisible(true);
-        scrlPane.setSize(2000, 1180);
-        scrlPane.setLocation(584, 230);
+        scrlPane.setSize(5*w/8, 59*h/90);
+        scrlPane.setLocation(73*w/400, 23*h/180);
         this.add(scrlPane);
     } 
     
@@ -71,8 +76,8 @@ public class PerformancePage extends JPanel {
     private void setChangeBtnSettings() {
         changeBtn = new JButton("Изменить");        
         changeBtn.setBackground(Color.LIGHT_GRAY);
-        changeBtn.setSize(250, 100);
-        changeBtn.setLocation(2334, 1440);
+        changeBtn.setSize(5*w/64, h/18);
+        changeBtn.setLocation(1167*w/1600, 4*h/5);
         CommonSettings.settingFont30(changeBtn);
         this.add(changeBtn);
         changeBtn.addActionListener(new controllers.PerformancePage.
@@ -81,8 +86,8 @@ public class PerformancePage extends JPanel {
         private void setEditBtnSettings() {
         editBtn = new JButton("Редактировать");        
         editBtn.setBackground(Color.LIGHT_GRAY);
-        editBtn.setSize(250, 100);
-        editBtn.setLocation(2054, 1440);
+        editBtn.setSize(5*w/64, h/18);
+        editBtn.setLocation(1027*w/1600, 4*h/5);
         editBtn.setVisible(false);
         CommonSettings.settingFont30(editBtn);
         this.add(editBtn);       
@@ -92,8 +97,8 @@ public class PerformancePage extends JPanel {
     private void setDelBtnSettings() {
         delBtn = new JButton("Удалить");        
         delBtn.setBackground(Color.LIGHT_GRAY);
-        delBtn.setSize(250, 100);
-        delBtn.setLocation(1774, 1440);
+        delBtn.setSize(5*w/64, h/18);
+        delBtn.setLocation(887*w/1600, 4*h/5);
         delBtn.setVisible(false);
         CommonSettings.settingFont30(delBtn);
         this.add(delBtn);
@@ -103,8 +108,8 @@ public class PerformancePage extends JPanel {
     private void setAddBtnSettings() {
         addBtn = new JButton("Добавить");        
         addBtn.setBackground(Color.LIGHT_GRAY);
-        addBtn.setSize(250, 100);
-        addBtn.setLocation(1494, 1440);
+        addBtn.setSize(5*w/64, h/18);
+        addBtn.setLocation(747*w/1600, 4*h/5);
         addBtn.setVisible(false);
         CommonSettings.settingFont30(addBtn);
         this.add(addBtn);
@@ -113,7 +118,7 @@ public class PerformancePage extends JPanel {
     }     
     public void setBtnsMode(boolean mode) {
         //editable or not regime
-        if (mode == true) {changeBtn.setText("Выйти");}
+        if (mode) {changeBtn.setText("Выйти");}
         else {changeBtn.setText("Изменить");}
         delBtn.setVisible(mode);
         addBtn.setVisible(mode);
