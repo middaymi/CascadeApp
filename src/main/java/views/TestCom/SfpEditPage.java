@@ -170,7 +170,7 @@ public class SfpEditPage extends JPanel {
         //btns
         btn = new JButton("+");      
         btn.setFocusable(false);
-        btn.setSize(h/32, h/18);
+        btn.setSize(w/32, h/18);
         btn.setLocation(21*w/800 + i*9*w/32, 127*h/180);
         CommonSettings.settingFont30(btn);
         btn.setBackground(Color.LIGHT_GRAY);

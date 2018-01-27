@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+
+import dataBase.SqlQuery;
 import views.Manager;
 import views.TestCom.SfpEditPage;
 
@@ -46,6 +48,11 @@ public class SfpEditModel {
             sfpEditModelInstance = new SfpEditModel();
         }
         return sfpEditModelInstance;
+    }
+
+    //id competition as hidden column by 1 number
+    private int getIdCompetition() {
+        return (int)tcModel.getValueAt(TestComModel.getTestComModelInstance().selRow(), 1);
     }
     
     //*********************************ATHLETE**********************************
@@ -442,27 +449,21 @@ public class SfpEditModel {
         
     //*******************************ELEMENTS***********************************
     //GET ELEMENTS 
-    /*get elements in COMPETITION from DB
+    /*get elements of COMPETITION from DB
     save to array as data
     view it at list*/
     public void setElementsList () {
-        tcModel = TestComModel.getTestComModelInstance();
         sfpEditPage = Manager.getSfpEditPage();
-        int selRow = tcModel.selRow();
-        
-        String queryLst;        
+
+        String query;
         PreparedStatement prstLst = null;        
         ResultSet rsLst = null; 
                         
-        //database lst  
+        //get from db
         try {           
-            queryLst = "SELECT SFP_ELEMENT. * " +
-                        "FROM SFP_ELEMENT, TESTS_ELEMENTS_LINK " +
-                        "WHERE TESTS_ELEMENTS_LINK.ID = SFP_ELEMENT.ID " +
-                        "AND TESTS_ELEMENTS_LINK.IDcompetition = " +
-                        tcModel.getValueAt(selRow, 1) + ";";
-            System.out.println(queryLst);
-            prstLst = DBC.prepareStatement(queryLst);
+            query = SqlQuery.setListElements(getIdCompetition());
+            System.out.println(query);
+            prstLst = DBC.prepareStatement(query);
             rsLst = prstLst.executeQuery();            
         } catch (SQLException ex) {
             Logger.getLogger(SfpEditModel.class.getName()).
@@ -470,7 +471,7 @@ public class SfpEditModel {
                    "Not get  elements for list", ex);
         }      
         
-        //data lst        
+        //save as object in arraylist of elements
         try { 
             /*get links, clear the array of lst, 
             clear view of lst*/
@@ -478,17 +479,15 @@ public class SfpEditModel {
             elementsByComp.clear();            
             sfpEditPage.getElLstModel().clear();                 
             
-            //lst        
+            //to arraylist
             while (rsLst.next()) {            
                 Element element = new Element();
                 element.setId(rsLst.getInt(1));
                 element.setFullName(rsLst.getString(2));
                 element.setDescription(rsLst.getString(3));
-                //do it for save data in dif arrays 
-                //in dif models
+                //do it for save data in dif arrays in dif models
                 elementsByComp.add(element);
                 sfpEditPage.getElLstModel().addElement(element);
-                System.out.println(element);
             }
             prstLst.close();
             rsLst.close();
@@ -497,65 +496,54 @@ public class SfpEditModel {
                        log(Level.SEVERE, null, ex);
         }        
     }
-    
+
     /*get elements, not in competition from DB
     save to array as data
     view it at combobox*/
     public void setElementsCombo() {
-        tcModel = TestComModel.getTestComModelInstance();
-        int selRow = tcModel.selRow();
-        
-        String queryCmb;
-        PreparedStatement prstCmb = null;
-        ResultSet rsCmb = null;
+        String query;
+        PreparedStatement prst = null;
+        ResultSet rs = null;
                 
-        //database  
-        try {            
-            queryCmb =  "SELECT SFP_ELEMENT. * " +
-                        "FROM SFP_ELEMENT " +
-                        "WHERE NOT SFP_ELEMENT.ID = ANY( " +
-                            "SELECT SFP_ELEMENT.ID " +
-                            "FROM SFP_ELEMENT, TESTS_ELEMENTS_LINK " +
-                            "WHERE TESTS_ELEMENTS_LINK.IDcompetition = " + 
-                                   tcModel.getValueAt(selRow, 1) + " " +
-                            "AND TESTS_ELEMENTS_LINK.ID = SFP_ELEMENT.ID);";
-            
-            prstCmb = DBC.prepareStatement(queryCmb);
-            rsCmb = prstCmb.executeQuery();             
+        //get from db
+        try {
+            query = SqlQuery.setComboboxElements(getIdCompetition());
+            prst = DBC.prepareStatement(query);
+            rs = prst.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(SfpEditModel.class.getName()).
                    log(Level.SEVERE, null, ex);
         }
-        try { 
-            /*get links, clear the array of cmb, 
-            clear view of cmb*/
+
+        //get links, clear the array of cmb, clear view of cmb
+        try {
             sfpEditPage = Manager.getSfpEditPage();                                    
             sfpEditPage.getElCombo().removeAllItems();  
             elements.clear();            
             //cmb
-            while (rsCmb.next()) {            
+            while (rs.next()) {
                 Element element = new Element();
-                element.setId(rsCmb.getInt(1));
-                element.setFullName(rsCmb.getString(2));
-                element.setDescription(rsCmb.getString(3));
-                //do it for save data in dif arrays 
-                //in dif models
+                element.setId(rs.getInt(1));
+                element.setFullName(rs.getString(2));
+                element.setDescription(rs.getString(3));
+                //do it for save data in dif arrays in dif models
                 elements.add(element);
                 sfpEditPage.getElCombo().addItem(element);
             }              
-            prstCmb.close();
-            rsCmb.close();
+            prst.close();
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(SfpEditModel.class.getName()).
                    log(Level.SEVERE, null, ex);
         }
     }
- 
+
     //add element chosen from combobox        
     public void addElement() {
         sfpEditPage = Manager.getSfpEditPage();
-        tcModel = TestComModel.getTestComModelInstance(); 
-        
+        String query;
+        PreparedStatement pstmt;
+
         //selected judge
         Element newElement = (Element)sfpEditPage.getElCombo().getSelectedItem();        
         
@@ -571,12 +559,9 @@ public class SfpEditModel {
         
         //insert into db
         try {
-           String query = "INSERT INTO TESTS_ELEMENTS_LINK VALUES (" +
-                   tcModel.getValueAt(tcModel.selRow(), 1) + ", " +
-                   newElement.getId() + ")";
-                   
+           query = SqlQuery.addElement(getIdCompetition(), newElement.getId());
            System.out.println(query);
-           PreparedStatement pstmt = DBC.prepareStatement(query);
+           pstmt = DBC.prepareStatement(query);
            pstmt.execute();
         } catch (SQLException ex) {
            Logger.getLogger(SfpEditModel.class.getName()).
@@ -616,7 +601,7 @@ public class SfpEditModel {
            String query =  "DELETE FROM TESTS_ELEMENTS_LINK " +
                            "WHERE IDcompetition =  " +
                             tcModel.getValueAt(tcModel.selRow(), 1) + " AND " +
-                            "IDelement = " + newElement.getId() + ";";
+                            "IDisuElement = " + newElement.getId() + ";";
            System.out.println(query);
            PreparedStatement pstmt = DBC.prepareStatement(query);
            pstmt.execute();

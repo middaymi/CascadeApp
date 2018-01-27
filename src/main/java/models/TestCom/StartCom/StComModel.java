@@ -79,7 +79,7 @@ public class StComModel {
         
         try {    
             query = "SELECT ALL_RESULTS.*, TESTS_ELEMENTS_LINK.IDcompetition, \n" +
-                    "TESTS_ELEMENTS_LINK.IDelement \n" +
+                    "TESTS_ELEMENTS_LINK.IDisuElement \n" +
                     "FROM ALL_RESULTS, TESTS_ELEMENTS_LINK\n" +
                     "WHERE ALL_RESULTS.IDtestsElementsLilk = TESTS_ELEMENTS_LINK.ID AND \n" +
                     "TESTS_ELEMENTS_LINK.IDcompetition = " + competition.getId() + ";";
@@ -137,7 +137,7 @@ public class StComModel {
                         
                         "(SELECT ALL_RESULTS.*, " +
                         "TESTS_ELEMENTS_LINK.IDcompetition, \n" +
-                        "TESTS_ELEMENTS_LINK.IDelement \n" +
+                        "TESTS_ELEMENTS_LINK.IDisuElement \n" +
                         "FROM ALL_RESULTS, TESTS_ELEMENTS_LINK\n" +
                         "WHERE ALL_RESULTS.IDtestsElementsLilk = " +
                         "TESTS_ELEMENTS_LINK.ID AND \n" +
@@ -151,7 +151,7 @@ public class StComModel {
                         
                         "(SELECT ALL_RESULTS.*, " +
                         "TESTS_ELEMENTS_LINK.IDcompetition, \n" +
-                        "TESTS_ELEMENTS_LINK.IDelement \n" +
+                        "TESTS_ELEMENTS_LINK.IDisuElement \n" +
                         "FROM ALL_RESULTS, TESTS_ELEMENTS_LINK\n" +
                         "WHERE ALL_RESULTS.IDtestsElementsLilk = " +
                         "TESTS_ELEMENTS_LINK.ID AND \n" +
@@ -344,7 +344,7 @@ public class StComModel {
             
             query = "SELECT " + tableName + ". * " + 
                     "FROM " + tableName + ", TESTS_ELEMENTS_LINK " +
-                    "WHERE TESTS_ELEMENTS_LINK.IDelement = " + tableName + ".ID " +
+                    "WHERE TESTS_ELEMENTS_LINK.IDisuElement = " + tableName + ".ID " +
                     "AND TESTS_ELEMENTS_LINK.IDcompetition = " +
                      tcModel.getValueAt(selRow, 1) + ";";
             System.out.println(query);
