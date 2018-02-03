@@ -79,7 +79,7 @@ public class StComModel {
         
         try {    
             query = "SELECT ALL_RESULTS.*, TESTS_ELEMENTS_LINK.IDcompetition, \n" +
-                    "TESTS_ELEMENTS_LINK.IDisuElement \n" +
+                    "TESTS_ELEMENTS_LINK.IDelement \n" +
                     "FROM ALL_RESULTS, TESTS_ELEMENTS_LINK\n" +
                     "WHERE ALL_RESULTS.IDtestsElementsLilk = TESTS_ELEMENTS_LINK.ID AND \n" +
                     "TESTS_ELEMENTS_LINK.IDcompetition = " + competition.getId() + ";";

@@ -18,6 +18,8 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+
+import dataBase.SqlQuery;
 import models.Performance.PerformanceModel;
 import views.Manager;
 
@@ -32,7 +34,7 @@ public class TestComModel extends AbstractTableModel {
                                "<html>Внешн/<p>внутр<html>", "Дата и время", 
                                "Адрес", "Описание", "IDРазряда"};    
     //viewing in table column names_rus
-    private ArrayList <String> columnNames = new ArrayList();    
+    private ArrayList <String> columnNames = new ArrayList();
     //list of columns type 
     private ArrayList <Object> columnTypes = new ArrayList();
     
@@ -67,38 +69,28 @@ public class TestComModel extends AbstractTableModel {
     }
     
     //SELECTED ROW**************************************************************
-      public int selRow() {
-        int sel = 0;
-        JTable perTable = Manager.getTestCompPage().getTable();
-        //get selected row
-        sel = perTable.getSelectedRow();           
-        if (sel == -1) {    
-                JOptionPane.showMessageDialog(Manager.getPerPage(),
-                "Соревнование не выбрано!",
-                "Ошибка", JOptionPane.WARNING_MESSAGE);                
+    //get selected row
+    public int selRow() {
+        int sel = Manager.getTestCompPage().getTable().getSelectedRow();
+        if (sel == -1) {
+            JOptionPane.showMessageDialog(Manager.getPerPage(),
+            "Соревнование не выбрано!",
+            "Ошибка", JOptionPane.WARNING_MESSAGE);
         }
-        return sel; 
+        return sel;
     }
     
     //TABLE*********************************************************************
     //get table data from db
-    private ResultSet getDataFromDB() {
-        String query; 
-        Statement stmt;
+    private ResultSet getTableDataFromDB() {
         ResultSet rs = null;
         try {
-            //select all from 
-            //(ID = COMPETITION.ID)
-            query = "SELECT COMPETITION_KIND.FullName as FullNameKind, " +
-                           "COMPETITION.* " +
-                    "FROM COMPETITION, COMPETITION_KIND " +
-                    "WHERE COMPETITION.IDcompetitionKind = COMPETITION_KIND.ID;";
-            stmt = DBC.createStatement();            
-            rs = stmt.executeQuery(query); 
+            Statement stmt = DBC.createStatement();
+            rs = stmt.executeQuery(SqlQuery.getCompetitionDataFromDB());
         } catch (SQLException ex) {
             Logger.getLogger(TestComModel.class.getName()).
                              log(Level.SEVERE, 
-                             "not get data from db", ex); 
+                             "not get data from db for detail a table", ex);
         }
         return rs;
     }
@@ -107,7 +99,7 @@ public class TestComModel extends AbstractTableModel {
     get selectAllFromCompetition data from ResultSet, 
     push it to the data storage (there:competition)*/
      public void setDataSource() {        
-        ResultSet rs = null; 
+        ResultSet rs = null;
         Class type = null;
         try {
             //del prev data
@@ -115,7 +107,7 @@ public class TestComModel extends AbstractTableModel {
             columnNames.clear();
             columnTypes.clear();
             
-            rs = getDataFromDB();
+            rs = getTableDataFromDB();
             ResultSetMetaData rsmd = rs.getMetaData();
             
             //get info about columns and their types,
@@ -269,17 +261,10 @@ public class TestComModel extends AbstractTableModel {
     public void updateData(int row, int column, Object value) {
         String query;
         try { 
-            if (enColumnNames.get(column).equals("FullNameKind")) {                
-                query = "UPDATE "  + "COMPETITION " +
-                    "SET IDcompetitionKind = " + (((CompetitionKind)value)).getId() + " " +
-                    "WHERE ID = " + getValueAt(row, 1) + ";"; 
-                //comboCompKind.setEnabled(false);
-               
+            if (enColumnNames.get(column).equals("FullNameKind")) {
+                query = SqlQuery.updateFieldFullNameKind(((CompetitionKind)value).getId(), (int)getValueAt(row, 1));
             } else {
-            //create updateQuery 
-            query = "UPDATE " + "COMPETITION " +
-                    "SET " + enColumnNames.get(column) + " = " +
-                    "'" + value + "'" + " WHERE ID = " + getValueAt(row, 1);            
+                query = SqlQuery.updateField(enColumnNames.get(column), value, (int)getValueAt(row, 1));
             }
             System.out.println(query);
             PreparedStatement pstmt = DBC.prepareStatement(query);
