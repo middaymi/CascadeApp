@@ -1,2 +1,0 @@
-home test database = "jdbc:sqlserver://localhost;instanceName=MSSQLSERVER;databaseName=DB;integratedSecurity=true;";
-server = "jdbc:sqlserver://91.123.24.45;databaseName=cascade;integratedSecurity=false;user=sa;password=1908London";
